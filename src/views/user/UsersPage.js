@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TableCard from '../../shared/components/TableCardbleCard';
-import { Button, CircularProgress, Grid } from '../../materialsals';
-../../assets
+import Page from '../../shared/components/Page';
+import TableCard from '../../shared/components/TableCard';
+import { Button, CircularProgress, Grid } from '../../materials';
 class UsersPage extends React.Component {
 
     componentDidMount() {
@@ -12,12 +12,14 @@ class UsersPage extends React.Component {
     render() {
         const { classes, users, loading } = this.props;
         return (
+            <Page className={classes.root} title="Invoice App | Users">
             <Grid container>
                 <h1>Platform Users</h1>
                 { loading && <CircularProgress/>}
                 <TableCard classes={classes} data={users}/>
                 <Button className={classes.button}>Load More</Button>
             </Grid>
+            </Page>
         )
     }
 };

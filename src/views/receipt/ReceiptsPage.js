@@ -1,8 +1,11 @@
 import React from 'react';
+import Page from '../../shared/components/Page';
 
-const ReceiptsPage = () => {
+const ReceiptsPage = ({classes}) => {
     return (
-        <h1>Receipts Page</h1>
+        <Page className={classes.root} title="Invoice App | Payments & Receipts">
+            <h1>Receipts Page</h1>
+        </Page>
     )
 };
 

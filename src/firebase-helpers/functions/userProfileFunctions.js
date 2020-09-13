@@ -35,7 +35,7 @@ export const updateUserProfileAvatar = async (payload) => {
     const user = new UserAvatar(payload).sanitize();
     const currentUser = auth().currentUser;
     const { id, file, fileName } = user.credentials;
-    const uploadTask = await storage.ref(STORAGE_URL).put(file);
+    const uploadTask = await storage.ref(`${STORAGE_URL}/${fileName}`).put(file);
     const avatarUrl = await (await uploadTask.task).ref.getDownloadURL();
 
     await db.collection('userProfiles').doc(id).set(
@@ -59,7 +59,7 @@ export const updateUserProfileAvatar = async (payload) => {
 export const getProfile = async (id) => {
   try {
     if (!id) throw new Error('id is required');
-    const docRef = db.collection(USER_PROFILE_COLLECTIONS).doc(id);
+    const docRef = db.collection(USER_PROFILES_COLLECTION).doc(id);
     return await (await docRef.get()).data();
   } catch (error) {
     // TODO: Log error to crash analytics

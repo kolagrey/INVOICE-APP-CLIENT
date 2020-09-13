@@ -1,9 +1,13 @@
 import React from 'react';
+import Page from '../../shared/components/Page';
 
-const ReportPage = () => {
+const ReportPage = ({classes}) => {
     return (
-        <h1>Reports Page</h1>
-    )
+        <Page className={classes.root} title="Invoice App | Reporting Tool">
+            <h1>Reports Page</h1>
+        </Page>
+        
+    );
 };
 
 export default ReportPage;

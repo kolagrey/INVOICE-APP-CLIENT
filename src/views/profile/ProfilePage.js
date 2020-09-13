@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { Grid } from '../../materialsals';
+import { Grid } from '../../materials';
+import Page from '../../shared/components/Page';
 
-import { formatFullName } from '../../shared/utilsd/utils';
+import { formatFullName } from '../../shared/utils';
 import Profile from './components/Profile';
 import ProfileDetails from './components/ProfileDetails';
 
-import profileActions from '../../redux/actions/profileile';
+import profileActions from '../../redux/actions/profile';
 const {
   updateProfileAvatar,
   updateUserProfileInformation,
@@ -15,7 +16,15 @@ const {
 } = profileActions;
 
 const ProfilePage = (props) => {
-  const { classes, error, user, success, updateUserProfileInformation, updateAvatar, clearError } = props;
+  const {
+    classes,
+    error,
+    user,
+    success,
+    updateUserProfileInformation,
+    updateAvatar,
+    clearError
+  } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,25 +41,27 @@ const ProfilePage = (props) => {
   }, [error, success, enqueueSnackbar, clearError]);
 
   return (
-    <Grid container spacing={3}>
-      <Grid item lg={3} md={4} xs={12}>
-        <Profile
-          classes={classes}
-          user={user}
-          formatFullName={formatFullName}
-          updateAvatar={updateAvatar}
-          errorMessage={error ? error.messagge : null}
-        />
-      </Grid>
-      <Grid item lg={9} md={8} xs={12}>
-        <ProfileDetails
-          classes={classes}
-          user={user}
-          updateUserProfileInformation={updateUserProfileInformation}
-          errorMessage={error ? error.messagge : null}
-        />
-      </Grid>
-    </Grid>
+      <Page className={classes.root} title="Invoice App | My Profile">
+        <Grid container spacing={3}>
+          <Grid item lg={3} md={4} xs={12}>
+            <Profile
+              classes={classes}
+              user={user}
+              formatFullName={formatFullName}
+              updateAvatar={updateAvatar}
+              errorMessage={error ? error.messagge : null}
+            />
+          </Grid>
+          <Grid item lg={9} md={8} xs={12}>
+            <ProfileDetails
+              classes={classes}
+              user={user}
+              updateUserProfileInformation={updateUserProfileInformation}
+              errorMessage={error ? error.messagge : null}
+            />
+          </Grid>
+        </Grid>
+      </Page>
   );
 };
 

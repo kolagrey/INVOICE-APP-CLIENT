@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
+import Page from '../../shared/components/Page';
 import RegistrationForm from './components/RegistrationForm';
 
-import authAction from '../../redux/actions/authuth';
+import authAction from '../../redux/actions/auth';
 const { clearAuthError, registerAdminUser } = authAction;
 
 const RegistrationPage = (props) => {
@@ -21,12 +22,13 @@ const RegistrationPage = (props) => {
   }, [error, enqueueSnackbar]);
 
   return (
+    <Page className={classes.root} title="Invoice App | Registration">
     <RegistrationForm
       classes={classes}
       errorMessage={error ? error.message : null}
       registerUser={registerUser}
       loading={loading}
-    />
+    /></Page>
   );
 };
 
