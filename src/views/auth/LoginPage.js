@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import LoginForm from './components/LoginForm';
 
-import authActions from '../../redux/actions/auth';
+import authActions from '../../redux/actions/authuth';
 const { clearAuthError, authenticateUser } = authActions;
 
 const LoginPage = (props) => {

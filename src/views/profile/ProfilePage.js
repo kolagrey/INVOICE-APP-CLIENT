@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { Grid } from '../../materials';
+import { Grid } from '../../materialsals';
 
-import { formatFullName } from '../../shared/utils';
+import { formatFullName } from '../../shared/utilsd/utils';
 import Profile from './components/Profile';
 import ProfileDetails from './components/ProfileDetails';
 
-import profileActions from '../../redux/actions/profile';
+import profileActions from '../../redux/actions/profileile';
 const {
   updateProfileAvatar,
   updateUserProfileInformation,

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import SummaryCard from './components/SummaryCard';
-import InvoiceReceiptChart from './components/InvoiceReceiptChart';
-import TableCard from '../../shared/components/TableCardbleCard';
+import SummaryCard from '../components/SummaryCard';
+import InvoiceReceiptChart from '../components/InvoiceReceiptChart';
+import TableCard from '../components/TableCard';
 
 import { Grid, useTheme, colors, AccountBalanceIcon, Typography } from '../../materialsals';
 import { BountyIcon, UsersIcon, BountyCollectedIcon } from '../../assetsets';

@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useStyles } from '../utils';
+import { useStyles } from '../shared/utils';
 import RouteGaurd from './RouteGaurd';
 import history from './history';
 // Pages

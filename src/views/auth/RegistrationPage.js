@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 
 import RegistrationForm from './components/RegistrationForm';
 
-import authAction from '../../redux/actions/auth';
+import authAction from '../../redux/actions/authuth';
 const { clearAuthError, registerAdminUser } = authAction;
 
 const RegistrationPage = (props) => {

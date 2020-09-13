@@ -12,9 +12,9 @@ import {
   Box,
   Grid,
   Typography
-} from '../../../materials';
+} from '../../../materialserials';
 import Copyright from '../../../shared/components/Copyright';
-import { Logo192 } from '../../../assets';
+import { Logo192 } from '../../../assetsassets';
 
 const RegistrationForm = (props) => {
   const { classes, registerUser, loading, errorMessage } = props;

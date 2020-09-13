@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DashboardLayout from '../layouts/DashboardLayout';
-import SideDrawer from '../shared/components/SideDrawer';
+import DashboardLayout from '../../layouts/DashboardLayout';
+import SideDrawer from '../components/SideDrawer';
 
 
 const DashboardPage = (props) => {
