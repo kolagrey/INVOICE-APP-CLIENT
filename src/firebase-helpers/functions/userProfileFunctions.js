@@ -32,7 +32,7 @@ export const updateUserProfile = async (payload) => {
 
 export const updateUserProfileAvatar = async (payload) => {
   try {
-    const user = new UserAvatar(payload);
+    const user = new UserAvatar(payload).sanitize();
     const currentUser = auth().currentUser;
     const { id, file, fileName } = user.credentials;
     const uploadTask = await storage.ref(STORAGE_URL).put(file);
