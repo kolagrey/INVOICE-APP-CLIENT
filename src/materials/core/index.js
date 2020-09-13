@@ -11,16 +11,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import InputBase from '@material-ui/core/InputBase';
-import Badge  from '@material-ui/core/Badge';
+import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
 
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
@@ -33,7 +32,7 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -42,41 +41,48 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import {colors, useTheme} from '@material-ui/core'
+import { colors, useTheme } from '@material-ui/core';
 
 export {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Container,
-    CircularProgress,
-    LinearProgress,
-    Avatar, 
-    TextField, 
-    FormControlLabel, 
-    Checkbox, 
-    Link, 
-    Paper, 
-    Box, 
-    Grid,
-    InputBase,
-    Badge,
-    MenuItem,
-    Menu,
-    Drawer,
-    AppBar,
-    Button,
-    Toolbar,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemAvatar,
-    ListItemText,
-    CssBaseline,
-    Typography,
-    Divider,
-    IconButton,
-    Card,
-    CardHeader,
-    CardActions,
-    CardContent,
-    colors, useTheme
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Container,
+  SvgIcon,
+  CircularProgress,
+  LinearProgress,
+  Avatar,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Paper,
+  Box,
+  Grid,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu,
+  Drawer,
+  AppBar,
+  Button,
+  Toolbar,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemAvatar,
+  ListItemText,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  Card,
+  CardHeader,
+  CardActions,
+  CardContent,
+  colors,
+  useTheme
 };

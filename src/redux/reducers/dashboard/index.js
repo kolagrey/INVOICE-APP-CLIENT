@@ -1,7 +1,7 @@
 import {
     SET_DASHBOARD_SUMMARY, UPDATE_DASHBOARD_SUMMARY
 } from '../../action-types';
-import { getTotal } from '../../../utils';
+import { getTotal } from '../../../shared/utils';
 
 const initialState = {
     users: 0,

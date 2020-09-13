@@ -9,7 +9,7 @@ import {
   CardHeader,
   ArrowRightIcon,
   Divider
-} from '../../../materialserials';
+} from '../../../materials';
 
 const InvoiceReceiptChart = (props) => {
   const { chartData, chartOptions } = props;

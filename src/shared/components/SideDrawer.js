@@ -19,12 +19,12 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     ExitToAppIcon,
-} from '../materials';
-import { dashboardMenu } from '../config';
-import { Logo192 } from '../assets';
+} from '../../materials';
+import { dashboardMenu } from '../../config';
+import { Logo192 } from '../../assets';
 
 
-import authActions from '../redux/actions/auth';
+import authActions from '../../redux/actions/auth';
 const { logOutUser } = authActions;
 
 const SideDrawer = (props) => {

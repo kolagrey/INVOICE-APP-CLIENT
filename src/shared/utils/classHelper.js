@@ -9,6 +9,12 @@ const useStyles = (makeStyles) =>
     loading: {
       color: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
     },
+    importButton: {
+      marginRight: theme.spacing(1)
+    },
+    exportButton: {
+      marginRight: theme.spacing(1)
+    },
     button: {
       margin: theme.spacing(3, 0, 2),
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',

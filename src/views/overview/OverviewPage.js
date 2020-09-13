@@ -1,12 +1,18 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
+import TableCard from '../../shared/components/TableCard';
+import Page from '../../shared/components/Page';
+import {
+  Grid,
+  useTheme,
+  colors,
+  AccountBalanceIcon,
+  Typography
+} from '../../materials';
+
 import SummaryCard from './components/SummaryCard';
 import InvoiceReceiptChart from './components/InvoiceReceiptChart';
-import TableCard from '../../shared/components/TableCardbleCard';
-
-import { Grid, useTheme, colors, AccountBalanceIcon, Typography } from '../../materialsals';
-import { BountyIcon, UsersIcon, BountyCollectedIcon } from '../../assetsets';
 
 const OverviewPage = (props) => {
   const { classes, summary } = props;
@@ -82,37 +88,43 @@ const OverviewPage = (props) => {
     }
   };
 
-  const tableData = [{
-    invoiceID: '0001',
-    description: 'What a wonderful invoice',
-    quantity: 1,
-    unitCost: 500000,
-    totalCost: 500000
-  },{
-    invoiceID: '0002',
-    description: 'What a wonderful invoice',
-    quantity: 1,
-    unitCost: 500000,
-    totalCost: 500000
-  },{
-    invoiceID: '0003',
-    description: 'What a wonderful invoice',
-    quantity: 1,
-    unitCost: 500000,
-    totalCost: 500000
-  },{
-    invoiceID: '0004',
-    description: 'What a wonderful invoice',
-    quantity: 1,
-    unitCost: 500000,
-    totalCost: 500000
-  },{
-    invoiceID: '0005',
-    description: 'What a wonderful invoice',
-    quantity: 1,
-    unitCost: 500000,
-    totalCost: 500000
-  }]
+  const tableData = [
+    {
+      invoiceID: '0001',
+      description: 'What a wonderful invoice',
+      quantity: 1,
+      unitCost: 500000,
+      totalCost: 500000
+    },
+    {
+      invoiceID: '0002',
+      description: 'What a wonderful invoice',
+      quantity: 1,
+      unitCost: 500000,
+      totalCost: 500000
+    },
+    {
+      invoiceID: '0003',
+      description: 'What a wonderful invoice',
+      quantity: 1,
+      unitCost: 500000,
+      totalCost: 500000
+    },
+    {
+      invoiceID: '0004',
+      description: 'What a wonderful invoice',
+      quantity: 1,
+      unitCost: 500000,
+      totalCost: 500000
+    },
+    {
+      invoiceID: '0005',
+      description: 'What a wonderful invoice',
+      quantity: 1,
+      unitCost: 500000,
+      totalCost: 500000
+    }
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -120,50 +132,56 @@ const OverviewPage = (props) => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={3}>
-        {/* Summary */}
-        <Grid item xs={12} md={3} lg={3}>
-          <SummaryCard
-            classes={classes}
-            title={'Tenants'}
-            value={summary.users}
-            icon={UsersIcon}
-          />
+      <Page className={classes.root} title="Invoice App | Overview">
+        <Grid container spacing={3}>
+          {/* Summary */}
+          <Grid item xs={12} md={3} lg={3}>
+            <SummaryCard
+              classes={classes}
+              title={'Tenants'}
+              value={summary.users}
+            />
+          </Grid>
+          <Grid item xs={12} md={3} lg={3}>
+            <SummaryCard
+              classes={classes}
+              title={'Properties'}
+              value={summary.bounties}
+            />
+          </Grid>
+          <Grid item xs={12} md={3} lg={3}>
+            <SummaryCard
+              classes={classes}
+              title={'Invoices'}
+              value={summary.vault}
+            />
+          </Grid>
+          <Grid item xs={12} md={3} lg={3}>
+            <SummaryCard
+              classes={classes}
+              title={'Receipts'}
+              value={summary.vault}
+            />
+          </Grid>
+          <Grid item lg={12} md={12} xl={12} xs={12}>
+            <InvoiceReceiptChart
+              chartData={data}
+              chartOption={options}
+              classes={classes}
+            />
+          </Grid>
+          <Grid item lg={12} md={12} xl={12} xs={12}>
+            <Typography color="textPrimary" variant="h4">
+              {'Most Recent Receipts'}
+            </Typography>
+            <TableCard
+              data={tableData}
+              classes={classes}
+              defaultIcon={AccountBalanceIcon}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={3} lg={3}>
-          <SummaryCard
-            classes={classes}
-            title={'Properties'}
-            value={summary.bounties}
-            icon={BountyIcon}
-          />
-        </Grid>
-        <Grid item xs={12} md={3} lg={3}>
-          <SummaryCard
-            classes={classes}
-            title={'Invoices'}
-            value={summary.vault}
-            icon={BountyCollectedIcon}
-          />
-        </Grid>
-        <Grid item xs={12} md={3} lg={3}>
-          <SummaryCard
-            classes={classes}
-            title={'Receipts'}
-            value={summary.vault}
-            icon={BountyCollectedIcon}
-          />
-        </Grid>
-        <Grid item lg={12} md={12} xl={12} xs={12}>
-          <InvoiceReceiptChart chartData={data} chartOption={options} classes={classes} />
-        </Grid>
-        <Grid item lg={12} md={12} xl={12} xs={12}>
-          <Typography color="textPrimary" variant="h4">
-            {'Most Recent Receipts'}
-          </Typography>
-          <TableCard data={tableData} classes={classes} defaultIcon={AccountBalanceIcon} />
-        </Grid>
-      </Grid>
+      </Page>
     </React.Fragment>
   );
 };

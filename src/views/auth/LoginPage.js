@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useSnackbar } from 'notistack';
+import Page from '../../shared/components/Page';
 import LoginForm from './components/LoginForm';
 
-import authActions from '../../redux/actions/authuth';
+import authActions from '../../redux/actions/auth';
 const { clearAuthError, authenticateUser } = authActions;
 
 const LoginPage = (props) => {
@@ -23,13 +24,14 @@ const LoginPage = (props) => {
   },[isAuthenticated, clearAuthError, error, enqueueSnackbar]);
 
   return (
+    <Page className={classes.root} title="Invoice App | Login">
     <LoginForm
       classes={classes}
       errorMessage={error ? error.message : null}
       authenticateUser={authenticateUser}
       loading={loading}
       clearAuthError={clearAuthError}
-    />
+    /></Page>
   );
 };
 

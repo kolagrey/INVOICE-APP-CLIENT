@@ -4,7 +4,7 @@ import {
     ExitToAppIcon,
     MenuItem,
     Menu
-} from '../materials';
+} from '../../materials';
 
 const FullMenu = (props) => {
     const { isMenuOpen, anchorEl, handleMenuClose, handleLogout, menuId } = props;

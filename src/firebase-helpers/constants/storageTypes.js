@@ -1,1 +1,1 @@
-export const STORAGE_URL = `feedbacker/${fileName}`;
+export const STORAGE_URL = 'feedbacker';
