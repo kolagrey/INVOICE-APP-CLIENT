@@ -1,0 +1,123 @@
+import React, { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
+
+import {
+  Avatar,
+  Button,
+  Box,
+  Typography,
+  Divider,
+  CircularProgress,
+  Card,
+  CardActions,
+  CardContent,
+  VerifiedUserIcon
+} from '../../../materials';
+
+const Profile = (props) => {
+  const {
+    classes,
+    user,
+    updateAvatar,
+    success,
+    clearError,
+    formatFullName,
+    errorMessage,
+    ...rest
+  } = props;
+
+  const fileInputRef = React.createRef();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState({
+    avatar: user.avatar
+  });
+
+  const onCameraFilesChange = ({target}) => {
+    const fileList = target.files;
+    if (!fileList.length) return;
+    if (fileList[0].size / 1000000 > 1) {
+      enqueueSnackbar('Image file too large. Must be 1MB or less.', { variant: 'error' });
+      return;
+    } else {
+      const fileUrl = URL.createObjectURL(fileList[0]);
+      setProfile({
+        avatar: fileUrl
+      });
+      const file = fileList[0];
+      const name = fileList[0].name.split('.');
+      const fileName = `${user.id}.${name[name.length - 1]}`;
+      onUpdateAvatar(fileName, file);
+    }
+  };
+
+  const onUpdateAvatar = async (fileName, file) => {
+    setLoading(true);
+    try {
+      await updateAvatar({
+        id: user.id,
+        fileName,
+        file
+      });
+      setLoading(false);
+    } catch (error) {
+      // TODO: Use error logging strategy
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  return (
+    <Card className={classes.card} {...rest}>
+      <CardContent>
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <Avatar className={classes.profileAvatar} src={profile.avatar} onClick={() => fileInputRef.current.click()} />
+          <Typography color="textPrimary" gutterBottom variant="h5">
+            {formatFullName(user.firstName, user.lastName)}
+          </Typography>
+          <VerifiedUserIcon />
+          <Typography color="textSecondary" variant="body2">
+            {user.role ? user.role : 'Unassigned'}
+          </Typography>
+        </Box>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <input
+          accept="image/*"
+          style={{ display: 'none'}}
+          ref={fileInputRef}
+          type="file"
+          onChange={onCameraFilesChange}
+        />
+        <Button
+          color="primary"
+          fullWidth
+          variant="text"
+          onClick={() => fileInputRef.current.click()}
+        >
+          {!loading ? 'Upload picture' : <CircularProgress />}
+        </Button>
+      </CardActions>
+      {errorMessage && (
+        <Typography color="textSecondary" variant="body1">
+          {errorMessage}
+        </Typography>
+      )}
+    </Card>
+  );
+};
+
+Profile.propTypes = {
+  classes: PropTypes.object,
+  success: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  clearError: PropTypes.func,
+  user: PropTypes.object,
+  updateAvatar: PropTypes.func,
+  formatFullName: PropTypes.func
+};
+
+export default Profile;
