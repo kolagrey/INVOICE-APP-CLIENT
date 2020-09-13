@@ -1,5 +1,5 @@
-export const USER_PROFILES = 'userProfiles';
-export const INVOICES = 'invoices';
-export const RECEIPTS = 'receipts';
-export const SETTINGS = 'settings';
-export const ACTIVITY_TRACKER = 'activityTracker'
+export const USER_PROFILES_COLLECTION = 'userProfiles';
+export const INVOICES_COLLECTION = 'invoices';
+export const RECEIPTS_COLLECTION = 'receipts';
+export const SETTINGS_COLLECTION = 'settings';
+export const ACTIVITY_TRACKER_COLLECTIONS = 'activityTracker'
