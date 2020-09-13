@@ -18,7 +18,7 @@ export const updateAdminProfile = async (payload) => {
 
 export const updateUserProfile = async (payload) => {
   try {
-    const user = new UserProfile(payload);
+    const user = new UserProfile(payload).sanitize();
     await db
       .collection(USER_PROFILES_COLLECTION)
       .doc(user.id)
