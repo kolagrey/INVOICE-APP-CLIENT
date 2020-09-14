@@ -11,7 +11,7 @@ import {
 } from '../../../materials';
 import { Search as SearchIcon } from 'react-feather';
 
-const Toolbar = ({ classes, ...rest }) => {
+const Toolbar = ({ classes }) => {
 
   return (
     <div>
@@ -19,9 +19,6 @@ const Toolbar = ({ classes, ...rest }) => {
         display="flex"
         justifyContent="flex-end"
       >
-        <Button className={classes.importButton}>
-          Import
-        </Button>
         <Button className={classes.exportButton}>
           Export
         </Button>
@@ -29,7 +26,7 @@ const Toolbar = ({ classes, ...rest }) => {
           color="primary"
           variant="contained"
         >
-          Add customer
+          Add Customer
         </Button>
       </Box>
       <Box mt={3}>
@@ -46,7 +43,7 @@ const Toolbar = ({ classes, ...rest }) => {
                         color="action"
                       >
                         <SearchIcon />
-                      </SvgIcon>
+                      </SvgIcon> 
                     </InputAdornment>
                   )
                 }}

@@ -34,13 +34,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Card,
   CardContent,
   CardActions,
   CardHeader,
   colors,
   useTheme,
-  SvgIcon
+  SvgIcon,
+  InputAdornment
 } from './core';
 
 import {
@@ -79,6 +81,7 @@ export {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Card,
   CardActions,
   CardContent,
@@ -86,6 +89,7 @@ export {
   colors,
   useTheme,
   SvgIcon,
+  InputAdornment,
   Container,
   CircularProgress,
   LinearProgress,

@@ -3,6 +3,12 @@ import { colors } from '../../materials';
 const drawerWidth = 240;
 const useStyles = (makeStyles) =>
   makeStyles((theme) => ({
+    pageRoot: {
+      backgroundColor: theme.palette.background.dark,
+      minHeight: '100%',
+      paddingBottom: theme.spacing(3),
+      paddingTop: theme.spacing(3)
+    },
     loginRoot: {
       height: '100vh'
     },
