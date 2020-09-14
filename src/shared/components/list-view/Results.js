@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -14,20 +13,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
-  makeStyles
+  Typography
 } from '../../../materials';
 import {getInitials} from '../../../shared/utils';
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  avatar: {
-    marginRight: theme.spacing(2)
-  }
-}));
-
-const Results = ({ className, customers, ...rest }) => {
-  const classes = useStyles();
+const Results = ({ classes, customers, ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -73,12 +63,8 @@ const Results = ({ className, customers, ...rest }) => {
   };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card>
       <PerfectScrollbar>
-        <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
@@ -159,7 +145,6 @@ const Results = ({ className, customers, ...rest }) => {
               ))}
             </TableBody>
           </Table>
-        </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
