@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+
 import {
   Checkbox,
   Table,
@@ -9,21 +9,14 @@ import {
   TablePagination,
   TableRow,
   TableContainer,
-  Paper,
-  Box,
-  Avatar,
-  Typography
+  Paper
 } from '../../../materials';
 
-import {
-  getInitials,
-  getComparator,
-  /* descendingComparator, */
-  stableSort
-} from '../../../shared/utils';
+import { getComparator, stableSort } from '../../../shared/utils';
 
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 import EnhancedTableHead from './EnhancedTableHead';
+import EnhancedTableCell from './EnhancedTableCell';
 
 const Results = ({ classes, customers, listConfig, ...rest }) => {
   const [order, setOrder] = useState('asc');
@@ -128,30 +121,24 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
                         inputProps={{ 'aria-labelledby': labelId }}
                       />
                     </TableCell>
-                    <TableCell>
-                      <Box alignItems="center" display="flex">
-                        <Avatar className={classes.avatar} src={row.avatarUrl}>
-                          {getInitials(row.name)}
-                        </Avatar>
-                        <Typography color="textPrimary" variant="body1">
-                          {row.name}
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align="right">{`${row.address.city}, ${row.address.state}, ${row.address.country}`}</TableCell>
-                    <TableCell align="right">{row.phone}</TableCell>
-                    <TableCell align="right">
-                      {moment(row.createdAt).format('DD/MM/YYYY')}
-                    </TableCell>
+                    {listConfig.headCells.map((cell) => {
+                      return (
+                        <EnhancedTableCell
+                          className={classes.avatar}
+                          fieldValue={
+                            cell.label === 'Location'
+                              ? `${row.address.city}, ${row.address.state}, ${row.address.country}`
+                              : row[cell.id]
+                          }
+                          fieldName={cell.label}
+                          fieldInitials={
+                            cell.label === 'Avatar'
+                              ? row.name
+                              : 'Not Applicable'
+                          }
+                        />
+                      );
+                    })}
                   </TableRow>
                 );
               })}

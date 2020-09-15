@@ -12,7 +12,7 @@ const CustomersPage = ({ classes, updateTitle }) => {
   const listConfig = {
     title: 'Customers',
     searchPlaceholder: 'Search Customer',
-    headers: ['Fullname', 'Email', 'Location', 'Phone', 'Registration Date'],
+    headers: ['Fullname', 'Email', 'Location', 'Phone', 'Created'],
     headCells: [
       {
         id: 'avatarUrl',
@@ -43,14 +43,14 @@ const CustomersPage = ({ classes, updateTitle }) => {
         id: 'createdAt',
         numeric: true,
         disablePadding: false,
-        label: 'Registration Date'
+        label: 'Created'
       }
     ],
     hasActions: true,
     canEdit: true,
     canDelete: true,
     canCreate: true,
-    showFilter: true,
+    showFilter: false,
     filterFunction: () => {},
     deleteFunction: () => {},
     searchFunction: () => {},
