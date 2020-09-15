@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
+import sharedAction from '../../redux/actions/shared';
 import TableCard from '../../shared/components/TableCard';
 import Page from '../../shared/components/Page';
 import {
@@ -14,8 +15,10 @@ import {
 import SummaryCard from './components/SummaryCard';
 import InvoiceReceiptChart from './components/InvoiceReceiptChart';
 
+const { updatePageTitle } = sharedAction;
+
 const OverviewPage = (props) => {
-  const { classes, summary } = props;
+  const { classes, summary, updateTitle } = props;
   const theme = useTheme();
   const data = {
     datasets: [
@@ -127,8 +130,9 @@ const OverviewPage = (props) => {
   ];
 
   useEffect(() => {
+    updateTitle('Overview');
     window.scrollTo(0, 0);
-  }, []);
+  }, [updateTitle]);
 
   return (
     <React.Fragment>
@@ -194,6 +198,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    updateTitle: (payload) => dispatch(updatePageTitle(payload))
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OverviewPage);

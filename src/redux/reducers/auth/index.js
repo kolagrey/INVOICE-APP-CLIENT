@@ -1,14 +1,24 @@
-import { SET_AUTHENTICATION_STATE, SET_REGISTRATION_STATE, CLEAR_AUTHENTICATION_STATE } from '../../action-types';
+import {
+  SET_AUTHENTICATION_STATE,
+  SET_REGISTRATION_STATE,
+  CLEAR_AUTHENTICATION_STATE
+} from '../../action-types';
 
-export default (state = {
+const initialState = {
   loading: false,
   isAuthenticated: false,
   authenticationError: null,
   registrationError: null
-}, action = { type: '' }) => {
+};
+
+export default (state = initialState, action = { type: '' }) => {
   switch (action.type) {
     case SET_AUTHENTICATION_STATE: {
-      const { loading = false, isAuthenticated = false, authenticationError = null } = action.payload;
+      const {
+        loading = false,
+        isAuthenticated = false,
+        authenticationError = null
+      } = action.payload;
       return {
         ...state,
         loading,
@@ -17,7 +27,11 @@ export default (state = {
       };
     }
     case SET_REGISTRATION_STATE: {
-      const { loading = false, isAuthenticated = false, registrationError = null } = action.payload;
+      const {
+        loading = false,
+        isAuthenticated = false,
+        registrationError = null
+      } = action.payload;
       return {
         ...state,
         loading,
@@ -34,7 +48,7 @@ export default (state = {
       };
     }
     default: {
-      return state
+      return state;
     }
   }
 };

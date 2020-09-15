@@ -3,6 +3,15 @@ import { colors } from '../../materials';
 const drawerWidth = 240;
 const useStyles = (makeStyles) =>
   makeStyles((theme) => ({
+    highlight: 'light',
+    listViewTitle: {
+      flex: '1 1 100%'
+    },
+    toolbarRoot: {
+      flex: '1 1 100%',
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(1)
+    },
     pageRoot: {
       backgroundColor: theme.palette.background.dark,
       minHeight: '100%',

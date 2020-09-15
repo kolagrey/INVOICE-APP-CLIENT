@@ -19,36 +19,41 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import SettingsIcon from '@material-ui/icons/Settings';
-import StoreIcon from '@material-ui/icons/Store'
+import StoreIcon from '@material-ui/icons/Store';
 import PollIcon from '@material-ui/icons/Poll';
 import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
+import SupervisedUserIcon from '@material-ui/icons/SupervisedUserCircle';
+import PeopleIcon from '@material-ui/icons/People';
+
 export {
-    PhotoCameraIcon,
-    ArrowRightIcon,
-    ArrowDropDownIcon,
-    VerifiedUserIcon,
-    NotificationsOutlinedIcon,
-    AccountBalanceWalletIcon,
-    AccountBalanceIcon,
-    MoneyIcon,
-    ExitToAppIcon,
-    DashboardIcon,
-    PeopleAltIcon,
-    SettingsIcon,
-    StoreIcon,
-    PollIcon,
-    AccountCircle,
-    NotificationsIcon,
-    MoreIcon,
-    MenuIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    InboxIcon,
-    MailIcon,
-    LockOutlinedIcon,
-    LockIcon,
-    ArrowDownwardIcon
+  SupervisedUserIcon,
+  PeopleIcon,
+  PhotoCameraIcon,
+  ArrowRightIcon,
+  ArrowDropDownIcon,
+  VerifiedUserIcon,
+  NotificationsOutlinedIcon,
+  AccountBalanceWalletIcon,
+  AccountBalanceIcon,
+  MoneyIcon,
+  ExitToAppIcon,
+  DashboardIcon,
+  PeopleAltIcon,
+  SettingsIcon,
+  StoreIcon,
+  PollIcon,
+  AccountCircle,
+  NotificationsIcon,
+  MoreIcon,
+  MenuIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InboxIcon,
+  MailIcon,
+  LockOutlinedIcon,
+  LockIcon,
+  ArrowDownwardIcon
 };
