@@ -9,6 +9,7 @@ import { Router, history } from './router';
 import { auth } from './services/firebase';
 import authActions from './redux/actions/auth';
 import profileActions from './redux/actions/profile';
+
 const { logOutUser } = authActions;
 const { getUserProfile } = profileActions;
 
@@ -26,6 +27,11 @@ const theme = createMuiTheme({
     fontFamily: ['"Lato"', 'sans-serif'].join(',')
   }
 });
+
+export const ConfigContext = React.createContext();
+const configValue = {
+  showDialog: false
+};
 
 class App extends React.Component {
   componentDidMount() {
@@ -46,9 +52,11 @@ class App extends React.Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
-          <Router />
-        </SnackbarProvider>
+        <ConfigContext.Provider value={configValue}>
+          <SnackbarProvider maxSnack={3}>
+            <Router />
+          </SnackbarProvider>
+        </ConfigContext.Provider>
       </ThemeProvider>
     );
   }

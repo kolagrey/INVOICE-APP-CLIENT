@@ -46,6 +46,7 @@ import {
 } from './core';
 
 import {
+  SupervisedUserIcon,
   VerifiedUserIcon,
   AccountCircle,
   LockOutlinedIcon,
@@ -70,7 +71,8 @@ import {
   ArrowRightIcon,
   ArrowDownwardIcon,
   ArrowDropDownIcon,
-  PhotoCameraIcon
+  PhotoCameraIcon,
+  PeopleIcon
 } from './icons';
 
 export {
@@ -120,6 +122,8 @@ export {
   Divider,
   IconButton,
   // Icons
+  SupervisedUserIcon,
+  PeopleIcon,
   PhotoCameraIcon,
   ArrowRightIcon,
   ArrowDropDownIcon,
