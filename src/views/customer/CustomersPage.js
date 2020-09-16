@@ -6,6 +6,7 @@ import data from '../../assets/data';
 
 import sharedAction from '../../redux/actions/shared';
 import AlertDialog from '../../shared/components/AlertDialog';
+import BlankView from '../../shared/components/BlankView';
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
 const CustomersPage = ({
@@ -74,12 +75,22 @@ const CustomersPage = ({
         okText={'Yes, Delete'}
         cancelText={'Discard'}
       ></AlertDialog>
-      <ListView
-        updateAlertDialogState={updateAlertState}
-        data={customers}
-        classes={classes}
-        listConfig={listConfig}
-      ></ListView>
+      {customers.length ? (
+        <ListView
+          updateAlertDialogState={updateAlertState}
+          data={customers}
+          classes={classes}
+          listConfig={listConfig}
+        ></ListView>
+      ) : (
+        <BlankView
+          classes={classes}
+          showAddButton={true}
+          addButtonText={listConfig.addButtonText}
+          addButtonUrl={listConfig.addButtonUrl}
+          title={listConfig.title}
+        />
+      )}
     </Page>
   );
 };

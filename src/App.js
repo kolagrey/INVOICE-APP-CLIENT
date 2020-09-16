@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { grey, pink } from '@material-ui/core/colors';
+import { deepPurple, grey } from '@material-ui/core/colors';
 import { SnackbarProvider } from 'notistack';
 
 import { Router, history } from './router';
@@ -16,7 +16,7 @@ const { getUserProfile } = profileActions;
 const theme = createMuiTheme({
   palette: {
     secondary: {
-      main: pink[700]
+      main: deepPurple[700]
     },
     primary: {
       main: grey[900]
