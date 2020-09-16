@@ -8,14 +8,25 @@ import {
   SvgIcon
 } from '../../../materials';
 import { Search as SearchIcon } from 'react-feather';
+import { Link } from 'react-router-dom';
 
-const SearchToolbar = ({ classes, placeholder }) => {
+const SearchToolbar = ({
+  classes,
+  searchPlaceholder,
+  addButtonText,
+  addButtonUrl
+}) => {
   return (
     <div>
       <Box display="flex" justifyContent="flex-end">
-        <Button className={classes.submit} variant="contained">
-          Add Customer
-        </Button>
+        <Link
+          to={`${addButtonUrl}/document`}
+          style={{ textDecoration: 'none' }}
+        >
+          <Button className={classes.submit} variant="contained">
+            {addButtonText}
+          </Button>
+        </Link>
       </Box>
       <Box mt={3}>
         <Box maxWidth={500}>
@@ -30,7 +41,7 @@ const SearchToolbar = ({ classes, placeholder }) => {
                 </InputAdornment>
               )
             }}
-            placeholder={placeholder}
+            placeholder={searchPlaceholder}
             variant="outlined"
           />
         </Box>
@@ -40,7 +51,10 @@ const SearchToolbar = ({ classes, placeholder }) => {
 };
 
 SearchToolbar.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  searchPlaceholder: PropTypes.string,
+  addButtonUrl: PropTypes.string,
+  addButtonText: PropTypes.string
 };
 
 export default SearchToolbar;

@@ -17,8 +17,14 @@ import { getComparator, stableSort } from '../../../shared/utils';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableCell from './EnhancedTableCell';
+import ActionTableCell from './ActionTableCell';
 
-const Results = ({ classes, customers, listConfig, ...rest }) => {
+const Results = ({
+  classes,
+  customers,
+  listConfig,
+  updateAlertDialogState
+}) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
@@ -29,6 +35,11 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+
+  const randomKey = () => {
+    const random = Math.random();
+    return random * 66666666666666;
   };
 
   const handleSelectAllClick = (event) => {
@@ -108,14 +119,16 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.name)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.name}
                     selected={isItemSelected}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell
+                      padding="checkbox"
+                      onClick={(event) => handleClick(event, row.name)}
+                    >
                       <Checkbox
                         checked={isItemSelected}
                         inputProps={{ 'aria-labelledby': labelId }}
@@ -124,6 +137,7 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
                     {listConfig.headCells.map((cell) => {
                       return (
                         <EnhancedTableCell
+                          key={`${row.id}-${randomKey()}`}
                           className={classes.avatar}
                           fieldValue={
                             cell.label === 'Location'
@@ -139,6 +153,15 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
                         />
                       );
                     })}
+                    <ActionTableCell
+                      canEdit={listConfig.canEdit}
+                      canDelete={listConfig.canDelete}
+                      editId={row.id}
+                      editUrl={listConfig.editUrl}
+                      viewAction={listConfig.canView}
+                      deleteAction={listConfig.deleteAction}
+                      updateAlertDialogState={updateAlertDialogState}
+                    ></ActionTableCell>
                   </TableRow>
                 );
               })}
@@ -164,9 +187,10 @@ const Results = ({ classes, customers, listConfig, ...rest }) => {
 };
 
 Results.propTypes = {
-  classes: PropTypes.string,
+  classes: PropTypes.object.isRequired,
   customers: PropTypes.array.isRequired,
-  listConfig: PropTypes.object.isRequired
+  listConfig: PropTypes.object.isRequired,
+  updateAlertDialogState: PropTypes.func
 };
 
 export default Results;

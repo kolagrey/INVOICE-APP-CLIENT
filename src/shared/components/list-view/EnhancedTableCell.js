@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Box, Avatar, Typography, TableCell } from '../../../materials';
+import { Box, Avatar, TableCell } from '../../../materials';
 import { getInitials } from '../../../shared/utils';
 
 const EnhancedTableCell = ({
@@ -16,9 +16,6 @@ const EnhancedTableCell = ({
         <Avatar className={className} src={fieldValue}>
           {getInitials(fieldInitials)}
         </Avatar>
-        <Typography color="textPrimary" variant="body1">
-          {fieldInitials}
-        </Typography>
       </Box>
     </TableCell>
   ) : fieldName === 'Created' ? (
@@ -33,8 +30,8 @@ const EnhancedTableCell = ({
 EnhancedTableCell.propTypes = {
   className: PropTypes.string,
   fieldName: PropTypes.string.isRequired,
-  fieldValue: PropTypes.string.isRequired,
-  fieldInitials: PropTypes.string.isRequired
+  fieldValue: PropTypes.any.isRequired,
+  fieldInitials: PropTypes.string
 };
 
 export default EnhancedTableCell;

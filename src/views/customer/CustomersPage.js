@@ -5,14 +5,19 @@ import ListView from '../../shared/components/list-view';
 import data from '../../assets/data';
 
 import sharedAction from '../../redux/actions/shared';
-const { updatePageTitle } = sharedAction;
+import AlertDialog from '../../shared/components/AlertDialog';
+const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
-const CustomersPage = ({ classes, updateTitle }) => {
+const CustomersPage = ({
+  classes,
+  updateTitle,
+  showDialog,
+  updateAlertState
+}) => {
   const [customers] = useState(data);
   const listConfig = {
     title: 'Customers',
     searchPlaceholder: 'Search Customer',
-    headers: ['Fullname', 'Email', 'Location', 'Phone', 'Created'],
     headCells: [
       {
         id: 'avatarUrl',
@@ -32,12 +37,6 @@ const CustomersPage = ({ classes, updateTitle }) => {
         disablePadding: false,
         label: 'Email'
       },
-      {
-        id: 'location',
-        numeric: true,
-        disablePadding: false,
-        label: 'Location'
-      },
       { id: 'phone', numeric: true, disablePadding: false, label: 'Phone' },
       {
         id: 'createdAt',
@@ -51,20 +50,32 @@ const CustomersPage = ({ classes, updateTitle }) => {
     canDelete: true,
     canCreate: true,
     showFilter: false,
-    filterFunction: () => {},
-    deleteFunction: () => {},
-    searchFunction: () => {},
-    editUrl: '',
-    createUrl: ''
+    filterAction: () => {},
+    deleteAction: () => {},
+    searchAction: () => {},
+    editUrl: '/dashboard/customer/edit',
+    addButtonText: 'Add Customer',
+    addButtonUrl: '/dashboard/customer/new'
   };
 
   useEffect(() => {
     updateTitle('Customers');
-  }, [updateTitle]);
+    updateAlertState(false);
+  }, [updateTitle, updateAlertState]);
 
   return (
-    <Page className={classes.root} title="Invoice App | Ciustomers">
+    <Page title="Invoice App | Ciustomers">
+      <AlertDialog
+        showDialog={showDialog}
+        updateAlertState={updateAlertState}
+        title={'Delete Customer?'}
+        body={'Are you sure you wany to delete this customer?'}
+        okAction={updateAlertState}
+        okText={'Yes, Delete'}
+        cancelText={'Discard'}
+      ></AlertDialog>
       <ListView
+        updateAlertDialogState={updateAlertState}
         data={customers}
         classes={classes}
         listConfig={listConfig}
@@ -73,12 +84,19 @@ const CustomersPage = ({ classes, updateTitle }) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    showDialog: state.shared.dialogState
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     updateTitle: (payload) => {
       return dispatch(updatePageTitle(payload));
-    }
+    },
+    updateAlertState: (payload) => dispatch(updateAlertDialogState(payload))
   };
 };
 
-export default connect(null, mapDispatchToProps)(CustomersPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomersPage);

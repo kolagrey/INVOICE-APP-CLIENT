@@ -43,10 +43,17 @@ const EnhancedTableHead = (props) => {
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              <strong>
+                {headCell.label === 'Avatar'
+                  ? ''
+                  : headCell.label.toUpperCase()}
+              </strong>
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell padding="default" align="right">
+          <strong>ACTIONS</strong>
+        </TableCell>
       </TableRow>
     </TableHead>
   );

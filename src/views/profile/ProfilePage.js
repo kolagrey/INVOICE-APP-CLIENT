@@ -9,6 +9,8 @@ import Profile from './components/Profile';
 import ProfileDetails from './components/ProfileDetails';
 
 import profileActions from '../../redux/actions/profile';
+import sharedAction from '../../redux/actions/shared';
+const { updatePageTitle } = sharedAction;
 const {
   updateProfileAvatar,
   updateUserProfileInformation,
@@ -21,6 +23,7 @@ const ProfilePage = (props) => {
     error,
     user,
     success,
+    updateTitle,
     updateUserProfileInformation,
     updateAvatar,
     clearError
@@ -29,6 +32,7 @@ const ProfilePage = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
+    updateTitle('Account Profile');
     if (error && error.message) {
       enqueueSnackbar(error.message, { variant: 'error' });
     }
@@ -38,30 +42,30 @@ const ProfilePage = (props) => {
     return () => {
       clearError();
     };
-  }, [error, success, enqueueSnackbar, clearError]);
+  }, [error, success, enqueueSnackbar, clearError, updateTitle]);
 
   return (
-      <Page className={classes.root} title="Invoice App | My Profile">
-        <Grid container spacing={3}>
-          <Grid item lg={3} md={4} xs={12}>
-            <Profile
-              classes={classes}
-              user={user}
-              formatFullName={formatFullName}
-              updateAvatar={updateAvatar}
-              errorMessage={error ? error.messagge : null}
-            />
-          </Grid>
-          <Grid item lg={9} md={8} xs={12}>
-            <ProfileDetails
-              classes={classes}
-              user={user}
-              updateUserProfileInformation={updateUserProfileInformation}
-              errorMessage={error ? error.messagge : null}
-            />
-          </Grid>
+    <Page className={classes.root} title="Invoice App | My Profile">
+      <Grid container spacing={3}>
+        <Grid item lg={3} md={4} xs={12}>
+          <Profile
+            classes={classes}
+            user={user}
+            formatFullName={formatFullName}
+            updateAvatar={updateAvatar}
+            errorMessage={error ? error.messagge : null}
+          />
         </Grid>
-      </Page>
+        <Grid item lg={9} md={8} xs={12}>
+          <ProfileDetails
+            classes={classes}
+            user={user}
+            updateUserProfileInformation={updateUserProfileInformation}
+            errorMessage={error ? error.messagge : null}
+          />
+        </Grid>
+      </Grid>
+    </Page>
   );
 };
 
@@ -75,6 +79,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    updateTitle: (payload) => {
+      return dispatch(updatePageTitle(payload));
+    },
     updateAvatar: (payload) => dispatch(updateProfileAvatar(payload)),
     updateUserProfileInformation: (payload) =>
       dispatch(updateUserProfileInformation(payload)),

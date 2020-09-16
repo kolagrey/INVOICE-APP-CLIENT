@@ -1,7 +1,8 @@
-import { UPDATE_PAGE_TITLE } from '../../action-types';
+import { UPDATE_PAGE_TITLE, SET_DIALOG_STATE } from '../../action-types';
 
 const initialState = {
-  pageTitle: 'Overview'
+  pageTitle: 'Overview',
+  dialogState: false
 };
 
 export default (state = initialState, action = { type: '' }) => {
@@ -11,6 +12,12 @@ export default (state = initialState, action = { type: '' }) => {
       return {
         ...state,
         pageTitle
+      };
+    case SET_DIALOG_STATE:
+      const { dialogState = false } = action.payload;
+      return {
+        ...state,
+        dialogState
       };
     default:
       return state;
