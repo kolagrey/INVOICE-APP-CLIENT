@@ -22,18 +22,18 @@ import Page from '../../shared/components/Page';
 import useData from '../../shared/hooks/useData';
 
 function CustomerPage({ classes, updateTitle }) {
-  const { id: customerId } = useParams();
+  const { id: documentId } = useParams();
   const [state, setState] = useState({});
   useEffect(() => {
     updateTitle('Customer');
   }, [updateTitle]);
 
   useEffect(() => {
-    const customerDocRef = db.collection(CUSTOMERS_COLLECTION).doc(customerId);
-    customerDocRef.get().then((customerDoc) => {
-      setState(customerDoc.data());
+    const customerDocRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
+    customerDocRef.get().then((documentDoc) => {
+      setState(documentDoc.data());
     });
-  }, [customerId]);
+  }, [documentId]);
 
   // Use Data Hook
   const [data, loading] = useData(INVOICES_COLLECTION, useState);

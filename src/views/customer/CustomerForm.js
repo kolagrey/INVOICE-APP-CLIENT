@@ -21,7 +21,7 @@ import { EDIT } from '../../shared/constants';
 
 function CustomerForm(props) {
   const { classes, user } = props;
-  const { action, id: customerId } = useParams();
+  const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
 
   const [state, setState] = useState({
@@ -37,14 +37,17 @@ function CustomerForm(props) {
 
   useEffect(() => {
     if (action === EDIT) {
-      const customerDocRef = db
+      const documentDocRef = db
         .collection(CUSTOMERS_COLLECTION)
-        .doc(customerId);
-      customerDocRef.get().then((customerDoc) => {
-        setState(customerDoc.data());
+        .doc(documentId);
+      documentDocRef.get().then((documentDoc) => {
+        setState((prevState) => ({
+          ...prevState,
+          ...documentDoc.data()
+        }));
       });
     }
-  }, [action, customerId]);
+  }, [action, documentId]);
 
   const onInputChange = (event) => {
     const { name, value } = event.target;
@@ -54,12 +57,12 @@ function CustomerForm(props) {
     }));
   };
 
-  const createCustomer = async (payload) => {
+  const createDocument = async (payload) => {
     try {
-      const newCustomoreRef = db.collection(CUSTOMERS_COLLECTION).doc();
-      const newCustomerData = payload;
-      newCustomerData.id = newCustomoreRef.id;
-      await newCustomoreRef.set(newCustomerData);
+      const newDocumentRef = db.collection(CUSTOMERS_COLLECTION).doc();
+      const newDocumentData = payload;
+      newDocumentData.id = newDocumentRef.id;
+      await newDocumentRef.set(newDocumentData);
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
@@ -67,9 +70,9 @@ function CustomerForm(props) {
     }
   };
 
-  const updateCustomer = async (payload) => {
+  const updateDocument = async (payload) => {
     try {
-      const customoreRef = db.collection(CUSTOMERS_COLLECTION).doc(customerId);
+      const customoreRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
       const customerData = { ...payload };
       await customoreRef.set(customerData);
       history.goBack();
@@ -79,13 +82,13 @@ function CustomerForm(props) {
     }
   };
 
-  const saveProfile = async (e) => {
+  const saveDocument = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       action === EDIT
-        ? await updateCustomer(state)
-        : await createCustomer(state);
+        ? await updateDocument(state)
+        : await createDocument(state);
       setLoading(false);
     } catch (error) {
       // TODO: Use error logging strategy
@@ -99,7 +102,7 @@ function CustomerForm(props) {
       <ValidatorForm
         autoComplete="off"
         noValidate
-        onSubmit={(e) => saveProfile(e)}
+        onSubmit={(e) => saveDocument(e)}
         className={classes.loginRoot}
       >
         <Card>
