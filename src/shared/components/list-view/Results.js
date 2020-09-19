@@ -119,7 +119,7 @@ const Results = ({ classes, data, listConfig }) => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.email}
+                    key={row.id}
                     selected={isItemSelected}
                   >
                     {listConfig.showCheckbox && (
@@ -135,9 +135,10 @@ const Results = ({ classes, data, listConfig }) => {
                     )}
                     {listConfig.headCells.map((cell) => {
                       const fieldValue = row[cell.id] ? row[cell.id] : '';
+                      const key = `${row.id}-${randomKey()}`;
                       return (
                         <EnhancedTableCell
-                          key={`${row.id}-${randomKey()}`}
+                          key={key}
                           className={classes.avatar}
                           fieldValue={fieldValue}
                           fieldName={cell.label}

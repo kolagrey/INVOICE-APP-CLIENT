@@ -12,6 +12,10 @@ const CustomersPage = lazy(() => import('../views/customer/CustomersPage'));
 const CustomerPage = lazy(() => import('../views/customer/CustomerPage'));
 const CustomerForm = lazy(() => import('../views/customer/CustomerForm'));
 
+const ShopsPage = lazy(() => import('../views/shop/ShopsPage'));
+const ShopPage = lazy(() => import('../views/shop/ShopPage'));
+const ShopForm = lazy(() => import('../views/shop/ShopForm'));
+
 const UsersPage = lazy(() => import('../views/user/UsersPage'));
 const InvoicesPage = lazy(() => import('../views/invoice/InvoicesPage'));
 const ReceiptsPage = lazy(() => import('../views/receipt/ReceiptsPage'));
@@ -52,6 +56,8 @@ const AppRouter = (props) => {
               >
                 <OverviewPage classes={classes} />
               </RouteGaurd>
+
+              {/* CUSTOMER ROUTES STARTS*/}
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
@@ -81,6 +87,40 @@ const AppRouter = (props) => {
               >
                 <CustomerForm classes={classes} />
               </RouteGaurd>
+              {/* CUSTOMER ROUTES ENDS */}
+
+              {/* SHOP ROUTES STARTS*/}
+              <RouteGaurd
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/shops"
+              >
+                <ShopsPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/shop/:id"
+              >
+                <ShopPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/shop/:action/:id"
+              >
+                <ShopForm classes={classes} />
+              </RouteGaurd>
+              {/* SHOP ROUTES ENDS */}
+
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
