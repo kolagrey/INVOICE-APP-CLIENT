@@ -23,9 +23,9 @@ const dashboardMenu = (state) => [
     url: '/dashboard/customers'
   },
   {
-    text: 'Properties',
+    text: 'Shops',
     icon: StoreIcon,
-    url: '/dashboard/properties'
+    url: '/dashboard/shops'
   },
   {
     text: 'Invoices',
