@@ -22,15 +22,15 @@ const CustomersPage = ({
 }) => {
   // Use Data Hook
   const [data, loading] = useData(CUSTOMERS_COLLECTION, useState);
-  const [customerId, setCustomerId] = useState('');
-  const deleteCustomer = (customerId) => {
+  const [documentId, setDocumentId] = useState('');
+  const deleteDocument = (documentId) => {
     updateAlertState(true);
-    setCustomerId(customerId);
+    setDocumentId(documentId);
   };
 
-  const confirmDeleteCustomer = () => {
-    const customerDocRef = db.collection(CUSTOMERS_COLLECTION).doc(customerId);
-    customerDocRef.delete().then(() => updateAlertState(false));
+  const confirmDeleteDocument = () => {
+    const documentDocRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
+    documentDocRef.delete().then(() => updateAlertState(false));
   };
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const CustomersPage = ({
     showFilter: false,
     showAddButton: true,
     filterAction: () => {},
-    deleteAction: deleteCustomer,
+    deleteAction: deleteDocument,
     searchAction: () => {},
     editUrl: '/dashboard/customer/edit',
     viewUrl: '/dashboard/customer',
@@ -91,7 +91,7 @@ const CustomersPage = ({
         showDialog={showDialog}
         title={'Delete Customer?'}
         body={'Are you sure you wany to delete this customer?'}
-        okAction={confirmDeleteCustomer}
+        okAction={confirmDeleteDocument}
         okText={'Yes, Delete'}
         cancelText={'Discard'}
         updateAlertState={updateAlertState}
