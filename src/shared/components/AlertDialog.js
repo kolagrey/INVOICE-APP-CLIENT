@@ -18,6 +18,7 @@ const AlertDialog = ({
   title,
   body,
   okText,
+  okAction,
   cancelText
 }) => {
   // Close Alert Dialog
@@ -42,7 +43,7 @@ const AlertDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">
+        <Button onClick={okAction} color="secondary">
           {okText ? okText : 'Proceed'}
         </Button>
         <Button onClick={handleClose} color="default">
@@ -59,6 +60,7 @@ AlertDialog.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   okText: PropTypes.string,
+  okAction: PropTypes.func,
   cancelText: PropTypes.string
 };
 

@@ -11,19 +11,21 @@ import { Link } from 'react-router-dom';
 const ActionTableCell = ({
   canEdit,
   canDelete,
-  editId,
+  documentId,
   editUrl,
-  viewAction,
-  updateAlertDialogState
+  viewUrl,
+  deleteAction
 }) => {
   return (
     <TableCell align="right">
       <Box display="flex" justifyContent="flex-end">
-        <IconButton aria-label="view" onClick={() => viewAction}>
-          <ViewIcon color="primary" />
-        </IconButton>
+        <Link to={`${viewUrl}/${documentId}`}>
+          <IconButton aria-label="view">
+            <ViewIcon color="primary" />
+          </IconButton>
+        </Link>
         {canEdit && (
-          <Link to={`${editUrl}/${editId}`}>
+          <Link to={`${editUrl}/${documentId}`}>
             <IconButton aria-label="edit">
               <EditIcon color="secondary" />
             </IconButton>
@@ -32,7 +34,7 @@ const ActionTableCell = ({
         {canDelete && (
           <IconButton
             aria-label="delete"
-            onClick={() => updateAlertDialogState(true)}
+            onClick={() => deleteAction(documentId)}
           >
             <DeleteIcon color="error" />
           </IconButton>
@@ -45,10 +47,10 @@ const ActionTableCell = ({
 ActionTableCell.propTypes = {
   canEdit: PropTypes.bool,
   canDelete: PropTypes.bool,
-  editId: PropTypes.string,
+  documentId: PropTypes.string,
   editUrl: PropTypes.string,
-  viewAction: PropTypes.func,
-  updateAlertDialogState: PropTypes.func
+  viewUrl: PropTypes.string,
+  deleteAction: PropTypes.func
 };
 
 export default ActionTableCell;

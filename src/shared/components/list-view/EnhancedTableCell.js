@@ -23,7 +23,9 @@ const EnhancedTableCell = ({
       {moment(fieldValue).format('DD/MM/YYYY')}
     </TableCell>
   ) : (
-    <TableCell align="left">{fieldValue}</TableCell>
+    <TableCell align="left" p={2}>
+      {fieldValue}
+    </TableCell>
   );
 };
 

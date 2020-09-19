@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Page from '../../shared/components/Page';
 import ListView from '../../shared/components/list-view';
-import data from '../../assets/data';
 
 import sharedAction from '../../redux/actions/shared';
 import AlertDialog from '../../shared/components/AlertDialog';
 import BlankView from '../../shared/components/BlankView';
+import { CircularProgress } from '../../materials';
+import useData from '../../shared/hooks/useData';
+import { CUSTOMERS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
+import { NoDataIcon } from '../../assets';
+import { db } from '../../services/firebase';
+
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
 const CustomersPage = ({
@@ -15,22 +20,44 @@ const CustomersPage = ({
   showDialog,
   updateAlertState
 }) => {
-  const [customers] = useState(data);
+  // Use Data Hook
+  const [data, loading] = useData(CUSTOMERS_COLLECTION, useState);
+  const [customerId, setCustomerId] = useState('');
+  const deleteCustomer = (customerId) => {
+    updateAlertState(true);
+    setCustomerId(customerId);
+  };
+
+  const confirmDeleteCustomer = () => {
+    const customerDocRef = db.collection(CUSTOMERS_COLLECTION).doc(customerId);
+    customerDocRef.delete().then(() => updateAlertState(false));
+  };
+
+  useEffect(() => {
+    updateTitle('Customers');
+  }, [updateTitle]);
+
   const listConfig = {
     title: 'Customers',
     searchPlaceholder: 'Search Customer',
     headCells: [
       {
-        id: 'avatarUrl',
+        id: 'avatar',
         numeric: false,
         disablePadding: true,
         label: 'Avatar'
       },
       {
-        id: 'name',
+        id: 'firstName',
         numeric: false,
         disablePadding: true,
-        label: 'Fullname'
+        label: 'Firstname'
+      },
+      {
+        id: 'lastName',
+        numeric: false,
+        disablePadding: true,
+        label: 'Lastname'
       },
       {
         id: 'email',
@@ -38,54 +65,51 @@ const CustomersPage = ({
         disablePadding: false,
         label: 'Email'
       },
-      { id: 'phone', numeric: true, disablePadding: false, label: 'Phone' },
-      {
-        id: 'createdAt',
-        numeric: true,
-        disablePadding: false,
-        label: 'Created'
-      }
+      { id: 'telephone', numeric: false, disablePadding: false, label: 'Phone' }
     ],
-    hasActions: true,
+    showSearchToolbar: true,
+    showCheckbox: true,
+    showAction: true,
     canEdit: true,
     canDelete: true,
     canCreate: true,
     showFilter: false,
+    showAddButton: true,
     filterAction: () => {},
-    deleteAction: () => {},
+    deleteAction: deleteCustomer,
     searchAction: () => {},
     editUrl: '/dashboard/customer/edit',
+    viewUrl: '/dashboard/customer',
     addButtonText: 'Add Customer',
-    addButtonUrl: '/dashboard/customer/new'
+    addButtonUrl: '/dashboard/customer/new/document'
   };
 
-  useEffect(() => {
-    updateTitle('Customers');
-    updateAlertState(false);
-  }, [updateTitle, updateAlertState]);
-
   return (
-    <Page title="Invoice App | Ciustomers">
+    <Page title="Invoice App | Customers">
       <AlertDialog
+        NoDataIcon={NoDataIcon}
         showDialog={showDialog}
-        updateAlertState={updateAlertState}
         title={'Delete Customer?'}
         body={'Are you sure you wany to delete this customer?'}
-        okAction={updateAlertState}
+        okAction={confirmDeleteCustomer}
         okText={'Yes, Delete'}
         cancelText={'Discard'}
-      ></AlertDialog>
-      {customers.length ? (
+        updateAlertState={updateAlertState}
+      />
+      {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={customers}
+          data={data}
           classes={classes}
           listConfig={listConfig}
-        ></ListView>
+        />
+      ) : loading ? (
+        <CircularProgress />
       ) : (
         <BlankView
           classes={classes}
-          showAddButton={true}
+          NoDataIcon={NoDataIcon}
+          showAddButton={listConfig.showAddButton}
           addButtonText={listConfig.addButtonText}
           addButtonUrl={listConfig.addButtonUrl}
           title={listConfig.title}

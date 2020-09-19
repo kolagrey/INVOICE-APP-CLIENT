@@ -7,7 +7,11 @@ import RouteGaurd from './RouteGaurd';
 import history from './history';
 // Pages
 const OverviewPage = lazy(() => import('../views/overview/OverviewPage'));
+
 const CustomersPage = lazy(() => import('../views/customer/CustomersPage'));
+const CustomerPage = lazy(() => import('../views/customer/CustomerPage'));
+const CustomerForm = lazy(() => import('../views/customer/CustomerForm'));
+
 const UsersPage = lazy(() => import('../views/user/UsersPage'));
 const InvoicesPage = lazy(() => import('../views/invoice/InvoicesPage'));
 const ReceiptsPage = lazy(() => import('../views/receipt/ReceiptsPage'));
@@ -58,13 +62,24 @@ const AppRouter = (props) => {
                 <CustomersPage classes={classes} />
               </RouteGaurd>
               <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/customer/:id"
+              >
+                <CustomerPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
                 Route={Route}
                 Redirect={Redirect}
                 isAuthenticated={isAuthenticated}
                 classes={classes}
                 path="/dashboard/customer/:action/:id"
               >
-                <CustomersPage classes={classes} />
+                <CustomerForm classes={classes} />
               </RouteGaurd>
               <RouteGaurd
                 Route={Route}
