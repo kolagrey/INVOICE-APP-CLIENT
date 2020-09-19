@@ -6,6 +6,7 @@ import authActions from '../../redux/actions/auth';
 
 import FullMenu from './FullMenu';
 import MobileMenu from './MobileMenu';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {
   Badge,
   Avatar,
@@ -50,6 +51,8 @@ const MenuAppBar = (props) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const goBack = () => history.goBack();
+
   const handleLogout = () => {
     props.logOutUser();
   };
@@ -74,6 +77,19 @@ const MenuAppBar = (props) => {
           >
             <MenuIcon />
           </IconButton>
+          {pageTitle !== 'Overview' && (
+            <IconButton
+              color="inherit"
+              aria-label="go back"
+              onClick={goBack}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: open
+              })}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
           <Typography variant="h6" noWrap>
             {pageTitle}
           </Typography>

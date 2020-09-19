@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NoDataIcon } from '../../assets';
-import { Avatar, Box, Button, Grid, Link, Typography } from '../../materials';
-function BlankView({
+import { Avatar, Grid, Typography, Box } from '../../materials';
+import LinkButton from './LinkButton';
+const BlankView = ({
+  NoDataIcon,
   showAddButton,
   addButtonText,
   addButtonUrl,
   title,
   classes
-}) {
+}) => {
   return (
     <Grid container direction="column" justify="center" alignItems="center">
-      <Grid item alignItems="center">
-        <Grid item alignItems="center">
+      <Grid item>
+        <Grid item>
           <Avatar src={NoDataIcon} className={classes.viewPlaceholderImg} />
         </Grid>
-        <Grid item alignItems="center">
+        <Grid item>
           <Typography
             gutterBottom
             variant="h6"
@@ -27,23 +28,23 @@ function BlankView({
           </Typography>
         </Grid>
       </Grid>
-      <Grid item alignItems="center">
-        <Box display="flex" justifyContent="flex-end">
-          <Link
-            to={`${addButtonUrl}/document`}
-            style={{ textDecoration: 'none' }}
-          >
-            <Button className={classes.submit} variant="contained">
-              {addButtonText}
-            </Button>
-          </Link>
-        </Box>
-      </Grid>
+      {showAddButton && (
+        <Grid item>
+          <Box display="flex" justifyContent="flex-end">
+            <LinkButton
+              buttonUrl={addButtonUrl}
+              buttonText={addButtonText}
+              buttonClass={classes.submit}
+            />
+          </Box>
+        </Grid>
+      )}
     </Grid>
   );
-}
+};
 
 BlankView.propTypes = {
+  NoDataIcon: PropTypes.any,
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   showAddButton: PropTypes.bool.isRequired,

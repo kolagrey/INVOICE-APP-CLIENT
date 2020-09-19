@@ -19,12 +19,7 @@ import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableCell from './EnhancedTableCell';
 import ActionTableCell from './ActionTableCell';
 
-const Results = ({
-  classes,
-  customers,
-  listConfig,
-  updateAlertDialogState
-}) => {
+const Results = ({ classes, data, listConfig }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
@@ -44,7 +39,7 @@ const Results = ({
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = customers.map((n) => n.name);
+      const newSelecteds = data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -83,7 +78,7 @@ const Results = ({
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, customers.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
     <Paper>
@@ -100,6 +95,8 @@ const Results = ({
           aria-label="enhanced table"
         >
           <EnhancedTableHead
+            showAction={listConfig.showAction}
+            showCheckbox={listConfig.showCheckbox}
             headCells={listConfig.headCells}
             classes={classes}
             numSelected={selected.length}
@@ -107,10 +104,10 @@ const Results = ({
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={customers.length}
+            rowCount={data.length}
           />
           <TableBody>
-            {stableSort(customers, getComparator(order, orderBy))
+            {stableSort(data, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 const isItemSelected = isSelected(row.name);
@@ -122,46 +119,46 @@ const Results = ({
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.name}
+                    key={row.email}
                     selected={isItemSelected}
                   >
-                    <TableCell
-                      padding="checkbox"
-                      onClick={(event) => handleClick(event, row.name)}
-                    >
-                      <Checkbox
-                        checked={isItemSelected}
-                        inputProps={{ 'aria-labelledby': labelId }}
-                      />
-                    </TableCell>
+                    {listConfig.showCheckbox && (
+                      <TableCell
+                        padding="checkbox"
+                        onClick={(event) => handleClick(event, row.name)}
+                      >
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </TableCell>
+                    )}
                     {listConfig.headCells.map((cell) => {
+                      const fieldValue = row[cell.id] ? row[cell.id] : '';
                       return (
                         <EnhancedTableCell
                           key={`${row.id}-${randomKey()}`}
                           className={classes.avatar}
-                          fieldValue={
-                            cell.label === 'Location'
-                              ? `${row.address.city}, ${row.address.state}, ${row.address.country}`
-                              : row[cell.id]
-                          }
+                          fieldValue={fieldValue}
                           fieldName={cell.label}
                           fieldInitials={
-                            cell.label === 'Avatar'
-                              ? row.name
+                            row.firstName && row.lastName
+                              ? `${row.firstName} ${row.lastName}`
                               : 'Not Applicable'
                           }
                         />
                       );
                     })}
-                    <ActionTableCell
-                      canEdit={listConfig.canEdit}
-                      canDelete={listConfig.canDelete}
-                      editId={row.id}
-                      editUrl={listConfig.editUrl}
-                      viewAction={listConfig.canView}
-                      deleteAction={listConfig.deleteAction}
-                      updateAlertDialogState={updateAlertDialogState}
-                    ></ActionTableCell>
+                    {listConfig.showAction && (
+                      <ActionTableCell
+                        canEdit={listConfig.canEdit}
+                        canDelete={listConfig.canDelete}
+                        documentId={row.id}
+                        editUrl={listConfig.editUrl}
+                        viewUrl={listConfig.viewUrl}
+                        deleteAction={listConfig.deleteAction}
+                      ></ActionTableCell>
+                    )}
                   </TableRow>
                 );
               })}
@@ -176,7 +173,7 @@ const Results = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={customers.length}
+        count={data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
@@ -188,9 +185,8 @@ const Results = ({
 
 Results.propTypes = {
   classes: PropTypes.object.isRequired,
-  customers: PropTypes.array.isRequired,
-  listConfig: PropTypes.object.isRequired,
-  updateAlertDialogState: PropTypes.func
+  data: PropTypes.array.isRequired,
+  listConfig: PropTypes.object.isRequired
 };
 
 export default Results;

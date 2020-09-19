@@ -1,14 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Button,
-  TextField,
-  InputAdornment,
-  SvgIcon
-} from '../../../materials';
+import { Box, TextField, InputAdornment, SvgIcon } from '../../../materials';
 import { Search as SearchIcon } from 'react-feather';
-import { Link } from 'react-router-dom';
+import LinkButton from '../LinkButton';
 
 const SearchToolbar = ({
   classes,
@@ -17,17 +11,15 @@ const SearchToolbar = ({
   addButtonUrl
 }) => {
   return (
-    <div>
+    <React.Fragment>
       <Box display="flex" justifyContent="flex-end">
-        <Link
-          to={`${addButtonUrl}/document`}
-          style={{ textDecoration: 'none' }}
-        >
-          <Button className={classes.submit} variant="contained">
-            {addButtonText}
-          </Button>
-        </Link>
+        <LinkButton
+          buttonUrl={addButtonUrl}
+          buttonText={addButtonText}
+          buttonClass={classes.submit}
+        />
       </Box>
+
       <Box mt={3}>
         <Box maxWidth={500}>
           <TextField
@@ -46,7 +38,7 @@ const SearchToolbar = ({
           />
         </Box>
       </Box>
-    </div>
+    </React.Fragment>
   );
 };
 
