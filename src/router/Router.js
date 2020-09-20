@@ -17,6 +17,9 @@ const ShopPage = lazy(() => import('../views/shop/ShopPage'));
 const ShopForm = lazy(() => import('../views/shop/ShopForm'));
 
 const UsersPage = lazy(() => import('../views/user/UsersPage'));
+const UserPage = lazy(() => import('../views/user/UserPage'));
+const UserForm = lazy(() => import('../views/user/UserForm'));
+
 const InvoicesPage = lazy(() => import('../views/invoice/InvoicesPage'));
 const ReceiptsPage = lazy(() => import('../views/receipt/ReceiptsPage'));
 const SettingsPage = lazy(() => import('../views/settings/SettingsPage'));
@@ -121,6 +124,7 @@ const AppRouter = (props) => {
               </RouteGaurd>
               {/* SHOP ROUTES ENDS */}
 
+              {/* USER ROUTES STARTS*/}
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
@@ -130,6 +134,28 @@ const AppRouter = (props) => {
               >
                 <UsersPage classes={classes} />
               </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/user/:id"
+              >
+                <UserPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/user/:action/:id"
+              >
+                <UserForm classes={classes} />
+              </RouteGaurd>
+              {/* USER ROUTES ENDS*/}
+
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}

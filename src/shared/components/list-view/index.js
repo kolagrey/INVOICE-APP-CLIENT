@@ -14,6 +14,7 @@ const ListView = React.memo(
             searchPlaceholder={listConfig.searchPlaceholder}
             addButtonUrl={listConfig.addButtonUrl}
             addButtonText={listConfig.addButtonText}
+            searchAction={listConfig.searchAction}
           />
         )}
         <Box mt={3}>

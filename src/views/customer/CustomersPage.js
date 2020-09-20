@@ -23,6 +23,24 @@ const CustomersPage = ({
   // Use Data Hook
   const [data, loading] = useData(CUSTOMERS_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filterDocument = (doc) => {
+    const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
+    const emailSearchText = doc.email.toLowerCase();
+    const telephoneSearchText = doc.telephone.toLowerCase();
+    const operatorSearchText = doc.operatorName.toLowerCase();
+    const operatorTelephoneSearchText = doc.operatorTelephone.toLowerCase();
+    return searchQuery.length === 0
+      ? true
+      : emailSearchText.includes(searchQuery.toLowerCase()) ||
+          telephoneSearchText.includes(searchQuery.toLowerCase()) ||
+          operatorSearchText.includes(searchQuery.toLowerCase()) ||
+          nameSearchText.includes(searchQuery.toLowerCase()) ||
+          operatorSearchText.includes(searchQuery.toLowerCase()) ||
+          operatorTelephoneSearchText.includes(searchQuery.toLowerCase());
+  };
+
   const deleteDocument = (documentId) => {
     updateAlertState(true);
     setDocumentId(documentId);
@@ -77,7 +95,7 @@ const CustomersPage = ({
     showAddButton: true,
     filterAction: () => {},
     deleteAction: deleteDocument,
-    searchAction: () => {},
+    searchAction: setSearchQuery,
     editUrl: '/dashboard/customer/edit',
     viewUrl: '/dashboard/customer',
     addButtonText: 'Add Customer',
@@ -99,7 +117,7 @@ const CustomersPage = ({
       {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={data}
+          data={data.filter(filterDocument)}
           classes={classes}
           listConfig={listConfig}
         />

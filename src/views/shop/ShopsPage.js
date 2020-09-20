@@ -18,6 +18,21 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
   // Use Data Hook
   const [data, loading] = useData(SHOPS_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filterDocument = (doc) => {
+    const shopSearchText = doc.shopNumber.toLowerCase();
+    const rentValueSearchText = doc.rentValue.toLowerCase();
+    const noteSearchText = doc.note.toLowerCase();
+    const availabilitySearchText = doc.availability.toLowerCase();
+    return searchQuery.length === 0
+      ? true
+      : shopSearchText.includes(searchQuery.toLowerCase()) ||
+          rentValueSearchText.includes(searchQuery.toLowerCase()) ||
+          noteSearchText.includes(searchQuery.toLowerCase()) ||
+          availabilitySearchText.includes(searchQuery.toLowerCase());
+  };
+
   const deleteDocument = (documentId) => {
     updateAlertState(true);
     setDocumentId(documentId);
@@ -71,7 +86,7 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
     showAddButton: true,
     filterAction: () => {},
     deleteAction: deleteDocument,
-    searchAction: () => {},
+    searchAction: setSearchQuery,
     editUrl: '/dashboard/shop/edit',
     viewUrl: '/dashboard/shop',
     addButtonText: 'Add Shop',
@@ -83,7 +98,7 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}
-        title={'Delete Customer?'}
+        title={'Delete Shop?'}
         body={'Are you sure you wany to delete this shop?'}
         okAction={confirmDeleteDocument}
         okText={'Yes, Delete'}
@@ -93,7 +108,7 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
       {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={data}
+          data={data.filter(filterDocument)}
           classes={classes}
           listConfig={listConfig}
         />
