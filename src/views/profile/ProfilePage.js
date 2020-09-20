@@ -5,8 +5,8 @@ import { Grid } from '../../materials';
 import Page from '../../shared/components/Page';
 
 import { formatFullName } from '../../shared/utils';
-import Profile from './components/Profile';
-import ProfileDetails from './components/ProfileDetails';
+import Profile from '../../shared/components/user-profile/Profile';
+import ProfileDetails from '../../shared/components/user-profile/ProfileDetails';
 
 import profileActions from '../../redux/actions/profile';
 import sharedAction from '../../redux/actions/shared';

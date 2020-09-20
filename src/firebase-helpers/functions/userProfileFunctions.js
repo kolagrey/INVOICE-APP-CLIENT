@@ -35,10 +35,12 @@ export const updateUserProfileAvatar = async (payload) => {
     const user = new UserAvatar(payload).sanitize();
     const currentUser = auth().currentUser;
     const { id, file, fileName } = user.credentials;
-    const uploadTask = await storage.ref(`${STORAGE_URL}/${fileName}`).put(file);
+    const uploadTask = await storage
+      .ref(`${STORAGE_URL}/${fileName}`)
+      .put(file);
     const avatarUrl = await (await uploadTask.task).ref.getDownloadURL();
 
-    await db.collection('userProfiles').doc(id).set(
+    await db.collection(USER_PROFILES_COLLECTION).doc(id).set(
       {
         avatar: avatarUrl
       },

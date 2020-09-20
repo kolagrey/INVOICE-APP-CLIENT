@@ -1,5 +1,19 @@
-import { auth } from '../../services/firebase';
-import { UserAuth } from '../../models/User';
+import { auth, fbf } from '../../services/firebase';
+import { UserAccount, UserAuth } from '../../models/User';
+import { CREATE_USER } from '../constants/functionsTypes';
+
+// Create New User
+export const createUser = async (payload) => {
+  try {
+    const user = new UserAccount(payload).sanitize();
+    const updateAdminProfile = fbf.httpsCallable(CREATE_USER);
+    const response = await updateAdminProfile(user.credentials);
+    return response.data;
+  } catch (error) {
+    // TODO: Log error to crash analytics
+    return { error };
+  }
+};
 
 // User Sign Up
 export const signUp = async (payload = {}) => {

@@ -6,6 +6,7 @@ import LinkButton from '../LinkButton';
 
 const SearchToolbar = ({
   classes,
+  searchAction,
   searchPlaceholder,
   addButtonText,
   addButtonUrl
@@ -33,6 +34,7 @@ const SearchToolbar = ({
                 </InputAdornment>
               )
             }}
+            onChange={(e) => searchAction(e.target.value)}
             placeholder={searchPlaceholder}
             variant="outlined"
           />
@@ -45,6 +47,7 @@ const SearchToolbar = ({
 SearchToolbar.propTypes = {
   className: PropTypes.string,
   searchPlaceholder: PropTypes.string,
+  searchAction: PropTypes.func,
   addButtonUrl: PropTypes.string,
   addButtonText: PropTypes.string
 };

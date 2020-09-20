@@ -29,8 +29,8 @@ function CustomerPage({ classes, updateTitle }) {
   }, [updateTitle]);
 
   useEffect(() => {
-    const customerDocRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
-    customerDocRef.get().then((documentDoc) => {
+    const documentRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
+    documentRef.get().then((documentDoc) => {
       setState(documentDoc.data());
     });
   }, [documentId]);
