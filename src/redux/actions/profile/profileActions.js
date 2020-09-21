@@ -1,11 +1,17 @@
-import { SET_USER_PROFILE, PROFILE_LOADING, CLEAR_PROFILE_ERROR, SET_USER_PROFILE_AVATAR } from '../../action-types';
+import {
+  SET_USER_PROFILE,
+  PROFILE_LOADING,
+  CLEAR_PROFILE_ERROR,
+  SET_USER_PROFILE_AVATAR
+} from '../../action-types';
 import { dispatcher } from '../action.helper';
 import {
   getProfile,
   updateUserProfile,
   updateUserProfileAvatar
 } from '../../../firebase-helpers/functions/userProfileFunctions';
-import { UserProfile, UserAvatar } from '../../../models/User';
+import { UserProfile } from '../../../models/User';
+import { Avatar } from '../../../models/Avatar';
 
 export const setUserProfile = (data) => async (dispatch) => {
   dispatcher(dispatch, SET_USER_PROFILE, {
@@ -57,7 +63,7 @@ export const updateProfileAvatar = (payload) => async (dispatch) => {
     success: false
   });
   try {
-    const userAvatar = new UserAvatar(payload).sanitize();
+    const userAvatar = new Avatar(payload).sanitize();
     const avatarUrl = await updateUserProfileAvatar(userAvatar.credentials);
     dispatcher(dispatch, SET_USER_PROFILE_AVATAR, {
       data: avatarUrl,
