@@ -9,6 +9,7 @@ import { Router, history } from './router';
 import { auth } from './services/firebase';
 import authActions from './redux/actions/auth';
 import profileActions from './redux/actions/profile';
+import { getSettings } from './redux/actions/settings/settingsActions';
 
 const { logOutUser } = authActions;
 const { getUserProfile } = profileActions;
@@ -39,6 +40,7 @@ class App extends React.Component {
       if (!user) {
         await this.props.logOut();
       } else {
+        this.props.getCompanySettings();
         await this.props.getUserProfile(user.uid);
         history.push('/dashboard');
       }
@@ -65,7 +67,8 @@ class App extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     logOut: () => dispatch(logOutUser()),
-    getUserProfile: (id) => dispatch(getUserProfile(id))
+    getUserProfile: (id) => dispatch(getUserProfile(id)),
+    getCompanySettings: () => dispatch(getSettings())
   };
 };
 
