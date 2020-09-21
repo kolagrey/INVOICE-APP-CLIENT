@@ -21,6 +21,9 @@ const UserPage = lazy(() => import('../views/user/UserPage'));
 const UserForm = lazy(() => import('../views/user/UserForm'));
 
 const InvoicesPage = lazy(() => import('../views/invoice/InvoicesPage'));
+const InvoicePage = lazy(() => import('../views/invoice/InvoicePage'));
+const InvoiceForm = lazy(() => import('../views/invoice/InvoiceForm'));
+
 const ReceiptsPage = lazy(() => import('../views/receipt/ReceiptsPage'));
 const SettingsPage = lazy(() => import('../views/settings/SettingsPage'));
 const ProfilePage = lazy(() => import('../views/profile/ProfilePage'));
@@ -156,7 +159,9 @@ const AppRouter = (props) => {
               </RouteGaurd>
               {/* USER ROUTES ENDS*/}
 
+              {/* INVOICE ROUTE STARTS */}
               <RouteGaurd
+                exact
                 Route={Route}
                 Redirect={Redirect}
                 isAuthenticated={isAuthenticated}
@@ -165,6 +170,28 @@ const AppRouter = (props) => {
               >
                 <InvoicesPage classes={classes} />
               </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/invoice/:id"
+              >
+                <InvoicePage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/invoice/:action/:id"
+              >
+                <InvoiceForm classes={classes} />
+              </RouteGaurd>
+              {/* INVOICE ROUTES ENDS*/}
+
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
