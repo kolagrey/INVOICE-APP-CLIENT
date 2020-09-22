@@ -9,5 +9,6 @@ const present = {
 };
 
 module.exports = {
-  present
+  present,
+  moment
 };
