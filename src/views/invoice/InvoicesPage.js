@@ -29,7 +29,7 @@ const InvoicesPage = ({
     const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
     const invoiceNumberSearchText = doc.invoiceNumber.toLowerCase();
     const shopNumberSearchText = doc.shopNumber.toLowerCase();
-    const accountPaymentSearchText = doc.accountPayment.toLowerCase();
+    const accountPaymentSearchText = doc.paymentAccount.toLowerCase();
     return searchQuery.length === 0
       ? true
       : invoiceNumberSearchText.includes(searchQuery.toLowerCase()) ||
@@ -60,56 +60,43 @@ const InvoicesPage = ({
         id: 'invoiceNumber',
         numeric: false,
         disablePadding: true,
-        label: 'Invoice Number'
+        label: 'Invoice'
       },
       {
-        id: 'firstName',
+        id: 'customerFirstName',
         numeric: false,
         disablePadding: true,
-        label: 'Owner Firstname'
+        label: 'Firstname'
       },
       {
-        id: 'lastName',
+        id: 'customerLastName',
         numeric: false,
         disablePadding: true,
-        label: 'Owner Lastname'
+        label: 'Lastname'
       },
       {
-        id: 'item',
-        numeric: true,
+        id: 'invoiceItem',
+        numeric: false,
         disablePadding: false,
         label: 'Item'
       },
       {
-        id: 'description',
+        id: 'unitCost',
         numeric: false,
         disablePadding: false,
-        label: 'Description'
-      },
-      {
-        id: 'unitPrice',
-        numeric: false,
-        disablePadding: false,
-        label: 'Unit Price'
+        label: 'Unit Cost'
       },
       {
         id: 'duration',
         numeric: false,
         disablePadding: false,
-        label: 'Duration'
+        label: 'Duration (YR)'
       },
       {
-        id: 'totalPrice',
-        numeric: true,
+        id: 'totalCost',
+        numeric: false,
         disablePadding: false,
-        label: 'Total'
-      },
-      { id: 'vat', numeric: true, disablePadding: false, label: 'VAT' },
-      {
-        id: 'grandTotal',
-        numeric: true,
-        disablePadding: false,
-        label: 'GrandTotal'
+        label: 'Total Cost'
       }
     ],
     showSearchToolbar: true,

@@ -40,6 +40,44 @@ export class UserProfile {
   }
 }
 
+export class InvoiceCustomer {
+  constructor({
+    firstName,
+    lastName,
+    email,
+    companyName,
+    address,
+    city,
+    state,
+    country,
+    telephone
+  }) {
+    this.customerFirstName = firstName || '';
+    this.customerLastName = lastName || '';
+    this.customerEmail = email || '';
+    this.customerCompanyName = companyName || '';
+    this.customerAddress = address || '';
+    this.customerCity = city || '';
+    this.customerState = state || '';
+    this.customerCountry = country || '';
+    this.customerTelephone = telephone || '';
+  }
+
+  get credentials() {
+    return {
+      customerFirstName: this.customerFirstName,
+      customerLastName: this.customerLastName,
+      customerEmail: this.customerEmail,
+      customerCompanyName: this.customerCompanyName,
+      customerAddress: this.customerAddress,
+      customerCity: this.customerCity,
+      customerState: this.customerState,
+      customerCountry: this.customerCountry,
+      customerTelephone: this.customerTelephone
+    };
+  }
+}
+
 export class UserAccount {
   constructor({ firstName, email, password, role = '' }) {
     this.firstName = firstName;
