@@ -11,14 +11,23 @@ import useData from '../../shared/hooks/useData';
 import { SHOPS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
+import { useSnackbar } from 'notistack';
+import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
-const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
+const ShopsPage = ({
+  classes,
+  updateTitle,
+  showDialog,
+  updateAlertState,
+  user
+}) => {
   // Use Data Hook
   const [data, loading] = useData(SHOPS_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
     const shopSearchText = doc.shopNumber.toLowerCase();
@@ -40,7 +49,10 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
 
   const confirmDeleteDocument = () => {
     const customerDocRef = db.collection(SHOPS_COLLECTION).doc(documentId);
-    customerDocRef.delete().then(() => updateAlertState(false));
+    customerDocRef.delete().then(() => {
+      updateAlertState(false);
+      enqueueSnackbar('Shop deleted successfully!', { variant: 'success' });
+    });
   };
 
   useEffect(() => {
@@ -78,10 +90,11 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
     ],
     showSearchToolbar: true,
     showCheckbox: true,
-    showAction: true,
-    canEdit: true,
-    canDelete: true,
-    canCreate: true,
+    showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canView: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canEdit: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canDelete: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canCreate: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     showFilter: false,
     showAddButton: true,
     filterAction: () => {},
@@ -130,7 +143,8 @@ const ShopsPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
 
 const mapStateToProps = (state) => {
   return {
-    showDialog: state.shared.dialogState
+    showDialog: state.shared.dialogState,
+    user: state.profile.user
   };
 };
 

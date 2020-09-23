@@ -11,10 +11,13 @@ import useData from '../../shared/hooks/useData';
 import { INVOICES_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
+import { useSnackbar } from 'notistack';
+import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
 const InvoicesPage = ({
+  user,
   classes,
   updateTitle,
   showDialog,
@@ -24,6 +27,7 @@ const InvoicesPage = ({
   const [data, loading] = useData(INVOICES_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
     const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
@@ -45,7 +49,10 @@ const InvoicesPage = ({
 
   const confirmDeleteDocument = () => {
     const documentDocRef = db.collection(INVOICES_COLLECTION).doc(documentId);
-    documentDocRef.delete().then(() => updateAlertState(false));
+    documentDocRef.delete().then(() => {
+      updateAlertState(false);
+      enqueueSnackbar('Invoice deleted successfully!', { variant: 'success' });
+    });
   };
 
   useEffect(() => {
@@ -101,10 +108,11 @@ const InvoicesPage = ({
     ],
     showSearchToolbar: true,
     showCheckbox: true,
-    showAction: true,
-    canEdit: true,
-    canDelete: true,
-    canCreate: true,
+    showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canView: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canEdit: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canDelete: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canCreate: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     showFilter: false,
     showAddButton: true,
     filterAction: () => {},
@@ -153,6 +161,7 @@ const InvoicesPage = ({
 
 const mapStateToProps = (state) => {
   return {
+    user: state.profile.user,
     showDialog: state.shared.dialogState
   };
 };

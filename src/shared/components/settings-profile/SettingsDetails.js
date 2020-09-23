@@ -21,6 +21,8 @@ const SettingsDetails = (props) => {
     id: data.id,
     companyName: data.companyName,
     vat: data.vat,
+    telephone: data.telephone ? data.telephone : '',
+    email: data.email ? data.email : '',
     address: data.address,
     city: data.city,
     state: data.state,
@@ -97,6 +99,36 @@ const SettingsDetails = (props) => {
                 id="address"
                 label="Address"
                 name="address"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                fullWidth
+                label="Email Address"
+                name="email"
+                margin="normal"
+                value={record.email}
+                validators={['required']}
+                errorMessages={['Email is required']}
+                onChange={onInputChange}
+                variant="outlined"
+                id="email"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.telephone}
+                onChange={onInputChange}
+                validators={['required']}
+                errorMessages={['Telephone is required']}
+                type="tel"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="telephone"
+                label="Telephone"
+                name="telephone"
               />
             </Grid>
             <Grid item md={6} xs={12}>

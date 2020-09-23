@@ -5,6 +5,8 @@ import {
   SelectValidator
 } from 'react-material-ui-form-validator';
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 import { createUser } from '../../firebase-helpers/functions/authFunctions';
 import { USER_PROFILES_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 
@@ -25,17 +27,18 @@ import Page from '../../shared/components/Page';
 import { EDIT } from '../../shared/constants';
 import { UserProfile } from '../../models/User';
 
-function UserForm(props) {
+const UserForm = (props) => {
   const { classes } = props;
   const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [state, setState] = useState({
-    staffId: '',
     firstName: '',
     lastName: '',
     email: '',
     telephone: '',
+    password: '',
     role: ''
   });
 
@@ -65,10 +68,10 @@ function UserForm(props) {
     try {
       // Generate Default Password
       const newDocumentData = payload;
-      newDocumentData.password = '123456';
 
       // Create User Account
       const response = await createUser(newDocumentData);
+      console.log({ response });
 
       // Create User Profile
       const { uid } = response;
@@ -76,9 +79,11 @@ function UserForm(props) {
       newDocumentData.id = uid;
       const newUserProfile = new UserProfile(newDocumentData).sanitize();
       await newDocumentRef.set(newUserProfile.credentials);
+      enqueueSnackbar('User created successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -90,9 +95,11 @@ function UserForm(props) {
         .doc(documentId);
       const customerData = { ...payload };
       await customoreRef.set(customerData);
+      enqueueSnackbar('User saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -107,6 +114,7 @@ function UserForm(props) {
       setLoading(false);
     } catch (error) {
       // TODO: Use error logging strategy
+      enqueueSnackbar(error.message, { variant: 'error' });
       setLoading(false);
       console.log(error);
     }
@@ -125,22 +133,6 @@ function UserForm(props) {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  value={state.staffId}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Staf ID is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="staffId"
-                  label="Staff ID"
-                  name="staffId"
-                />
-              </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
                   value={state.firstName}
@@ -177,6 +169,7 @@ function UserForm(props) {
               <Grid item md={6} xs={12}>
                 <TextValidator
                   fullWidth
+                  disabled={action === EDIT}
                   label="Email Address"
                   name="email"
                   margin="normal"
@@ -216,11 +209,29 @@ function UserForm(props) {
                   name="role"
                 >
                   <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="Manager">Manager</MenuItem>
                   <MenuItem value="Invoicing">Invoicing</MenuItem>
-                  <MenuItem value="Receipting">Receipting</MenuItem>
                   <MenuItem value="Viewing">Viewing</MenuItem>
                 </SelectValidator>
               </Grid>
+              {action !== EDIT && (
+                <Grid item md={6} xs={12}>
+                  <TextValidator
+                    value={state.password}
+                    onChange={onInputChange}
+                    validators={['required']}
+                    errorMessages={['Temp password is required']}
+                    type="password"
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="password"
+                    label="Temporary Password"
+                    name="password"
+                  />
+                </Grid>
+              )}
             </Grid>
           </CardContent>
           <Divider />
@@ -240,6 +251,6 @@ function UserForm(props) {
       </ValidatorForm>
     </Page>
   );
-}
+};
 
 export default UserForm;

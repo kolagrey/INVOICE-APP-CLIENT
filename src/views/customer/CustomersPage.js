@@ -11,6 +11,8 @@ import useData from '../../shared/hooks/useData';
 import { CUSTOMERS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
+import { useSnackbar } from 'notistack';
+import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
@@ -18,17 +20,19 @@ const CustomersPage = ({
   classes,
   updateTitle,
   showDialog,
-  updateAlertState
+  updateAlertState,
+  user
 }) => {
   // Use Data Hook
   const [data, loading] = useData(CUSTOMERS_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
-    const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
-    const emailSearchText = doc.email.toLowerCase();
-    const telephoneSearchText = doc.telephone.toLowerCase();
+    const nameSearchText = `${doc.customerFirstName} ${doc.customerLastName}`.toLowerCase();
+    const emailSearchText = doc.customerEmail.toLowerCase();
+    const telephoneSearchText = doc.customerTelephone.toLowerCase();
     const operatorSearchText = doc.operatorName.toLowerCase();
     const operatorTelephoneSearchText = doc.operatorTelephone.toLowerCase();
     return searchQuery.length === 0
@@ -48,7 +52,10 @@ const CustomersPage = ({
 
   const confirmDeleteDocument = () => {
     const documentDocRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
-    documentDocRef.delete().then(() => updateAlertState(false));
+    documentDocRef.delete().then(() => {
+      updateAlertState(false);
+      enqueueSnackbar('Invoice deleted successfully!', { variant: 'success' });
+    });
   };
 
   useEffect(() => {
@@ -66,33 +73,45 @@ const CustomersPage = ({
         label: 'Avatar'
       },
       {
-        id: 'firstName',
+        id: 'customerFirstName',
         numeric: false,
         disablePadding: true,
         label: 'Firstname'
       },
       {
-        id: 'lastName',
+        id: 'customerLastName',
         numeric: false,
         disablePadding: true,
         label: 'Lastname'
       },
       {
-        id: 'email',
+        id: 'customerEmail',
         numeric: true,
         disablePadding: false,
         label: 'Email'
       },
-      { id: 'telephone', numeric: false, disablePadding: false, label: 'Phone' }
+      {
+        id: 'customerTelephone',
+        numeric: false,
+        disablePadding: false,
+        label: 'Phone'
+      },
+      {
+        id: 'customerCity',
+        numeric: false,
+        disablePadding: false,
+        label: 'Location'
+      }
     ],
     showSearchToolbar: true,
     showCheckbox: true,
-    showAction: true,
-    canEdit: true,
-    canDelete: true,
-    canCreate: true,
+    showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canView: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canEdit: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canDelete: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canCreate: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     showFilter: false,
-    showAddButton: true,
+    showAddButton: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     filterAction: () => {},
     deleteAction: deleteDocument,
     searchAction: setSearchQuery,
@@ -139,7 +158,8 @@ const CustomersPage = ({
 
 const mapStateToProps = (state) => {
   return {
-    showDialog: state.shared.dialogState
+    showDialog: state.shared.dialogState,
+    user: state.profile.user
   };
 };
 

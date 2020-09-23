@@ -22,7 +22,8 @@ const ProfileDetails = (props) => {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
-    telephone: user.telephone
+    telephone: user.telephone,
+    role: user.role
   });
 
   const onInputChange = (event) => {

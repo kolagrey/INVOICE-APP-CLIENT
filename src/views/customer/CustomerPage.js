@@ -19,11 +19,13 @@ import { db } from '../../services/firebase';
 import BlankView from '../../shared/components/BlankView';
 import ListView from '../../shared/components/list-view';
 import Page from '../../shared/components/Page';
-import useData from '../../shared/hooks/useData';
 
 function CustomerPage({ classes, updateTitle }) {
   const { id: documentId } = useParams();
   const [state, setState] = useState({});
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     updateTitle('Customer');
   }, [updateTitle]);
@@ -32,11 +34,19 @@ function CustomerPage({ classes, updateTitle }) {
     const documentRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
     documentRef.get().then((documentDoc) => {
       setState(documentDoc.data());
+      setLoading(false);
     });
   }, [documentId]);
 
-  // Use Data Hook
-  const [data, loading] = useData(INVOICES_COLLECTION, useState);
+  useEffect(() => {
+    const documentRef = db
+      .collection(INVOICES_COLLECTION)
+      .where('customerId', '==', documentId);
+    documentRef.get().then((querySnapshot) => {
+      const dataList = querySnapshot.docs.map((doc) => doc.data());
+      setInvoices(dataList);
+    });
+  }, [documentId]);
 
   const listConfig = {
     title: 'Invoices',
@@ -75,38 +85,69 @@ function CustomerPage({ classes, updateTitle }) {
   return (
     <Page title="Invoice App | Customer">
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={4} lg={4}>
           <Card>
             <List>
               <ListItem>
-                <ListItemText primary="Company" secondary={state.companyName} />
+                <ListItemText
+                  primary="Company"
+                  secondary={state.customerCompanyName}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Email" secondary={state.email} />
+                <ListItemText primary="Email" secondary={state.customerEmail} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Telephone" secondary={state.telephone} />
+                <ListItemText
+                  primary="Telephone"
+                  secondary={state.customerTelephone}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Shop Count" secondary="2" />
+                <ListItemText primary="Shop Count" secondary="0" />
               </ListItem>
             </List>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={4} lg={4}>
+          <Card>
+            {' '}
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="Address"
+                  secondary={state.customerAddress}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="City" secondary={state.customerCity} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="State" secondary={state.customerState} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Country"
+                  secondary={state.customerCountry}
+                />
+              </ListItem>
+            </List>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4} lg={4}>
           <Card>
             {' '}
             <List>
               <ListItem>
                 <ListItemText
                   primary="Owner Firstname"
-                  secondary={state.firstName}
+                  secondary={state.customerFirstName}
                 />
               </ListItem>
               <ListItem>
                 <ListItemText
                   primary="Owner Lastname"
-                  secondary={state.lastName}
+                  secondary={state.customerLastName}
                 />
               </ListItem>
               <ListItem>
@@ -127,8 +168,12 @@ function CustomerPage({ classes, updateTitle }) {
         <Grid item xs={12} md={12} lg={12}>
           {loading ? (
             <LinearProgress />
-          ) : data.length ? (
-            <ListView data={data} classes={classes} listConfig={listConfig} />
+          ) : invoices.length ? (
+            <ListView
+              data={invoices}
+              classes={classes}
+              listConfig={listConfig}
+            />
           ) : (
             <BlankView
               NoDataIcon={NoDataIcon}

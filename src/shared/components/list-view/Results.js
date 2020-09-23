@@ -152,6 +152,7 @@ const Results = ({ classes, data, listConfig }) => {
                     })}
                     {listConfig.showAction && (
                       <ActionTableCell
+                        canView={listConfig.canView}
                         canEdit={listConfig.canEdit}
                         canDelete={listConfig.canDelete}
                         documentId={row.id}

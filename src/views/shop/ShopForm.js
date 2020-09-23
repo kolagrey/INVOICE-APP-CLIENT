@@ -7,6 +7,7 @@ import {
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { SHOPS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
+import { useSnackbar } from 'notistack';
 
 import {
   Button,
@@ -24,10 +25,11 @@ import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { EDIT } from '../../shared/constants';
 
-function ShopsForm(props) {
+const ShopsForm = (props) => {
   const { classes, user } = props;
   const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [state, setState] = useState({
     createdBy: user.id,
@@ -63,9 +65,11 @@ function ShopsForm(props) {
       const newDocumentData = payload;
       newDocumentData.id = newDocumentRef.id;
       await newDocumentRef.set(newDocumentData);
+      enqueueSnackbar('Shop created successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -75,9 +79,11 @@ function ShopsForm(props) {
       const customoreRef = db.collection(SHOPS_COLLECTION).doc(documentId);
       const customerData = { ...payload };
       await customoreRef.set(customerData);
+      enqueueSnackbar('Shop saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -92,6 +98,7 @@ function ShopsForm(props) {
       setLoading(false);
     } catch (error) {
       // TODO: Use error logging strategy
+      enqueueSnackbar(error.message, { variant: 'error' });
       setLoading(false);
       console.log(error);
     }
@@ -200,7 +207,7 @@ function ShopsForm(props) {
       </ValidatorForm>
     </Page>
   );
-}
+};
 
 const mapStateToProps = (state) => {
   return {

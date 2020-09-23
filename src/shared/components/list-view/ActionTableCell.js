@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 
 const ActionTableCell = ({
+  canView,
   canEdit,
   canDelete,
   documentId,
@@ -19,11 +20,13 @@ const ActionTableCell = ({
   return (
     <TableCell align="right">
       <Box display="flex" justifyContent="flex-end">
-        <Link to={`${viewUrl}/${documentId}`}>
-          <IconButton aria-label="view">
-            <ViewIcon color="primary" />
-          </IconButton>
-        </Link>
+        {canView && (
+          <Link to={`${viewUrl}/${documentId}`}>
+            <IconButton aria-label="view">
+              <ViewIcon color="primary" />
+            </IconButton>
+          </Link>
+        )}
         {canEdit && (
           <Link to={`${editUrl}/${documentId}`}>
             <IconButton aria-label="edit">
@@ -45,6 +48,7 @@ const ActionTableCell = ({
 };
 
 ActionTableCell.propTypes = {
+  canView: PropTypes.bool,
   canEdit: PropTypes.bool,
   canDelete: PropTypes.bool,
   documentId: PropTypes.string,

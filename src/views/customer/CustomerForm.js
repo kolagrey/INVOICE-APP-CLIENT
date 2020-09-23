@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 import { CUSTOMERS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 
 import {
@@ -19,18 +21,23 @@ import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { EDIT } from '../../shared/constants';
 
-function CustomerForm(props) {
+const CustomerForm = (props) => {
   const { classes, user } = props;
   const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [state, setState] = useState({
     createdBy: user.id,
-    firstName: '',
-    lastName: '',
-    email: '',
-    companyName: '',
-    telephone: '',
+    customerFirstName: '',
+    customerLastName: '',
+    customerEmail: '',
+    customerCompanyName: '',
+    customerTelephone: '',
+    customerAddress: '',
+    customerCity: '',
+    customerState: '',
+    customerCountry: '',
     operatorName: '',
     operatorTelephone: ''
   });
@@ -63,9 +70,11 @@ function CustomerForm(props) {
       const newDocumentData = payload;
       newDocumentData.id = newDocumentRef.id;
       await newDocumentRef.set(newDocumentData);
+      enqueueSnackbar('Customer saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -75,9 +84,11 @@ function CustomerForm(props) {
       const customoreRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
       const customerData = { ...payload };
       await customoreRef.set(customerData);
+      enqueueSnackbar('Customer saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -93,6 +104,7 @@ function CustomerForm(props) {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -112,7 +124,7 @@ function CustomerForm(props) {
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.firstName}
+                  value={state.customerFirstName}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Firstname is required']}
@@ -121,15 +133,15 @@ function CustomerForm(props) {
                   margin="normal"
                   required
                   fullWidth
-                  id="firstName"
+                  id="customerFirstName"
                   label="Firstname"
-                  name="firstName"
+                  name="customerFirstName"
                   autoFocus
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.lastName}
+                  value={state.customerLastName}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Lastname is required']}
@@ -138,14 +150,14 @@ function CustomerForm(props) {
                   margin="normal"
                   required
                   fullWidth
-                  id="lastName"
+                  id="customerLastName"
                   label="Lastname"
-                  name="lastName"
+                  name="customerLastName"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.companyName}
+                  value={state.customerCompanyName}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Company name is required']}
@@ -154,28 +166,28 @@ function CustomerForm(props) {
                   margin="normal"
                   required
                   fullWidth
-                  id="companyName"
+                  id="customerCompanyName"
                   label="Company Name"
-                  name="companyName"
+                  name="customerCompanyName"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
                   fullWidth
                   label="Email Address"
-                  name="email"
+                  name="customerEmail"
                   margin="normal"
-                  value={state.email}
+                  value={state.customerEmail}
                   validators={['required']}
                   errorMessages={['Email is required']}
                   onChange={onInputChange}
                   variant="outlined"
-                  id="email"
+                  id="customerEmail"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.telephone}
+                  value={state.customerTelephone}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Telephone is required']}
@@ -184,9 +196,73 @@ function CustomerForm(props) {
                   margin="normal"
                   required
                   fullWidth
-                  id="telephone"
+                  id="customerTelephone"
                   label="Telephone"
-                  name="telephone"
+                  name="customerTelephone"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerAddress}
+                  onChange={onInputChange}
+                  validators={['required']}
+                  errorMessages={['Address is required']}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="customerAddress"
+                  label="Address"
+                  name="customerAddress"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerCity}
+                  onChange={onInputChange}
+                  validators={['required']}
+                  errorMessages={['City is required']}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="customerCity"
+                  label="City"
+                  name="customerCity"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerState}
+                  onChange={onInputChange}
+                  validators={['required']}
+                  errorMessages={['State is required']}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="customerState"
+                  label="State"
+                  name="customerState"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerCountry}
+                  onChange={onInputChange}
+                  validators={['required']}
+                  errorMessages={['Country is required']}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="customerCountry"
+                  label="Country"
+                  name="customerCountry"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
@@ -240,7 +316,7 @@ function CustomerForm(props) {
       </ValidatorForm>
     </Page>
   );
-}
+};
 
 const mapStateToProps = (state) => {
   return {
