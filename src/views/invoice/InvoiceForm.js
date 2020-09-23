@@ -6,6 +6,7 @@ import {
 } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 import {
   IDS_TRACKER_COLLECTION,
@@ -33,10 +34,12 @@ import { db, fb } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { EDIT, INVOICE_PREFIX } from '../../shared/constants';
 
-function InvoiceForm(props) {
+const InvoiceForm = (props) => {
   const { classes, user } = props;
   const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [options, setOptions] = useState({
     customers: [],
@@ -229,9 +232,11 @@ function InvoiceForm(props) {
       const newDocumentData = finalPayload;
       newDocumentData.id = newDocumentRef.id;
       await newDocumentRef.set(newDocumentData);
+      enqueueSnackbar('Invoice created successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -250,9 +255,11 @@ function InvoiceForm(props) {
       const customoreRef = db.collection(INVOICES_COLLECTION).doc(documentId);
       const customerData = { ...finalPayload };
       await customoreRef.set(customerData);
+      enqueueSnackbar('Invoice saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -268,6 +275,7 @@ function InvoiceForm(props) {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
+      enqueueSnackbar(error.message, { variant: 'error' });
       console.log(error);
     }
   };
@@ -304,7 +312,7 @@ function InvoiceForm(props) {
                       {options.customers.map((customer) => {
                         return (
                           <MenuItem key={customer.id} value={customer.id}>
-                            {customer.companyName}
+                            {customer.customerCompanyName}
                           </MenuItem>
                         );
                       })}
@@ -463,7 +471,7 @@ function InvoiceForm(props) {
       </ValidatorForm>
     </Page>
   );
-}
+};
 
 const mapStateToProps = (state) => {
   return {

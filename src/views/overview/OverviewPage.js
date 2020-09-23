@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import sharedAction from '../../redux/actions/shared';
-import TableCard from '../../shared/components/TableCard';
+/* import TableCard from '../../shared/components/TableCard'; */
 import Page from '../../shared/components/Page';
 import {
   Grid,
   useTheme,
-  colors,
-  AccountBalanceIcon,
-  Typography
+  colors
+  /*  AccountBalanceIcon,
+  Typography */
 } from '../../materials';
 
 import SummaryCard from './components/SummaryCard';
@@ -91,44 +91,6 @@ const OverviewPage = (props) => {
     }
   };
 
-  const tableData = [
-    {
-      invoiceID: '0001',
-      description: 'What a wonderful invoice',
-      quantity: 1,
-      unitCost: 500000,
-      totalCost: 500000
-    },
-    {
-      invoiceID: '0002',
-      description: 'What a wonderful invoice',
-      quantity: 1,
-      unitCost: 500000,
-      totalCost: 500000
-    },
-    {
-      invoiceID: '0003',
-      description: 'What a wonderful invoice',
-      quantity: 1,
-      unitCost: 500000,
-      totalCost: 500000
-    },
-    {
-      invoiceID: '0004',
-      description: 'What a wonderful invoice',
-      quantity: 1,
-      unitCost: 500000,
-      totalCost: 500000
-    },
-    {
-      invoiceID: '0005',
-      description: 'What a wonderful invoice',
-      quantity: 1,
-      unitCost: 500000,
-      totalCost: 500000
-    }
-  ];
-
   useEffect(() => {
     updateTitle('Overview');
     window.scrollTo(0, 0);
@@ -142,14 +104,14 @@ const OverviewPage = (props) => {
           <Grid item xs={12} md={3} lg={3}>
             <SummaryCard
               classes={classes}
-              title={'Tenants'}
+              title={'Customers'}
               value={summary.users}
             />
           </Grid>
           <Grid item xs={12} md={3} lg={3}>
             <SummaryCard
               classes={classes}
-              title={'Properties'}
+              title={'Shops'}
               value={summary.bounties}
             />
           </Grid>
@@ -174,7 +136,7 @@ const OverviewPage = (props) => {
               classes={classes}
             />
           </Grid>
-          <Grid item lg={12} md={12} xl={12} xs={12}>
+          {/*    <Grid item lg={12} md={12} xl={12} xs={12}>
             <Typography color="textPrimary" variant="h4">
               {'Most Recent Receipts'}
             </Typography>
@@ -183,7 +145,7 @@ const OverviewPage = (props) => {
               classes={classes}
               defaultIcon={AccountBalanceIcon}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Page>
     </React.Fragment>

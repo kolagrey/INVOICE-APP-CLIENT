@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useSnackbar } from 'notistack';
+
 import Page from '../../shared/components/Page';
 import ListView from '../../shared/components/list-view';
 
@@ -11,14 +13,22 @@ import useData from '../../shared/hooks/useData';
 import { USER_PROFILES_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
+import { ADMIN_ROLE } from '../../shared/constants';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
-const UsersPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
+const UsersPage = ({
+  classes,
+  updateTitle,
+  showDialog,
+  updateAlertState,
+  user
+}) => {
   // Use Data Hook
   const [data, loading] = useData(USER_PROFILES_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
     const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
@@ -42,7 +52,10 @@ const UsersPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
     const documentDocRef = db
       .collection(USER_PROFILES_COLLECTION)
       .doc(documentId);
-    documentDocRef.delete().then(() => updateAlertState(false));
+    documentDocRef.delete().then(() => {
+      updateAlertState(false);
+      enqueueSnackbar('Shop deleted successfully!', { variant: 'success' });
+    });
   };
 
   useEffect(() => {
@@ -87,12 +100,13 @@ const UsersPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
     ],
     showSearchToolbar: true,
     showCheckbox: true,
-    showAction: true,
-    canEdit: true,
-    canDelete: true,
-    canCreate: true,
+    showAction: user.role === ADMIN_ROLE,
+    canView: user.role === ADMIN_ROLE,
+    canEdit: user.role === ADMIN_ROLE,
+    canDelete: user.role === ADMIN_ROLE,
+    canCreate: user.role === ADMIN_ROLE,
     showFilter: false,
-    showAddButton: true,
+    showAddButton: user.role === ADMIN_ROLE,
     filterAction: () => {},
     deleteAction: deleteDocument,
     searchAction: setSearchQuery,
@@ -139,7 +153,8 @@ const UsersPage = ({ classes, updateTitle, showDialog, updateAlertState }) => {
 
 const mapStateToProps = (state) => {
   return {
-    showDialog: state.shared.dialogState
+    showDialog: state.shared.dialogState,
+    user: state.profile.user
   };
 };
 

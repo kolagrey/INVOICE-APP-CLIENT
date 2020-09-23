@@ -1,15 +1,6 @@
 export class UserProfile {
-  constructor({
-    id,
-    staffId,
-    firstName,
-    lastName,
-    email,
-    telephone = '',
-    role = ''
-  }) {
+  constructor({ id, firstName, lastName, email, telephone = '', role = '' }) {
     this.id = id;
-    this.staffId = staffId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -19,7 +10,6 @@ export class UserProfile {
 
   sanitize() {
     if (!this.id) throw new Error('id property is required');
-    if (!this.staffId) throw new Error('staffId property is required');
     if (!this.firstName) throw new Error('firstName property is required');
     if (!this.lastName) throw new Error('lastName property is required');
     if (!this.email) throw new Error('email property is required');
@@ -30,7 +20,6 @@ export class UserProfile {
   get credentials() {
     return {
       id: this.id,
-      staffId: this.staffId,
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
@@ -42,25 +31,25 @@ export class UserProfile {
 
 export class InvoiceCustomer {
   constructor({
-    firstName,
-    lastName,
-    email,
-    companyName,
-    address,
-    city,
-    state,
-    country,
-    telephone
+    customerFirstName,
+    customerLastName,
+    customerEmail,
+    customerCompanyName,
+    customerAddress,
+    customerCity,
+    customerState,
+    customerCountry,
+    customerTelephone
   }) {
-    this.customerFirstName = firstName || '';
-    this.customerLastName = lastName || '';
-    this.customerEmail = email || '';
-    this.customerCompanyName = companyName || '';
-    this.customerAddress = address || '';
-    this.customerCity = city || '';
-    this.customerState = state || '';
-    this.customerCountry = country || '';
-    this.customerTelephone = telephone || '';
+    this.customerFirstName = customerFirstName || '';
+    this.customerLastName = customerLastName || '';
+    this.customerEmail = customerEmail || '';
+    this.customerCompanyName = customerCompanyName || '';
+    this.customerAddress = customerAddress || '';
+    this.customerCity = customerCity || '';
+    this.customerState = customerState || '';
+    this.customerCountry = customerCountry || '';
+    this.customerTelephone = customerTelephone || '';
   }
 
   get credentials() {
