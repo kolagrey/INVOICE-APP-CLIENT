@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+/* import { Link } from 'react-router-dom'; */
 import PropTypes from 'prop-types';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -113,9 +113,9 @@ const LoginForm = (props) => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/forgot-password" variant="body2">
+                {/* <Link to="/forgot-password" variant="body2">
                   Forgot password?
-                </Link>
+                </Link> */}
               </Grid>
               <Grid item>
                 {/*                 <Link to="/register" variant="body2">
