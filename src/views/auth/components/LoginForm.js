@@ -118,9 +118,9 @@ const LoginForm = (props) => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link to="/register" variant="body2">
+                {/*                 <Link to="/register" variant="body2">
                   Create an account
-                </Link>
+                </Link> */}
               </Grid>
             </Grid>
             <Box mt={5}>
@@ -133,7 +133,6 @@ const LoginForm = (props) => {
   );
 };
 
-
 LoginForm.propTypes = {
   classes: PropTypes.object,
   authenticateUser: PropTypes.func,
@@ -143,4 +142,4 @@ LoginForm.propTypes = {
   loading: PropTypes.bool
 };
 
-export default  LoginForm;
+export default LoginForm;

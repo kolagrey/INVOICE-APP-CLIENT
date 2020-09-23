@@ -30,7 +30,7 @@ const ProfilePage = lazy(() => import('../views/profile/ProfilePage'));
 const ReportPage = lazy(() => import('../views/report/ReportPage'));
 const DashboardPage = lazy(() => import('../views/DashboardPage'));
 const LoginPage = lazy(() => import('../views/auth/LoginPage'));
-const RegistrationPage = lazy(() => import('../views/auth/RegistrationPage'));
+// const RegistrationPage = lazy(() => import('../views/auth/RegistrationPage'));
 const NoMatch = lazy(() => import('../views/error/NoMatch'));
 
 const AppRouter = (props) => {
@@ -47,7 +47,7 @@ const AppRouter = (props) => {
           <LoginPage classes={classes} />
         </Route>
         <Route exact path="/register">
-          <RegistrationPage classes={classes} />
+          <LoginPage classes={classes} />
         </Route>
         <Route path="/dashboard">
           <DashboardPage classes={classes} theme={theme}>
