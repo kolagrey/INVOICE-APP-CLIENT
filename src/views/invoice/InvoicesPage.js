@@ -91,19 +91,19 @@ const InvoicesPage = ({
         id: 'unitCost',
         numeric: false,
         disablePadding: false,
-        label: 'Unit Cost'
+        label: 'Charge'
       },
       {
         id: 'duration',
         numeric: false,
         disablePadding: false,
-        label: 'Duration (YR)'
+        label: 'Duration'
       },
       {
         id: 'totalCost',
         numeric: false,
         disablePadding: false,
-        label: 'Total Cost'
+        label: 'Total'
       }
     ],
     showSearchToolbar: true,

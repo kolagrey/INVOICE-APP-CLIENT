@@ -27,6 +27,12 @@ const SettingsDetails = (props) => {
     city: data.city,
     state: data.state,
     country: data.country,
+    serviceChargeActiveDiscount: data.serviceChargeActiveDiscount
+      ? data.serviceChargeActiveDiscount
+      : 0,
+    serviceChargeInActiveDiscount: data.serviceChargeInActiveDiscount
+      ? data.serviceChargeInActiveDiscount
+      : 0,
     receiptNote: data.receiptNote ? data.receiptNote : '',
     invoiceNote: data.invoiceNote ? data.invoiceNote : ''
   });
@@ -217,8 +223,42 @@ const SettingsDetails = (props) => {
                 required
                 fullWidth
                 id="vat"
-                label="V.A.T"
+                label="V.A.T (%)"
                 name="vat"
+              />
+            </Grid>
+
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.serviceChargeActiveDiscount}
+                onChange={onInputChange}
+                type="number"
+                variant="outlined"
+                margin="normal"
+                validators={['required']}
+                errorMessages={['Active discount is required']}
+                required
+                fullWidth
+                id="serviceChargeActiveDiscount"
+                label="Active Discount (%)"
+                name="serviceChargeActiveDiscount"
+              />
+            </Grid>
+
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.serviceChargeInActiveDiscount}
+                onChange={onInputChange}
+                type="number"
+                variant="outlined"
+                margin="normal"
+                validators={['required']}
+                errorMessages={['In Active discount is required']}
+                required
+                fullWidth
+                id="serviceChargeInActiveDiscount"
+                label="In Active Discount (%)"
+                name="serviceChargeInActiveDiscount"
               />
             </Grid>
           </Grid>

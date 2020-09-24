@@ -35,18 +35,46 @@ function ShopPage({ updateTitle }) {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary="Rent Value"
-                  secondary={state.rentValue}
+                  primary="Service Charge"
+                  secondary={state.serviceCharge}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Base Service Charge"
+                  secondary={state.baseServiceCharge}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Shop Units"
+                  secondary={state.shopUnits}
+                />
+              </ListItem>
+            </List>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={6}>
+          <Card>
+            <List>
+              <ListItem>
+                <ListItemText primary="Occupant" secondary={state.customer} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Shop Status"
+                  secondary={state.shopStatus}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Availability"
+                  secondary={state.availability}
                 />
               </ListItem>
               <ListItem>
                 <ListItemText primary="Note" secondary={state.note} />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Shop Availability"
-                  secondary={state.availability ? 'Available' : 'Not Available'}
-                />
               </ListItem>
             </List>
           </Card>

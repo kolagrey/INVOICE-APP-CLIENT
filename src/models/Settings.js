@@ -9,6 +9,8 @@ export class Settings {
     this.city = settings.city;
     this.state = settings.state;
     this.country = settings.country;
+    this.serviceChargeActiveDiscount = settings.serviceChargeActiveDiscount;
+    this.serviceChargeInActiveDiscount = settings.serviceChargeInActiveDiscount;
     this.invoiceNote = settings.invoiceNote;
     this.receiptNote = settings.receiptNote;
   }
@@ -23,6 +25,10 @@ export class Settings {
     if (!this.city) throw new Error('city property is required');
     if (!this.state) throw new Error('state property is required');
     if (!this.country) throw new Error('country property is required');
+    if (!this.serviceChargeActiveDiscount)
+      throw new Error('active discount property is required');
+    if (!this.serviceChargeInActiveDiscount)
+      throw new Error('in active discount property is required');
     return this;
   }
 
@@ -38,7 +44,9 @@ export class Settings {
       state: this.state,
       country: this.country,
       invoiceNote: this.invoiceNote,
-      receiptNote: this.receiptNote
+      receiptNote: this.receiptNote,
+      serviceChargeActiveDiscount: this.serviceChargeActiveDiscount,
+      serviceChargeInActiveDiscount: this.serviceChargeInActiveDiscount
     };
   }
 }
