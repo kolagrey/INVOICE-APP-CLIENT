@@ -31,13 +31,11 @@ const ShopsPage = ({
 
   const filterDocument = (doc) => {
     const shopSearchText = doc.shopNumber.toLowerCase();
-    const rentValueSearchText = doc.rentValue.toLowerCase();
     const noteSearchText = doc.note.toLowerCase();
     const availabilitySearchText = doc.availability.toLowerCase();
     return searchQuery.length === 0
       ? true
       : shopSearchText.includes(searchQuery.toLowerCase()) ||
-          rentValueSearchText.includes(searchQuery.toLowerCase()) ||
           noteSearchText.includes(searchQuery.toLowerCase()) ||
           availabilitySearchText.includes(searchQuery.toLowerCase());
   };
@@ -70,22 +68,22 @@ const ShopsPage = ({
         label: 'Shop Number'
       },
       {
-        id: 'rentValue',
+        id: 'serviceCharge',
         numeric: false,
         disablePadding: true,
-        label: 'Rent Value'
+        label: 'Service Charge'
       },
       {
-        id: 'note',
+        id: 'shopUnits',
         numeric: false,
         disablePadding: false,
-        label: 'Note'
+        label: 'Shop Units'
       },
       {
-        id: 'availability',
+        id: 'shopStatus',
         numeric: false,
         disablePadding: false,
-        label: 'Availability'
+        label: 'Shop Status'
       }
     ],
     showSearchToolbar: true,

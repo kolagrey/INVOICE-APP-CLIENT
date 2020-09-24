@@ -226,7 +226,9 @@ const useStyles = (makeStyles) =>
     alignItemCenter: {
       alignItems: 'center'
     },
-    card: {},
+    card: {
+      marginBottom: theme.spacing(2)
+    },
     container: {
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4)

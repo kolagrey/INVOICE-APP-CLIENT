@@ -3,6 +3,7 @@ import { getChartData } from './chartHelper';
 import { getTotal, k_formatter, formatFullName } from './componentHelper';
 import { present, moment } from './time.utils';
 import getInitials from './getInitials';
+import currencyFormatter from './currencyFormatter';
 import { getComparator, stableSort, descendingComparator } from './sortUtils';
 
 export {
@@ -16,5 +17,6 @@ export {
   getInitials,
   getComparator,
   stableSort,
-  descendingComparator
+  descendingComparator,
+  currencyFormatter
 };

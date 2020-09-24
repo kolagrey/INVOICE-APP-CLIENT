@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ValidatorForm,
   TextValidator,
@@ -32,7 +32,8 @@ import { InvoiceCustomer } from '../../models/User';
 import { history } from '../../router';
 import { db, fb } from '../../services/firebase';
 import Page from '../../shared/components/Page';
-import { EDIT, INVOICE_PREFIX } from '../../shared/constants';
+import { EDIT, INVOICE_PREFIX, SETTINGS_ID } from '../../shared/constants';
+import { currencyFormatter } from '../../shared/utils';
 
 const InvoiceForm = (props) => {
   const { classes, user } = props;
@@ -42,7 +43,7 @@ const InvoiceForm = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [options, setOptions] = useState({
-    customers: [],
+    customer: {},
     shops: [],
     nextInvoiceId: 0,
     unitCost: 0,
@@ -93,6 +94,22 @@ const InvoiceForm = (props) => {
     note: ''
   });
 
+  const getCustomerInformation = useMemo(
+    () => (customerId) => {
+      const documentDocRef = db
+        .collection(CUSTOMERS_COLLECTION)
+        .doc(customerId);
+      documentDocRef.get().then((documentDoc) => {
+        const documentData = documentDoc.data();
+        setOptions((prevState) => ({
+          ...prevState,
+          customer: new InvoiceCustomer(documentData)
+        }));
+      });
+    },
+    []
+  );
+
   useEffect(() => {
     if (action === EDIT) {
       const documentDocRef = db.collection(INVOICES_COLLECTION).doc(documentId);
@@ -105,21 +122,6 @@ const InvoiceForm = (props) => {
       });
     }
   }, [action, documentId]);
-
-  useEffect(() => {
-    const _customers = [];
-    db.collection(CUSTOMERS_COLLECTION)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          _customers.push(doc.data());
-        });
-        setOptions((prevState) => ({
-          ...prevState,
-          customers: _customers
-        }));
-      });
-  }, []);
 
   useEffect(() => {
     const _shops = [];
@@ -150,7 +152,7 @@ const InvoiceForm = (props) => {
 
   useEffect(() => {
     db.collection(SETTINGS_COLLECTION)
-      .doc('WFwkJiAaJWrAQ4kbYrTv')
+      .doc(SETTINGS_ID)
       .get()
       .then((doc) => {
         setOptions((prevState) => ({
@@ -168,34 +170,28 @@ const InvoiceForm = (props) => {
     const _shops = [...options.shops];
     const _shop = _shops.filter((shop) => shop.id === state.shopId);
     if (_shop.length) {
-      const { rentValue, shopNumber } = _shop[0];
-      const totalCost = +rentValue * state.duration;
+      const { serviceCharge, shopNumber, customerId } = _shop[0];
+      const totalCost = +serviceCharge * state.duration;
       const vat = +options.settings.vat;
       const vatValue = (vat / 100) * totalCost;
       setOptions((prevState) => ({
         ...prevState,
         shopNumber: shopNumber,
-        unitCost: +rentValue,
+        unitCost: +serviceCharge,
         vat: vat,
         vatValue: vatValue,
         totalCost: totalCost,
         grandTotal: totalCost + vatValue
       }));
+      getCustomerInformation(customerId);
     }
-  }, [state.duration, state.shopId, options.shops, options.settings.vat]);
-
-  useEffect(() => {
-    const _customer = options.customers.filter((doc) => {
-      return doc.id === state.customerId;
-    });
-    if (_customer.length) {
-      const invoiceCustomer = new InvoiceCustomer(_customer[0]);
-      setState((prevState) => ({
-        ...prevState,
-        ...invoiceCustomer.credentials
-      }));
-    }
-  }, [options.customers, state.customerId]);
+  }, [
+    state.duration,
+    state.shopId,
+    options.shops,
+    options.settings.vat,
+    getCustomerInformation
+  ]);
 
   const onInputChange = (event) => {
     const { name, value } = event.target;
@@ -208,6 +204,17 @@ const InvoiceForm = (props) => {
   const createDocument = async (payload) => {
     const finalPayload = {
       ...payload,
+
+      customerFirstName: options.customer.customerFirstName,
+      customerLastName: options.customer.customerLastName,
+      customerEmail: options.customer.customerEmail,
+      customerCompanyName: options.customer.customerCompanyName,
+      customerAddress: options.customer.customerAddress,
+      customerCity: options.customer.customerCity,
+      customerState: options.customer.customerState,
+      customerCountry: options.customer.customerCountry,
+      customerTelephone: options.customer.customerTelephone,
+
       companyAddress: options.settings.address,
       companyCity: options.settings.city,
       companyCountry: options.settings.country,
@@ -298,29 +305,6 @@ const InvoiceForm = (props) => {
                   <Grid item md={6} xs={12}>
                     <SelectValidator
                       fullWidth
-                      validators={['required']}
-                      errorMessages={['Customer is required']}
-                      required
-                      margin="normal"
-                      variant="outlined"
-                      label="Customer"
-                      value={state.customerId}
-                      onChange={onInputChange}
-                      id="customerId"
-                      name="customerId"
-                    >
-                      {options.customers.map((customer) => {
-                        return (
-                          <MenuItem key={customer.id} value={customer.id}>
-                            {customer.customerCompanyName}
-                          </MenuItem>
-                        );
-                      })}
-                    </SelectValidator>
-                  </Grid>
-                  <Grid item md={6} xs={12}>
-                    <SelectValidator
-                      fullWidth
                       required
                       validators={['required']}
                       errorMessages={['Shop Number is required']}
@@ -347,15 +331,15 @@ const InvoiceForm = (props) => {
                 <TextValidator
                   fullWidth
                   type="number"
-                  label="Duration (Years)"
+                  label="Duration (Months)"
                   name="duration"
                   margin="normal"
                   value={state.duration}
-                  validators={['required', 'minNumber:1', 'maxNumber:5']}
+                  validators={['required', 'minNumber:1', 'maxNumber:12']}
                   errorMessages={[
                     'Duration is required',
-                    'Minimum duration is 1year',
-                    'Maximum duration is 5years'
+                    'Minimum duration is 1month',
+                    'Maximum duration is 12months'
                   ]}
                   onChange={onInputChange}
                   variant="outlined"
@@ -451,7 +435,7 @@ const InvoiceForm = (props) => {
 
           <Box display="flex" justifyContent="flex-end" p={2}>
             <Typography variant="h5" component="h5">
-              NGN{options.totalCost}.00
+              NGN{currencyFormatter(options.totalCost)}
             </Typography>
           </Box>
           <Divider />
