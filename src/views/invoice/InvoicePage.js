@@ -145,7 +145,7 @@ const InvoicePage = ({ classes }) => {
                     marginBottom: 30
                   }}
                 >
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <div style={{ textAlign: 'left' }}>
                       <div>Invoice Date</div>
                       <div>
@@ -153,7 +153,7 @@ const InvoicePage = ({ classes }) => {
                       </div>
                     </div>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <div style={{ textAlign: 'left' }}>
                       <div>Due Date</div>
                       <div>
@@ -161,7 +161,15 @@ const InvoicePage = ({ classes }) => {
                       </div>
                     </div>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
+                    <div style={{ textAlign: 'left' }}>
+                      <div>Shop Number</div>
+                      <div>
+                        <h4>{invoiceDocument.shopNumber}</h4>
+                      </div>
+                    </div>
+                  </Grid>
+                  <Grid item xs={3}>
                     <div style={{ textAlign: 'right' }}>
                       <div>Invoice Number</div>
                       <div>

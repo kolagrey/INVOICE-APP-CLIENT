@@ -1,5 +1,6 @@
 export const USER_PROFILES_COLLECTION = 'userProfiles';
 export const CUSTOMERS_COLLECTION = 'customers';
+export const BILLING_PROFILES_COLLECTION = 'billingProfiles';
 export const SHOPS_COLLECTION = 'shops';
 export const INVOICES_COLLECTION = 'invoices';
 export const RECEIPTS_COLLECTION = 'receipts';
