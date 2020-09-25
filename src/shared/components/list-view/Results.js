@@ -1,182 +1,194 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+
 import {
-  Avatar,
-  Box,
-  Card,
   Checkbox,
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TablePagination,
   TableRow,
-  Typography,
-  makeStyles
+  TableContainer,
+  Paper
 } from '../../../materials';
-import {getInitials} from '../../../shared/utils';
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  avatar: {
-    marginRight: theme.spacing(2)
-  }
-}));
+import { getComparator, stableSort } from '../../../shared/utils';
 
-const Results = ({ className, customers, ...rest }) => {
-  const classes = useStyles();
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(10);
+import EnhancedTableToolbar from './EnhancedTableToolbar';
+import EnhancedTableHead from './EnhancedTableHead';
+import EnhancedTableCell from './EnhancedTableCell';
+import ActionTableCell from './ActionTableCell';
+
+const Results = ({ classes, data, listConfig }) => {
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
-
-    if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
-    } else {
-      newSelectedCustomerIds = [];
-    }
-
-    setSelectedCustomerIds(newSelectedCustomerIds);
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
   };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+  const randomKey = () => {
+    const random = Math.random();
+    return random * 66666666666666;
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = data.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
+      newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelected(newSelected);
   };
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
-
-  const handlePageChange = (event, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const isSelected = (name) => selected.indexOf(name) !== -1;
+
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <PerfectScrollbar>
-        <Box minWidth={1050}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Email
-                </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Registration date
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {customers.slice(0, limit).map((customer) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
-                      value="true"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Avatar
-                        className={classes.avatar}
-                        src={customer.avatarUrl}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {customer.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {customer.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={customers.length}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
+    <Paper>
+      <EnhancedTableToolbar
+        numSelected={selected.length}
+        classes={classes}
+        tableTitle={listConfig.title}
+        showFilter={listConfig.showFilter}
       />
-    </Card>
+      <TableContainer>
+        <Table
+          aria-labelledby="tableTitle"
+          size={'medium'}
+          aria-label="enhanced table"
+        >
+          <EnhancedTableHead
+            showAction={listConfig.showAction}
+            showCheckbox={listConfig.showCheckbox}
+            headCells={listConfig.headCells}
+            classes={classes}
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={data.length}
+          />
+          <TableBody>
+            {stableSort(data, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                  >
+                    {listConfig.showCheckbox && (
+                      <TableCell
+                        padding="checkbox"
+                        onClick={(event) => handleClick(event, row.name)}
+                      >
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </TableCell>
+                    )}
+                    {listConfig.headCells.map((cell) => {
+                      const fieldValue = row[cell.id] ? row[cell.id] : '';
+                      const key = `${row.id}-${randomKey()}`;
+                      return (
+                        <EnhancedTableCell
+                          key={key}
+                          className={classes.avatar}
+                          fieldValue={fieldValue}
+                          fieldName={cell.label}
+                          fieldInitials={
+                            row.firstName && row.lastName
+                              ? `${row.firstName} ${row.lastName}`
+                              : 'Not Applicable'
+                          }
+                        />
+                      );
+                    })}
+                    {listConfig.showAction && (
+                      <ActionTableCell
+                        canView={listConfig.canView}
+                        canEdit={listConfig.canEdit}
+                        canDelete={listConfig.canDelete}
+                        documentId={row.id}
+                        editUrl={listConfig.editUrl}
+                        viewUrl={listConfig.viewUrl}
+                        deleteAction={listConfig.deleteAction}
+                      ></ActionTableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
   );
 };
 
 Results.propTypes = {
-  className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  classes: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  listConfig: PropTypes.object.isRequired
 };
 
 export default Results;

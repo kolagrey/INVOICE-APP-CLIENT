@@ -40,6 +40,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import { colors, useTheme } from '@material-ui/core';
 
@@ -50,8 +52,10 @@ export {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Container,
   SvgIcon,
+  InputAdornment,
   CircularProgress,
   LinearProgress,
   Avatar,

@@ -34,16 +34,19 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Card,
   CardContent,
   CardActions,
   CardHeader,
   colors,
   useTheme,
-  SvgIcon
+  SvgIcon,
+  InputAdornment
 } from './core';
 
 import {
+  SupervisedUserIcon,
   VerifiedUserIcon,
   AccountCircle,
   LockOutlinedIcon,
@@ -68,7 +71,8 @@ import {
   ArrowRightIcon,
   ArrowDownwardIcon,
   ArrowDropDownIcon,
-  PhotoCameraIcon
+  PhotoCameraIcon,
+  PeopleIcon
 } from './icons';
 
 export {
@@ -79,6 +83,7 @@ export {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Card,
   CardActions,
   CardContent,
@@ -86,6 +91,7 @@ export {
   colors,
   useTheme,
   SvgIcon,
+  InputAdornment,
   Container,
   CircularProgress,
   LinearProgress,
@@ -116,6 +122,8 @@ export {
   Divider,
   IconButton,
   // Icons
+  SupervisedUserIcon,
+  PeopleIcon,
   PhotoCameraIcon,
   ArrowRightIcon,
   ArrowDropDownIcon,

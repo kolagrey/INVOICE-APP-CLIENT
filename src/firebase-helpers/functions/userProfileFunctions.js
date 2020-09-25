@@ -2,7 +2,8 @@ import { fbf, auth, storage, db } from '../../services/firebase';
 import { UPDATE_ADMIN_PROFILE } from '../constants/functionsTypes';
 import { STORAGE_URL } from '../constants/storageTypes';
 import { USER_PROFILES_COLLECTION } from '../constants/collectionsTypes';
-import { UserProfile, UserAvatar } from '../../models/User';
+import { UserProfile } from '../../models/User';
+import { Avatar } from '../../models/Avatar';
 
 export const updateAdminProfile = async (payload) => {
   try {
@@ -32,13 +33,15 @@ export const updateUserProfile = async (payload) => {
 
 export const updateUserProfileAvatar = async (payload) => {
   try {
-    const user = new UserAvatar(payload).sanitize();
+    const user = new Avatar(payload).sanitize();
     const currentUser = auth().currentUser;
     const { id, file, fileName } = user.credentials;
-    const uploadTask = await storage.ref(`${STORAGE_URL}/${fileName}`).put(file);
+    const uploadTask = await storage
+      .ref(`${STORAGE_URL}/${fileName}`)
+      .put(file);
     const avatarUrl = await (await uploadTask.task).ref.getDownloadURL();
 
-    await db.collection('userProfiles').doc(id).set(
+    await db.collection(USER_PROFILES_COLLECTION).doc(id).set(
       {
         avatar: avatarUrl
       },
