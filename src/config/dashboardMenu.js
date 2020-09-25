@@ -1,3 +1,4 @@
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import {
   AccountBalanceWalletIcon,
   MoneyIcon,
@@ -21,6 +22,11 @@ const dashboardMenu = (state) => [
     text: 'Customers',
     icon: PeopleIcon,
     url: '/dashboard/customers'
+  },
+  {
+    text: 'Billing Profiles',
+    icon: AssignmentIndIcon,
+    url: '/dashboard/billings'
   },
   {
     text: 'Shops',

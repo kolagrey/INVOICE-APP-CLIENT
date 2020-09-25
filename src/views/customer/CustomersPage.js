@@ -54,7 +54,7 @@ const CustomersPage = ({
     const documentDocRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
     documentDocRef.delete().then(() => {
       updateAlertState(false);
-      enqueueSnackbar('Invoice deleted successfully!', { variant: 'success' });
+      enqueueSnackbar('Customer deleted successfully!', { variant: 'success' });
     });
   };
 

@@ -12,8 +12,8 @@ import {
   IDS_TRACKER_COLLECTION,
   CUSTOMERS_COLLECTION,
   INVOICES_COLLECTION,
-  SHOPS_COLLECTION,
-  SETTINGS_COLLECTION
+  SETTINGS_COLLECTION,
+  BILLING_PROFILES_COLLECTION
 } from '../../firebase-helpers/constants/collectionsTypes';
 
 import {
@@ -125,7 +125,7 @@ const InvoiceForm = (props) => {
 
   useEffect(() => {
     const _shops = [];
-    db.collection(SHOPS_COLLECTION)
+    db.collection(BILLING_PROFILES_COLLECTION)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -155,13 +155,15 @@ const InvoiceForm = (props) => {
       .doc(SETTINGS_ID)
       .get()
       .then((doc) => {
+        const docData = doc.data();
         setOptions((prevState) => ({
           ...prevState,
-          settings: doc.data()
+          settings: docData
         }));
         setState((prevState) => ({
           ...prevState,
-          note: doc.data().invoiceNote
+          paymentAccount: docData.paymentAccount,
+          note: docData.invoiceNote
         }));
       });
   }, []);
@@ -398,22 +400,6 @@ const InvoiceForm = (props) => {
                   id="invoiceDescription"
                   label="Invoice Description"
                   name="invoiceDescription"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  value={state.paymentAccount}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Payment account is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="paymentAccount"
-                  label="Payment Account"
-                  name="paymentAccount"
                 />
               </Grid>
               <Grid item md={6} xs={12}>

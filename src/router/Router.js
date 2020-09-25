@@ -12,6 +12,16 @@ const CustomersPage = lazy(() => import('../views/customer/CustomersPage'));
 const CustomerPage = lazy(() => import('../views/customer/CustomerPage'));
 const CustomerForm = lazy(() => import('../views/customer/CustomerForm'));
 
+const BillingProfilesPage = lazy(() =>
+  import('../views/billing/BillingProfilesPage')
+);
+const BillingProfilePage = lazy(() =>
+  import('../views/billing/BillingProfilePage')
+);
+const BillingProfileForm = lazy(() =>
+  import('../views/billing/BillingProfileForm')
+);
+
 const ShopsPage = lazy(() => import('../views/shop/ShopsPage'));
 const ShopPage = lazy(() => import('../views/shop/ShopPage'));
 const ShopForm = lazy(() => import('../views/shop/ShopForm'));
@@ -95,7 +105,39 @@ const AppRouter = (props) => {
               </RouteGaurd>
               {/* CUSTOMER ROUTES ENDS */}
 
-              {/* SHOP ROUTES STARTS*/}
+              {/* BILLING PROFILE ROUTES STARTS*/}
+              <RouteGaurd
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/billings"
+              >
+                <BillingProfilesPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/billing/:id"
+              >
+                <BillingProfilePage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                exact
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/billing/:action/:id"
+              >
+                <BillingProfileForm classes={classes} />
+              </RouteGaurd>
+              {/* BILLING PROFILE ROUTES ENDS */}
+
+              {/* SHOP PROFILE ROUTES STARTS*/}
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
@@ -125,7 +167,7 @@ const AppRouter = (props) => {
               >
                 <ShopForm classes={classes} />
               </RouteGaurd>
-              {/* SHOP ROUTES ENDS */}
+              {/* SHOP PROFILE ROUTES ENDS */}
 
               {/* USER ROUTES STARTS*/}
               <RouteGaurd

@@ -81,9 +81,9 @@ const CustomerForm = (props) => {
 
   const updateDocument = async (payload) => {
     try {
-      const customoreRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
+      const customorRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
       const customerData = { ...payload };
-      await customoreRef.set(customerData);
+      await customorRef.set(customerData);
       enqueueSnackbar('Customer saved successfully!', { variant: 'success' });
       history.goBack();
     } catch (error) {

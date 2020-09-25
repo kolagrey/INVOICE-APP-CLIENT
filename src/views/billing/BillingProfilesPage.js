@@ -8,7 +8,7 @@ import AlertDialog from '../../shared/components/AlertDialog';
 import BlankView from '../../shared/components/BlankView';
 import { CircularProgress } from '../../materials';
 import useData from '../../shared/hooks/useData';
-import { SHOPS_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
+import { BILLING_PROFILES_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
@@ -16,7 +16,7 @@ import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
-const CustomersPage = ({
+const ShopsPage = ({
   classes,
   updateTitle,
   showDialog,
@@ -24,16 +24,16 @@ const CustomersPage = ({
   user
 }) => {
   // Use Data Hook
-  const [data, loading] = useData(SHOPS_COLLECTION, useState);
+  const [data, loading] = useData(BILLING_PROFILES_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
-    const shopNumberSearchText = doc.shopNumber.toLowerCase();
+    const shopSearchText = doc.shopNumber.toLowerCase();
     return searchQuery.length === 0
       ? true
-      : shopNumberSearchText.includes(searchQuery.toLowerCase());
+      : shopSearchText.includes(searchQuery.toLowerCase());
   };
 
   const deleteDocument = (documentId) => {
@@ -42,20 +42,22 @@ const CustomersPage = ({
   };
 
   const confirmDeleteDocument = () => {
-    const documentDocRef = db.collection(SHOPS_COLLECTION).doc(documentId);
-    documentDocRef.delete().then(() => {
+    const customerDocRef = db
+      .collection(BILLING_PROFILES_COLLECTION)
+      .doc(documentId);
+    customerDocRef.delete().then(() => {
       updateAlertState(false);
       enqueueSnackbar('Shop deleted successfully!', { variant: 'success' });
     });
   };
 
   useEffect(() => {
-    updateTitle('Shops');
+    updateTitle('Billing Profiles');
   }, [updateTitle]);
 
   const listConfig = {
-    title: 'Shops',
-    searchPlaceholder: 'Search Shop',
+    title: 'Billing Profiles',
+    searchPlaceholder: 'Search Billing Profile',
     headCells: [
       {
         id: 'shopNumber',
@@ -64,9 +66,21 @@ const CustomersPage = ({
         label: 'Shop Number'
       },
       {
-        id: 'shopStatus',
+        id: 'serviceCharge',
         numeric: false,
         disablePadding: true,
+        label: 'Service Charge'
+      },
+      {
+        id: 'shopUnits',
+        numeric: false,
+        disablePadding: false,
+        label: 'Shop Units'
+      },
+      {
+        id: 'shopStatus',
+        numeric: false,
+        disablePadding: false,
         label: 'Shop Status'
       }
     ],
@@ -78,18 +92,18 @@ const CustomersPage = ({
     canDelete: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     canCreate: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     showFilter: false,
-    showAddButton: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    showAddButton: true,
     filterAction: () => {},
     deleteAction: deleteDocument,
     searchAction: setSearchQuery,
-    editUrl: '/dashboard/shop/edit',
-    viewUrl: '/dashboard/shop',
-    addButtonText: 'Add Shop',
-    addButtonUrl: '/dashboard/shop/new/document'
+    editUrl: '/dashboard/billing/edit',
+    viewUrl: '/dashboard/billing',
+    addButtonText: 'Add Billing Profile',
+    addButtonUrl: '/dashboard/billing/new/document'
   };
 
   return (
-    <Page title="Invoice App | Shops">
+    <Page title="Invoice App | Billing Profiles">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}
@@ -139,4 +153,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomersPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopsPage);

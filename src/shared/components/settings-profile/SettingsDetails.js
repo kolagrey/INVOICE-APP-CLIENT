@@ -27,6 +27,7 @@ const SettingsDetails = (props) => {
     city: data.city,
     state: data.state,
     country: data.country,
+    paymentAccount: data.paymentAccount ? data.paymentAccount : '',
     serviceChargeActiveDiscount: data.serviceChargeActiveDiscount
       ? data.serviceChargeActiveDiscount
       : 0,
@@ -34,7 +35,8 @@ const SettingsDetails = (props) => {
       ? data.serviceChargeInActiveDiscount
       : 0,
     receiptNote: data.receiptNote ? data.receiptNote : '',
-    invoiceNote: data.invoiceNote ? data.invoiceNote : ''
+    invoiceNote: data.invoiceNote ? data.invoiceNote : '',
+    baseServiceCharge: data.baseServiceCharge ? data.baseServiceCharge : 0
   });
 
   const onInputChange = (event) => {
@@ -187,6 +189,22 @@ const SettingsDetails = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextValidator
+                value={record.paymentAccount}
+                onChange={onInputChange}
+                validators={['required']}
+                errorMessages={['Payment details is required']}
+                type="text"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="paymentAccount"
+                label="Payment Bank Account"
+                name="paymentAccount"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextValidator
                 value={record.invoiceNote}
                 onChange={onInputChange}
                 type="text"
@@ -211,6 +229,28 @@ const SettingsDetails = (props) => {
                 name="receiptNote"
               />
             </Grid>
+
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.baseServiceCharge}
+                onChange={onInputChange}
+                validators={['required', 'minNumber:1000', 'maxNumber:1000000']}
+                errorMessages={[
+                  'Base service charge is required',
+                  'Base service charge must be greater than One Thousand',
+                  'Base service charge must be less than One Million'
+                ]}
+                type="tel"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="baseServiceCharge"
+                label="Base Service Charge"
+                name="baseServiceCharge"
+              />
+            </Grid>
+
             <Grid item md={6} xs={12}>
               <TextValidator
                 value={record.vat}
@@ -240,7 +280,7 @@ const SettingsDetails = (props) => {
                 required
                 fullWidth
                 id="serviceChargeActiveDiscount"
-                label="Active Discount (%)"
+                label="Functional Discount (%)"
                 name="serviceChargeActiveDiscount"
               />
             </Grid>
@@ -257,7 +297,7 @@ const SettingsDetails = (props) => {
                 required
                 fullWidth
                 id="serviceChargeInActiveDiscount"
-                label="In Active Discount (%)"
+                label="Non-Function Discount (%)"
                 name="serviceChargeInActiveDiscount"
               />
             </Grid>
