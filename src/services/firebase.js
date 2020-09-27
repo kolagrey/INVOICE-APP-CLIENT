@@ -5,7 +5,7 @@ import 'firebase/firestore';
 import 'firebase/functions';
 import 'firebase/storage';
 
-const env = 'development';
+const env = process.env.NODE_ENV;
 
 const config = {
   production: {

@@ -31,10 +31,14 @@ const InvoicesPage = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
-    const nameSearchText = doc.customerFullName.toLowerCase();
+    const nameSearchText = doc.customerFullName
+      ? doc.customerFullName.toLowerCase()
+      : doc.customerCompanyName.toLowerCase();
     const invoiceNumberSearchText = doc.invoiceNumber.toLowerCase();
     const shopNumberSearchText = doc.shopNumber.toLowerCase();
-    const accountPaymentSearchText = doc.bankName.toLowerCase();
+    const accountPaymentSearchText = doc.bankName
+      ? doc.bankName.toLowerCase()
+      : '';
     return searchQuery.length === 0
       ? true
       : invoiceNumberSearchText.includes(searchQuery.toLowerCase()) ||
