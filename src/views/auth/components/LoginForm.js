@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-/* import { Link } from 'react-router-dom'; */
 import PropTypes from 'prop-types';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import * as Sentry from '@sentry/react';
 import {
   Avatar,
   Button,
   CssBaseline,
-  FormControlLabel,
   CircularProgress,
-  Checkbox,
   Paper,
   Box,
   Grid,
@@ -38,11 +35,10 @@ const LoginForm = (props) => {
   const submitLogin = async (e) => {
     e.preventDefault();
     try {
-      localStorage.setItem('remember', state.remember);
       await authenticateUser(state);
     } catch (error) {
       // TODO: Use error logging strategy
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -90,17 +86,7 @@ const LoginForm = (props) => {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="remember"
-                  value={state.remember}
-                  onChange={onInputChange}
-                  color="primary"
-                />
-              }
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               disabled={props.loading}
@@ -111,18 +97,6 @@ const LoginForm = (props) => {
             >
               {!loading ? 'Sign In' : <CircularProgress />}
             </Button>
-            <Grid container>
-              <Grid item xs>
-                {/* <Link to="/forgot-password" variant="body2">
-                  Forgot password?
-                </Link> */}
-              </Grid>
-              <Grid item>
-                {/*                 <Link to="/register" variant="body2">
-                  Create an account
-                </Link> */}
-              </Grid>
-            </Grid>
             <Box mt={5}>
               <Copyright />
             </Box>

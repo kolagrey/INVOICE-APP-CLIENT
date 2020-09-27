@@ -13,10 +13,11 @@ import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
 import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
+import { currencyFormatter } from '../../shared/utils';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
-const ShopsPage = ({
+const BillingProfilesPage = ({
   classes,
   updateTitle,
   showDialog,
@@ -35,6 +36,15 @@ const ShopsPage = ({
       ? true
       : shopSearchText.includes(searchQuery.toLowerCase());
   };
+
+  const mapDocument = (doc) => {
+    // doc.serviceCharge = currencyFormatter(doc.serviceCharge);
+    const formattedServiceCharge = currencyFormatter(doc.serviceCharge);
+    doc.formattedServiceCharge = `NGN${formattedServiceCharge}`;
+    return doc;
+  };
+
+  const formattedData = data.map(mapDocument);
 
   const deleteDocument = (documentId) => {
     updateAlertState(true);
@@ -66,7 +76,7 @@ const ShopsPage = ({
         label: 'Shop Number'
       },
       {
-        id: 'serviceCharge',
+        id: 'formattedServiceCharge',
         numeric: false,
         disablePadding: true,
         label: 'Service Charge'
@@ -103,7 +113,7 @@ const ShopsPage = ({
   };
 
   return (
-    <Page title="Invoice App | Billing Profiles">
+    <Page title="Billing App | Billing Profiles">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}
@@ -117,7 +127,7 @@ const ShopsPage = ({
       {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={data.filter(filterDocument)}
+          data={formattedData.filter(filterDocument)}
           classes={classes}
           listConfig={listConfig}
         />
@@ -153,4 +163,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopsPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BillingProfilesPage);

@@ -19,12 +19,21 @@ import { db } from '../../services/firebase';
 import BlankView from '../../shared/components/BlankView';
 import ListView from '../../shared/components/list-view';
 import Page from '../../shared/components/Page';
+import { currencyFormatter } from '../../shared/utils';
 
 function CustomerPage({ classes, updateTitle }) {
   const { id: documentId } = useParams();
   const [state, setState] = useState({});
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const mapDocument = (doc) => {
+    const formattedTotalCost = currencyFormatter(doc.totalCost);
+    const formattedGrandTotal = currencyFormatter(doc.grandTotal);
+    doc.formattedTotalCost = `NGN${formattedTotalCost}`;
+    doc.formattedGrandTotal = `NGN${formattedGrandTotal}`;
+    return doc;
+  };
 
   useEffect(() => {
     updateTitle('Customer');
@@ -44,7 +53,8 @@ function CustomerPage({ classes, updateTitle }) {
       .where('customerId', '==', documentId);
     documentRef.get().then((querySnapshot) => {
       const dataList = querySnapshot.docs.map((doc) => doc.data());
-      setInvoices(dataList);
+      const formattedDataList = dataList.map(mapDocument);
+      setInvoices(formattedDataList);
     });
   }, [documentId]);
 
@@ -58,8 +68,8 @@ function CustomerPage({ classes, updateTitle }) {
         label: 'Invoice Number'
       },
       {
-        id: 'totalCost',
-        numeric: true,
+        id: 'formattedTotalCost',
+        numeric: false,
         disablePadding: false,
         label: 'Total Cost'
       },
@@ -67,11 +77,11 @@ function CustomerPage({ classes, updateTitle }) {
         id: 'vat',
         numeric: true,
         disablePadding: false,
-        label: 'VAT'
+        label: 'VAT (%)'
       },
       {
-        id: 'grandTotal',
-        numeric: true,
+        id: 'formattedGrandTotal',
+        numeric: false,
         disablePadding: false,
         label: 'Grand Total'
       }
@@ -83,28 +93,67 @@ function CustomerPage({ classes, updateTitle }) {
   };
 
   return (
-    <Page title="Invoice App | Customer">
+    <Page title="Billing App | Customer">
       <Grid container spacing={3}>
         <Grid item xs={12} md={4} lg={4}>
           <Card>
             <List>
               <ListItem>
                 <ListItemText
-                  primary="Company"
+                  primary="Owner Firstname"
+                  secondary={state.ownerFirstName}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Owner Lastname"
+                  secondary={state.ownerLastName}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Owner Email"
+                  secondary={state.ownerEmail}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Owner Telephone"
+                  secondary={state.ownerTelephone}
+                />
+              </ListItem>
+            </List>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={4} lg={4}>
+          <Card>
+            {' '}
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="Operator"
+                  secondary={state.customerFullName}
+                />
+              </ListItem>
+
+              <ListItem>
+                <ListItemText
+                  primary="Operator Company"
                   secondary={state.customerCompanyName}
                 />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Email" secondary={state.customerEmail} />
-              </ListItem>
-              <ListItem>
                 <ListItemText
-                  primary="Telephone"
+                  primary="Operator Telephone"
                   secondary={state.customerTelephone}
                 />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Shop Count" secondary="0" />
+                <ListItemText
+                  primary="Operator Email"
+                  secondary={state.customerEmail}
+                />
               </ListItem>
             </List>
           </Card>
@@ -129,37 +178,6 @@ function CustomerPage({ classes, updateTitle }) {
                 <ListItemText
                   primary="Country"
                   secondary={state.customerCountry}
-                />
-              </ListItem>
-            </List>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4} lg={4}>
-          <Card>
-            {' '}
-            <List>
-              <ListItem>
-                <ListItemText
-                  primary="Owner Firstname"
-                  secondary={state.customerFirstName}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Owner Lastname"
-                  secondary={state.customerLastName}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Operator"
-                  secondary={state.operatorName}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Operator Number"
-                  secondary={state.operatorTelephone}
                 />
               </ListItem>
             </List>

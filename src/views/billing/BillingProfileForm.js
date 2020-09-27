@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import * as Sentry from '@sentry/react';
 import {
   ValidatorForm,
   TextValidator,
@@ -31,7 +32,7 @@ import Page from '../../shared/components/Page';
 import { ACTIVE, EDIT, SETTINGS_ID } from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
 
-const ShopsForm = (props) => {
+const BillingProfileForm = (props) => {
   const { classes, user } = props;
   const { action, id: documentId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -146,7 +147,7 @@ const ShopsForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -158,9 +159,17 @@ const ShopsForm = (props) => {
         querySnapshot.forEach((doc) => {
           _customers.push(doc.data());
         });
-        setCustomers(_customers);
+        if (_customers.length) {
+          setCustomers(_customers);
+        } else {
+          enqueueSnackbar(
+            'No customer found! Please create a customer first.',
+            { variant: 'error' }
+          );
+          history.goBack();
+        }
       });
-  }, []);
+  }, [enqueueSnackbar]);
 
   useEffect(() => {
     const customer = customers.filter((doc) => doc.id === state.customerId)[0];
@@ -179,12 +188,14 @@ const ShopsForm = (props) => {
         .doc(documentId);
       const customerData = { ...payload };
       await customoreRef.set(customerData);
-      enqueueSnackbar('Shop saved successfully!', { variant: 'success' });
+      enqueueSnackbar('Billing profile saved successfully!', {
+        variant: 'success'
+      });
       history.goBack();
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -200,12 +211,12 @@ const ShopsForm = (props) => {
       // TODO: Use error logging strategy
       enqueueSnackbar(error.message, { variant: 'error' });
       setLoading(false);
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
   return (
-    <Page title="Invoice App | Manage Billing Profile">
+    <Page title="Billing App | Manage Billing Profile">
       <ValidatorForm
         autoComplete="off"
         noValidate
@@ -341,4 +352,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(ShopsForm);
+export default connect(mapStateToProps, null)(BillingProfileForm);

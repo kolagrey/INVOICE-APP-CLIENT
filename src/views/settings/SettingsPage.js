@@ -44,7 +44,7 @@ const SettingsPage = (props) => {
   }, [error, success, enqueueSnackbar, clearError, updateTitle]);
 
   return (
-    <Page className={classes.root} title="Invoice App | Settings">
+    <Page className={classes.root} title="Billing App | Settings">
       <Grid container spacing={3}>
         <Grid item lg={12} md={12} xs={12}>
           <CompanyAvatar

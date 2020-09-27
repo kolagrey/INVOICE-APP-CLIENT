@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import * as Sentry from '@sentry/react';
 
 import {
   Button,
@@ -27,7 +28,9 @@ const SettingsDetails = (props) => {
     city: data.city,
     state: data.state,
     country: data.country,
-    paymentAccount: data.paymentAccount ? data.paymentAccount : '',
+    bankName: data.bankName ? data.bankName : '',
+    bankAccountName: data.bankAccountName ? data.bankAccountName : '',
+    bankAccountNumber: data.bankAccountNumber ? data.bankAccountNumber : '',
     serviceChargeActiveDiscount: data.serviceChargeActiveDiscount
       ? data.serviceChargeActiveDiscount
       : 0,
@@ -56,7 +59,7 @@ const SettingsDetails = (props) => {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
   return (
@@ -189,18 +192,50 @@ const SettingsDetails = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextValidator
-                value={record.paymentAccount}
+                value={record.bankName}
                 onChange={onInputChange}
                 validators={['required']}
-                errorMessages={['Payment details is required']}
+                errorMessages={['Bank name details is required']}
                 type="text"
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="paymentAccount"
-                label="Payment Bank Account"
-                name="paymentAccount"
+                id="bankName"
+                label="Bank Name"
+                name="bankName"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.bankAccountName}
+                onChange={onInputChange}
+                validators={['required']}
+                errorMessages={['Bank account name details is required']}
+                type="text"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="bankAccountName"
+                label="Bank Account Name"
+                name="bankAccountName"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextValidator
+                value={record.bankAccountNumber}
+                onChange={onInputChange}
+                validators={['required']}
+                errorMessages={['Bank account number details is required']}
+                type="number"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="bankAccountNumber"
+                label="Bank Account Number"
+                name="bankAccountNumber"
               />
             </Grid>
             <Grid item md={6} xs={12}>

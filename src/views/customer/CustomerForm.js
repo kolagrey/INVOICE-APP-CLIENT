@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import * as Sentry from '@sentry/react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -29,17 +30,18 @@ const CustomerForm = (props) => {
 
   const [state, setState] = useState({
     createdBy: user.id,
-    customerFirstName: '',
-    customerLastName: '',
-    customerEmail: '',
+    ownerFirstName: '',
+    ownerLastName: '',
+    ownerEmail: '',
+    ownerTelephone: '',
+    customerFullName: '',
     customerCompanyName: '',
+    customerEmail: '',
     customerTelephone: '',
     customerAddress: '',
     customerCity: '',
     customerState: '',
-    customerCountry: '',
-    operatorName: '',
-    operatorTelephone: ''
+    customerCountry: ''
   });
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const CustomerForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -89,7 +91,7 @@ const CustomerForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -105,12 +107,12 @@ const CustomerForm = (props) => {
       // TODO: Use error logging strategy
       setLoading(false);
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
   return (
-    <Page title="Invoice App | Manage Customer">
+    <Page title="Billing App | Manage Customer">
       <ValidatorForm
         autoComplete="off"
         noValidate
@@ -122,85 +124,106 @@ const CustomerForm = (props) => {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <h3>Owner's Information</h3>
+              </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.customerFirstName}
+                  value={state.ownerFirstName}
                   onChange={onInputChange}
                   validators={['required']}
-                  errorMessages={['Firstname is required']}
+                  errorMessages={['Owner firstname is required']}
                   type="text"
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
-                  id="customerFirstName"
-                  label="Firstname"
-                  name="customerFirstName"
+                  id="ownerFirstName"
+                  label="Owner Firstname"
+                  name="ownerFirstName"
                   autoFocus
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.customerLastName}
+                  value={state.ownerLastName}
                   onChange={onInputChange}
                   validators={['required']}
-                  errorMessages={['Lastname is required']}
+                  errorMessages={['Owner lastname is required']}
                   type="text"
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
-                  id="customerLastName"
-                  label="Lastname"
-                  name="customerLastName"
+                  id="ownerLastName"
+                  label="Owner Lastname"
+                  name="ownerLastName"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.customerCompanyName}
+                  fullWidth
+                  label="Owner Email Address"
+                  name="ownerEmail"
+                  margin="normal"
+                  value={state.ownerEmail}
+                  onChange={onInputChange}
+                  variant="outlined"
+                  id="ownerEmail"
+                />
+              </Grid>
+
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.ownerTelephone}
                   onChange={onInputChange}
                   validators={['required']}
-                  errorMessages={['Company name is required']}
+                  errorMessages={['Owner telephone is required']}
+                  type="tel"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="ownerTelephone"
+                  label="Owner Telephone"
+                  name="ownerTelephone"
+                />
+              </Grid>
+              <Divider />
+              <Grid item xs={12}>
+                <h3>Operator's Information</h3>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerFullName}
+                  onChange={onInputChange}
+                  validators={['required']}
+                  errorMessages={['Operator fullname is required']}
                   type="text"
                   variant="outlined"
                   margin="normal"
                   required
+                  fullWidth
+                  id="customerFullName"
+                  label="Fullname"
+                  name="customerFullName"
+                />
+              </Grid>
+
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  value={state.customerCompanyName}
+                  onChange={onInputChange}
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
                   fullWidth
                   id="customerCompanyName"
                   label="Company Name"
                   name="customerCompanyName"
                 />
               </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  fullWidth
-                  label="Email Address"
-                  name="customerEmail"
-                  margin="normal"
-                  value={state.customerEmail}
-                  validators={['required']}
-                  errorMessages={['Email is required']}
-                  onChange={onInputChange}
-                  variant="outlined"
-                  id="customerEmail"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  value={state.customerTelephone}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Telephone is required']}
-                  type="tel"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="customerTelephone"
-                  label="Telephone"
-                  name="customerTelephone"
-                />
-              </Grid>
+
               <Grid item md={6} xs={12}>
                 <TextValidator
                   value={state.customerAddress}
@@ -267,23 +290,19 @@ const CustomerForm = (props) => {
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.operatorName}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Operator fullname is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
                   fullWidth
-                  id="operatorName"
-                  label="Operator Fullname"
-                  name="operatorName"
+                  label="Email Address"
+                  name="customerEmail"
+                  margin="normal"
+                  value={state.customerEmail}
+                  onChange={onInputChange}
+                  variant="outlined"
+                  id="customerEmail"
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.operatorTelephone}
+                  value={state.customerTelephone}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Operator telephone is required']}
@@ -292,9 +311,9 @@ const CustomerForm = (props) => {
                   margin="normal"
                   required
                   fullWidth
-                  id="operatorTelephone"
-                  label="Operator Telephone"
-                  name="operatorTelephone"
+                  id="customerTelephone"
+                  label="Telephone"
+                  name="customerTelephone"
                 />
               </Grid>
             </Grid>

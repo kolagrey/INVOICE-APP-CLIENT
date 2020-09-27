@@ -13,7 +13,9 @@ export class Settings {
     this.serviceChargeInActiveDiscount = settings.serviceChargeInActiveDiscount;
     this.invoiceNote = settings.invoiceNote;
     this.receiptNote = settings.receiptNote;
-    this.paymentAccount = settings.paymentAccount;
+    this.bankName = settings.bankName;
+    this.bankAccountName = settings.bankAccountName;
+    this.bankAccountNumber = settings.bankAccountNumber;
     this.baseServiceCharge = settings.baseServiceCharge;
   }
 
@@ -29,8 +31,11 @@ export class Settings {
     if (!this.country) throw new Error('country property is required');
     if (!this.baseServiceCharge)
       throw new Error('base service charge property is required');
-    if (!this.paymentAccount)
-      throw new Error('payment account property is required');
+    if (!this.bankAccountName)
+      throw new Error('bank account name property is required');
+    if (!this.bankAccountNumber)
+      throw new Error('bank account number property is required');
+    if (!this.bankName) throw new Error('bank name property is required');
     if (!this.serviceChargeActiveDiscount)
       throw new Error('active discount property is required');
     if (!this.serviceChargeInActiveDiscount)
@@ -51,7 +56,9 @@ export class Settings {
       country: this.country,
       invoiceNote: this.invoiceNote,
       receiptNote: this.receiptNote,
-      paymentAccount: this.paymentAccount,
+      bankAccountName: this.bankAccountName,
+      bankAccountNumber: this.bankAccountNumber,
+      bankName: this.bankName,
       baseServiceCharge: this.baseServiceCharge,
       serviceChargeActiveDiscount: this.serviceChargeActiveDiscount,
       serviceChargeInActiveDiscount: this.serviceChargeInActiveDiscount

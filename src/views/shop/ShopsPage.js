@@ -89,7 +89,7 @@ const CustomersPage = ({
   };
 
   return (
-    <Page title="Invoice App | Shops">
+    <Page title="Billing App | Shops">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}

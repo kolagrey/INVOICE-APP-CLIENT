@@ -9,7 +9,7 @@ import authAction from '../../redux/actions/auth';
 const { clearAuthError, registerAdminUser } = authAction;
 
 const RegistrationPage = (props) => {
-  const { classes, error, registerUser, loading } = props; 
+  const { classes, error, registerUser, loading } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -22,13 +22,14 @@ const RegistrationPage = (props) => {
   }, [error, enqueueSnackbar]);
 
   return (
-    <Page className={classes.root} title="Invoice App | Registration">
-    <RegistrationForm
-      classes={classes}
-      errorMessage={error ? error.message : null}
-      registerUser={registerUser}
-      loading={loading}
-    /></Page>
+    <Page className={classes.root} title="Billing App | Registration">
+      <RegistrationForm
+        classes={classes}
+        errorMessage={error ? error.message : null}
+        registerUser={registerUser}
+        loading={loading}
+      />
+    </Page>
   );
 };
 

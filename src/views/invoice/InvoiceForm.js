@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import * as Sentry from '@sentry/react';
 import {
   ValidatorForm,
   TextValidator,
@@ -44,7 +45,7 @@ const InvoiceForm = (props) => {
 
   const [options, setOptions] = useState({
     customer: {},
-    shops: [],
+    billingProfiles: [],
     nextInvoiceId: 0,
     unitCost: 0,
     totalCost: 0,
@@ -55,8 +56,7 @@ const InvoiceForm = (props) => {
     createdBy: user.id,
 
     customerId: '',
-    customerFirstName: '',
-    customerLastName: '',
+    customerFullName: '',
     customerEmail: '',
     customerCompanyName: '',
     customerAddress: '',
@@ -77,7 +77,7 @@ const InvoiceForm = (props) => {
     invoiceDate: '',
     invoiceDueDate: '',
 
-    shopId: '',
+    billingProfileId: '',
     shopNumber: '',
 
     invoiceItem: '',
@@ -124,19 +124,27 @@ const InvoiceForm = (props) => {
   }, [action, documentId]);
 
   useEffect(() => {
-    const _shops = [];
+    const billingProfiles = [];
     db.collection(BILLING_PROFILES_COLLECTION)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          _shops.push(doc.data());
+          billingProfiles.push(doc.data());
         });
-        setOptions((prevState) => ({
-          ...prevState,
-          shops: _shops
-        }));
+        if (billingProfiles.length) {
+          setOptions((prevState) => ({
+            ...prevState,
+            billingProfiles: billingProfiles
+          }));
+        } else {
+          enqueueSnackbar(
+            'No billing profile found! Please create billing profile first.',
+            { variant: 'error' }
+          );
+          history.goBack();
+        }
       });
-  }, []);
+  }, [enqueueSnackbar]);
 
   useEffect(() => {
     db.collection(IDS_TRACKER_COLLECTION)
@@ -162,17 +170,21 @@ const InvoiceForm = (props) => {
         }));
         setState((prevState) => ({
           ...prevState,
-          paymentAccount: docData.paymentAccount,
+          bankName: docData.bankName,
+          bankAccountName: docData.bankAccountName,
+          bankAccountNumber: docData.bankAccountNumber,
           note: docData.invoiceNote
         }));
       });
   }, []);
 
   useEffect(() => {
-    const _shops = [...options.shops];
-    const _shop = _shops.filter((shop) => shop.id === state.shopId);
-    if (_shop.length) {
-      const { serviceCharge, shopNumber, customerId } = _shop[0];
+    const _billingProfiles = [...options.billingProfiles];
+    const _billingProfile = _billingProfiles.filter(
+      (billingProfile) => billingProfile.id === state.billingProfileId
+    );
+    if (_billingProfile.length) {
+      const { serviceCharge, shopNumber, customerId } = _billingProfile[0];
       const totalCost = +serviceCharge * state.duration;
       const vat = +options.settings.vat;
       const vatValue = (vat / 100) * totalCost;
@@ -185,12 +197,16 @@ const InvoiceForm = (props) => {
         totalCost: totalCost,
         grandTotal: totalCost + vatValue
       }));
+      setState((prevState) => ({
+        ...prevState,
+        customerId
+      }));
       getCustomerInformation(customerId);
     }
   }, [
     state.duration,
-    state.shopId,
-    options.shops,
+    state.billingProfileId,
+    options.billingProfiles,
     options.settings.vat,
     getCustomerInformation
   ]);
@@ -207,8 +223,7 @@ const InvoiceForm = (props) => {
     const finalPayload = {
       ...payload,
 
-      customerFirstName: options.customer.customerFirstName,
-      customerLastName: options.customer.customerLastName,
+      customerFullName: options.customer.customerFullName,
       customerEmail: options.customer.customerEmail,
       customerCompanyName: options.customer.customerCompanyName,
       customerAddress: options.customer.customerAddress,
@@ -224,6 +239,7 @@ const InvoiceForm = (props) => {
       companyName: options.settings.companyName,
       companyState: options.settings.state,
       companyTelephone: options.settings.telephone || '',
+
       invoiceDate: new Date(),
       invoiceDueDate: new Date(state.invoiceDueDate),
       invoiceNumber: `${INVOICE_PREFIX}${options.nextInvoiceId}`,
@@ -246,7 +262,7 @@ const InvoiceForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -269,7 +285,7 @@ const InvoiceForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -285,12 +301,12 @@ const InvoiceForm = (props) => {
       // TODO: Use error logging strategy
       setLoading(false);
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
   return (
-    <Page title="Invoice App | Manage Invoice">
+    <Page title="Billing App | Manage Invoice">
       <ValidatorForm
         autoComplete="off"
         noValidate
@@ -313,15 +329,18 @@ const InvoiceForm = (props) => {
                       margin="normal"
                       variant="outlined"
                       label="Shop Number"
-                      value={state.shopId}
+                      value={state.billingProfileId}
                       onChange={onInputChange}
-                      id="shopId"
-                      name="shopId"
+                      id="billingProfileId"
+                      name="billingProfileId"
                     >
-                      {options.shops.map((shop) => {
+                      {options.billingProfiles.map((billingProfile) => {
                         return (
-                          <MenuItem key={shop.id} value={shop.id}>
-                            {shop.shopNumber}
+                          <MenuItem
+                            key={billingProfile.id}
+                            value={billingProfile.id}
+                          >
+                            {billingProfile.shopNumber}
                           </MenuItem>
                         );
                       })}

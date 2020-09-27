@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
+import * as Sentry from '@sentry/react';
 
 import {
   Avatar,
@@ -35,11 +36,13 @@ const Profile = (props) => {
     avatar: user.avatar
   });
 
-  const onCameraFilesChange = ({target}) => {
+  const onCameraFilesChange = ({ target }) => {
     const fileList = target.files;
     if (!fileList.length) return;
     if (fileList[0].size / 1000000 > 1) {
-      enqueueSnackbar('Image file too large. Must be 1MB or less.', { variant: 'error' });
+      enqueueSnackbar('Image file too large. Must be 1MB or less.', {
+        variant: 'error'
+      });
       return;
     } else {
       const fileUrl = URL.createObjectURL(fileList[0]);
@@ -65,7 +68,7 @@ const Profile = (props) => {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -73,7 +76,11 @@ const Profile = (props) => {
     <Card className={classes.card} {...rest}>
       <CardContent>
         <Box alignItems="center" display="flex" flexDirection="column">
-          <Avatar className={classes.profileAvatar} src={profile.avatar} onClick={() => fileInputRef.current.click()} />
+          <Avatar
+            className={classes.profileAvatar}
+            src={profile.avatar}
+            onClick={() => fileInputRef.current.click()}
+          />
           <Typography color="textPrimary" gutterBottom variant="h5">
             {formatFullName(user.firstName, user.lastName)}
           </Typography>
@@ -87,7 +94,7 @@ const Profile = (props) => {
       <CardActions>
         <input
           accept="image/*"
-          style={{ display: 'none'}}
+          style={{ display: 'none' }}
           ref={fileInputRef}
           type="file"
           onChange={onCameraFilesChange}

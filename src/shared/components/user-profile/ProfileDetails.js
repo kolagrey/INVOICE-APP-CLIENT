@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import * as Sentry from '@sentry/react';
 
 import {
   Button,
@@ -43,7 +44,7 @@ const ProfileDetails = (props) => {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
   return (

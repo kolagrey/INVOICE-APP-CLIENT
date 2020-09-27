@@ -6,8 +6,9 @@ import { Card, Grid, List, ListItem, ListItemText } from '../../materials';
 import { updatePageTitle } from '../../redux/actions/shared/sharedActions';
 import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
+import { currencyFormatter } from '../../shared/utils';
 
-function ShopPage({ updateTitle }) {
+function BillingProfilePage({ updateTitle }) {
   const { id: documentId } = useParams();
   const [state, setState] = useState({});
   useEffect(() => {
@@ -24,7 +25,7 @@ function ShopPage({ updateTitle }) {
   }, [documentId]);
 
   return (
-    <Page title="Invoice App | Billing Profile">
+    <Page title="Billing App | Billing Profile">
       <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>
           <Card>
@@ -38,7 +39,7 @@ function ShopPage({ updateTitle }) {
               <ListItem>
                 <ListItemText
                   primary="Service Charge"
-                  secondary={state.serviceCharge}
+                  secondary={`NGN${currencyFormatter(state.serviceCharge)}`}
                 />
               </ListItem>
 
@@ -80,4 +81,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(BillingProfilePage);
