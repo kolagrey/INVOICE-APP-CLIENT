@@ -22,7 +22,7 @@ function UserPage({ updateTitle }) {
   }, [documentId]);
 
   return (
-    <Page title="Invoice App | User">
+    <Page title="Billing App | User">
       <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>
           <Card>

@@ -31,8 +31,7 @@ export class UserProfile {
 
 export class InvoiceCustomer {
   constructor({
-    customerFirstName,
-    customerLastName,
+    customerFullName,
     customerEmail,
     customerCompanyName,
     customerAddress,
@@ -41,8 +40,7 @@ export class InvoiceCustomer {
     customerCountry,
     customerTelephone
   }) {
-    this.customerFirstName = customerFirstName || '';
-    this.customerLastName = customerLastName || '';
+    this.customerFullName = customerFullName || '';
     this.customerEmail = customerEmail || '';
     this.customerCompanyName = customerCompanyName || '';
     this.customerAddress = customerAddress || '';
@@ -54,8 +52,7 @@ export class InvoiceCustomer {
 
   get credentials() {
     return {
-      customerFirstName: this.customerFirstName,
-      customerLastName: this.customerLastName,
+      customerFullName: this.customerFullName,
       customerEmail: this.customerEmail,
       customerCompanyName: this.customerCompanyName,
       customerAddress: this.customerAddress,

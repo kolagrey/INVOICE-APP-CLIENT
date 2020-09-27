@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Tooltip from '@material-ui/core/Tooltip';
 import MenuAppBar from './MenuAppBar';
 import ComponentLink from './ComponentLink';
 import {
@@ -77,19 +78,16 @@ const SideDrawer = (props) => {
           {dashboardMenu({
             notifications: props.newNotifications
           }).map((menu, index) => (
-            <ListItem
-              button
-              key={index}
-              component={ComponentLink}
-              to={menu.url}
-            >
-              <ListItemIcon>
-                <Badge badgeContent={menu.badge} color="secondary">
-                  <menu.icon />
-                </Badge>
-              </ListItemIcon>
-              <ListItemText primary={menu.text} />
-            </ListItem>
+            <Tooltip key={index} arrow title={menu.text} placement="right-end">
+              <ListItem button component={ComponentLink} to={menu.url}>
+                <ListItemIcon>
+                  <Badge badgeContent={menu.badge} color="secondary">
+                    <menu.icon />
+                  </Badge>
+                </ListItemIcon>
+                <ListItemText primary={menu.text} />
+              </ListItem>
+            </Tooltip>
           ))}
         </List>
         <Divider />

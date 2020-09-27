@@ -117,7 +117,7 @@ const UsersPage = ({
   };
 
   return (
-    <Page title="Invoice App | Users">
+    <Page title="Billing App | Users">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}

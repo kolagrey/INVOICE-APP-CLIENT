@@ -29,6 +29,12 @@ const InvoicePage = ({ classes }) => {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
 
+  const invoiceHeadersStyle = {
+    textAlign: 'left',
+    fontSize: 10,
+    color: 'grey'
+  };
+
   useEffect(() => {
     const documentDocRef = db.collection(INVOICES_COLLECTION).doc(documentId);
     documentDocRef.get().then((documentDoc) => {
@@ -73,7 +79,7 @@ const InvoicePage = ({ classes }) => {
         <CircularProgress />
       ) : (
         <Grid container direction="row" justify="center" alignItems="center">
-          <Grid item xs={12} md={10} lg={10}>
+          <Grid item xs={12} md={11} lg={11}>
             <Grid container spacing={5}>
               <Grid item sm={12} md={12} lg={12}>
                 <Button
@@ -90,92 +96,99 @@ const InvoicePage = ({ classes }) => {
 
             <Card className={classes.card} variant="outlined">
               <CardContent className="printArea">
-                <Grid container spacing={3}>
-                  <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    lg={12}
-                    style={{ textAlign: 'center', marginBottom: 50 }}
-                  >
-                    <img
-                      style={{ margin: 'auto', height: 100 }}
-                      alt="Logo"
-                      src={settings.avatar}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container spacing={3} style={{ marginBottom: 50 }}>
+                <Grid container spacing={3} style={{ marginBottom: 10 }}>
                   <Grid item xs={6} md={6} lg={6}>
-                    <div style={{ textAlign: 'left' }}>
-                      <div>
-                        <b>
-                          {invoiceDocument.customerFirstName}{' '}
-                          {invoiceDocument.customerLastName}
-                        </b>
-                      </div>
-                      <div>{invoiceDocument.customerAddress}</div>
-                      <div>
-                        {invoiceDocument.customerCity},{' '}
-                        {invoiceDocument.customerState}
-                      </div>
-                      <div>{invoiceDocument.customerTelephone}</div>
-                      <div>{invoiceDocument.customerEmail}</div>
-                    </div>
+                    <Grid container spacing={1} style={{ marginBottom: 10 }}>
+                      <Grid item xs={12}>
+                        <h1>INVOICE</h1>
+                      </Grid>
+                      <Grid item xs={4} style={invoiceHeadersStyle}>
+                        INVOICE NUMBER
+                      </Grid>
+
+                      <Grid item xs={8} style={invoiceHeadersStyle}>
+                        {invoiceDocument.invoiceNumber}
+                      </Grid>
+                      <Grid item xs={4} style={invoiceHeadersStyle}>
+                        INVOICE DATE
+                      </Grid>
+                      <Grid item xs={8} style={invoiceHeadersStyle}>
+                        {invoiceDocument.invoiceDate}
+                      </Grid>
+                      <Grid item xs={4} style={invoiceHeadersStyle}>
+                        DUE DATE
+                      </Grid>
+                      <Grid item xs={8} style={invoiceHeadersStyle}>
+                        {invoiceDocument.invoiceDueDate}
+                      </Grid>
+                      <Grid item xs={4} style={invoiceHeadersStyle}>
+                        SHOP NUMBER(S)
+                      </Grid>
+                      <Grid item xs={8} style={invoiceHeadersStyle}>
+                        {invoiceDocument.shopNumber}
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={6} md={6} lg={6}>
-                    <div style={{ textAlign: 'right' }}>
-                      <div>
-                        <b>{invoiceDocument.companyName}</b>
-                      </div>
-                      <div>{invoiceDocument.companyAddress}</div>
-                      <div>
-                        {invoiceDocument.companyCity},{' '}
-                        {invoiceDocument.companyState}
-                      </div>
-                      <div>{invoiceDocument.companyTelephone}</div>
-                      <div>{invoiceDocument.companyEmail}</div>
-                    </div>
+                    <Grid container spacing={3} style={{ marginBottom: 10 }}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={12}
+                        lg={12}
+                        style={{ textAlign: 'right', marginBottom: 10 }}
+                      >
+                        <img
+                          style={{ height: 100 }}
+                          alt="Logo"
+                          src={settings.avatar}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
 
-                <Grid
-                  container
-                  style={{
-                    marginBottom: 30
-                  }}
-                >
-                  <Grid item xs={3}>
-                    <div style={{ textAlign: 'left' }}>
-                      <div>Invoice Date</div>
-                      <div>
-                        <h4>{invoiceDocument.invoiceDate}</h4>
-                      </div>
+                <Grid container spacing={3} style={{ marginBottom: 10 }}>
+                  <Grid item xs={6} md={6} lg={6} style={{ textAlign: 'left' }}>
+                    <div style={invoiceHeadersStyle}>
+                      <div>FROM</div>
                     </div>
+                    <div>
+                      <h3>{invoiceDocument.companyName}</h3>
+                    </div>
+                    <div>{invoiceDocument.companyAddress}</div>
+                    <div>
+                      {invoiceDocument.companyCity},{' '}
+                      {invoiceDocument.companyState}
+                    </div>
+                    <div>{invoiceDocument.companyTelephone}</div>
+                    <div>{invoiceDocument.companyEmail}</div>
                   </Grid>
-                  <Grid item xs={3}>
-                    <div style={{ textAlign: 'left' }}>
-                      <div>Due Date</div>
-                      <div>
-                        <h4>{invoiceDocument.invoiceDueDate}</h4>
-                      </div>
+
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    lg={6}
+                    style={{ textAlign: 'left', marginBottom: 50 }}
+                  >
+                    <div style={invoiceHeadersStyle}>
+                      <div>TO</div>
                     </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div style={{ textAlign: 'left' }}>
-                      <div>Shop Number</div>
-                      <div>
-                        <h4>{invoiceDocument.shopNumber}</h4>
-                      </div>
+                    <div>
+                      <h4>
+                        {invoiceDocument.customerCompanyName
+                          ? invoiceDocument.customerCompanyName
+                          : invoiceDocument.customerFullName}
+                      </h4>
                     </div>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <div style={{ textAlign: 'right' }}>
-                      <div>Invoice Number</div>
-                      <div>
-                        <h4>{invoiceDocument.invoiceNumber}</h4>
-                      </div>
+                    <div>{invoiceDocument.customerAddress}</div>
+                    <div>
+                      {invoiceDocument.customerCity},{' '}
+                      {invoiceDocument.customerState}
                     </div>
+                    <div>{invoiceDocument.customerTelephone}</div>
+                    <div>{invoiceDocument.customerEmail}</div>
                   </Grid>
                 </Grid>
 
@@ -242,11 +255,25 @@ const InvoicePage = ({ classes }) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={12} lg={12} style={{ paddingTop: 40 }}>
-                    <h4>Payment Instruction</h4>
-                    <div>{invoiceDocument.paymentAccount}</div>
+                  <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    lg={12}
+                    style={{ marginTop: 40, marginBottom: 30 }}
+                  >
+                    <div style={invoiceHeadersStyle}>PAYMENT INSTRUCTION</div>
+                    <div>{invoiceDocument.bankAccountName}</div>
+                    <div>{invoiceDocument.bankAccountNumber}</div>
+                    <div>{invoiceDocument.bankName}</div>
                   </Grid>
-                  <Grid item xs={12} md={12} lg={12}>
+                  <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    lg={12}
+                    style={{ textAlign: 'center', marginBottom: 30 }}
+                  >
                     <i>{invoiceDocument.note}</i>
                   </Grid>
                 </Grid>
