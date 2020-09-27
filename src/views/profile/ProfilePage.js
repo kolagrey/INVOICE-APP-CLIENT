@@ -45,7 +45,7 @@ const ProfilePage = (props) => {
   }, [error, success, enqueueSnackbar, clearError, updateTitle]);
 
   return (
-    <Page className={classes.root} title="Invoice App | My Profile">
+    <Page className={classes.root} title="Billing App | My Profile">
       <Grid container spacing={3}>
         <Grid item lg={3} md={4} xs={12}>
           <Profile

@@ -73,16 +73,10 @@ const CustomersPage = ({
         label: 'Avatar'
       },
       {
-        id: 'customerFirstName',
+        id: 'customerFullName',
         numeric: false,
         disablePadding: true,
-        label: 'Firstname'
-      },
-      {
-        id: 'customerLastName',
-        numeric: false,
-        disablePadding: true,
-        label: 'Lastname'
+        label: 'Customer Fullname'
       },
       {
         id: 'customerEmail',
@@ -122,7 +116,7 @@ const CustomersPage = ({
   };
 
   return (
-    <Page title="Invoice App | Customers">
+    <Page title="Billing App | Customers">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/react';
 import { db } from '../../services/firebase';
 
 const useData = (COLLECTION, useState) => {
@@ -15,7 +16,7 @@ const useData = (COLLECTION, useState) => {
       (error) => {
         // TODO: Fix with proper error logging
         setLoading(false);
-        console.log(error);
+        Sentry.captureException(error);
       }
     );
 

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import {
   SET_USER_PROFILE,
   PROFILE_LOADING,
@@ -23,6 +24,14 @@ export const setUserProfile = (data) => async (dispatch) => {
 export const getUserProfile = (id) => async (dispatch) => {
   try {
     const userProfile = await getProfile(id);
+
+    Sentry.setUser({
+      id,
+      email: userProfile.email,
+      firstName: userProfile.firstName,
+      lastName: userProfile.lastName
+    });
+
     dispatcher(dispatch, SET_USER_PROFILE, {
       data: userProfile,
       loading: false

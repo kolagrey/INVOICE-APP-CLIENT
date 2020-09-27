@@ -98,7 +98,7 @@ const OverviewPage = (props) => {
 
   return (
     <React.Fragment>
-      <Page className={classes.root} title="Invoice App | Overview">
+      <Page className={classes.root} title="Billing App | Overview">
         <Grid container spacing={3}>
           {/* Summary */}
           <Grid item xs={12} md={3} lg={3}>

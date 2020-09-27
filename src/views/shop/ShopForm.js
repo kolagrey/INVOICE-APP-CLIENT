@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import * as Sentry from '@sentry/react';
 import {
   ValidatorForm,
   TextValidator,
@@ -89,7 +90,7 @@ const CustomerForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -103,7 +104,7 @@ const CustomerForm = (props) => {
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -119,12 +120,12 @@ const CustomerForm = (props) => {
       // TODO: Use error logging strategy
       setLoading(false);
       enqueueSnackbar(error.message, { variant: 'error' });
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
   return (
-    <Page title="Invoice App | Manage Shop">
+    <Page title="Billing App | Manage Shop">
       <ValidatorForm
         autoComplete="off"
         noValidate

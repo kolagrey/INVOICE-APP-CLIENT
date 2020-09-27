@@ -32,7 +32,7 @@ function CustomerPage({ updateTitle }) {
   }, [documentId]);
 
   return (
-    <Page title="Invoice App | Shop Profile">
+    <Page title="Billing App | Shop Profile">
       {loading ? (
         <CircularProgress />
       ) : (

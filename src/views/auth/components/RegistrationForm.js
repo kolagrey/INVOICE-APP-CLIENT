@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as Sentry from '@sentry/react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -22,7 +23,8 @@ const RegistrationForm = (props) => {
     email: '',
     password: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    role: 'Admin'
   });
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const RegistrationForm = (props) => {
       await registerUser(state);
     } catch (error) {
       // TODO: Use error logging strategy
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 
@@ -119,7 +121,9 @@ const RegistrationForm = (props) => {
               value={state.password}
               onChange={onInputChange}
               validators={['required', 'isPasswordValid']}
-              error={errorMessage ? errorMessage.indexOf("Password") !== -1 : false}
+              error={
+                errorMessage ? errorMessage.indexOf('Password') !== -1 : false
+              }
               errorMessages={[
                 'Password is required',
                 'Password must be at least 6 characters'

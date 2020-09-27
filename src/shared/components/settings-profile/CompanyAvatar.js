@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
+import * as Sentry from '@sentry/react';
 
 import {
   Avatar,
@@ -65,7 +66,7 @@ const CompanyAvatar = (props) => {
     } catch (error) {
       // TODO: Use error logging strategy
       setLoading(false);
-      console.log(error);
+      Sentry.captureException(error);
     }
   };
 

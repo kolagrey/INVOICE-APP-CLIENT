@@ -8,30 +8,38 @@ import authActions from '../../redux/actions/auth';
 const { clearAuthError, authenticateUser } = authActions;
 
 const LoginPage = (props) => {
-  const { classes, error, authenticateUser, loading, clearAuthError, isAuthenticated } = props;
+  const {
+    classes,
+    error,
+    authenticateUser,
+    loading,
+    clearAuthError,
+    isAuthenticated
+  } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if(error && error.message) {
+    if (error && error.message) {
       enqueueSnackbar(error.message, { variant: 'error' });
     }
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       enqueueSnackbar('Login successful!', { variant: 'success' });
     }
     return () => {
       clearAuthError();
     };
-  },[isAuthenticated, clearAuthError, error, enqueueSnackbar]);
+  }, [isAuthenticated, clearAuthError, error, enqueueSnackbar]);
 
   return (
-    <Page className={classes.root} title="Invoice App | Login">
-    <LoginForm
-      classes={classes}
-      errorMessage={error ? error.message : null}
-      authenticateUser={authenticateUser}
-      loading={loading}
-      clearAuthError={clearAuthError}
-    /></Page>
+    <Page className={classes.root} title="Billing App | Login">
+      <LoginForm
+        classes={classes}
+        errorMessage={error ? error.message : null}
+        authenticateUser={authenticateUser}
+        loading={loading}
+        clearAuthError={clearAuthError}
+      />
+    </Page>
   );
 };
 

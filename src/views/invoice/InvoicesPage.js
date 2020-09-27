@@ -13,6 +13,7 @@ import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
 import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
+import { currencyFormatter } from '../../shared/utils';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
@@ -30,10 +31,14 @@ const InvoicesPage = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
-    const nameSearchText = `${doc.firstName} ${doc.lastName}`.toLowerCase();
+    const nameSearchText = doc.customerFullName
+      ? doc.customerFullName.toLowerCase()
+      : doc.customerCompanyName.toLowerCase();
     const invoiceNumberSearchText = doc.invoiceNumber.toLowerCase();
     const shopNumberSearchText = doc.shopNumber.toLowerCase();
-    const accountPaymentSearchText = doc.paymentAccount.toLowerCase();
+    const accountPaymentSearchText = doc.bankName
+      ? doc.bankName.toLowerCase()
+      : '';
     return searchQuery.length === 0
       ? true
       : invoiceNumberSearchText.includes(searchQuery.toLowerCase()) ||
@@ -41,6 +46,16 @@ const InvoicesPage = ({
           shopNumberSearchText.includes(searchQuery.toLowerCase()) ||
           accountPaymentSearchText.includes(searchQuery.toLowerCase());
   };
+
+  const mapDocument = (doc) => {
+    const formattedTotalCost = currencyFormatter(doc.totalCost);
+    const formattedUnitCost = currencyFormatter(doc.unitCost);
+    doc.formattedTotalCost = `NGN${formattedTotalCost}`;
+    doc.formattedUnitCost = `NGN${formattedUnitCost}`;
+    return doc;
+  };
+
+  const formattedData = data.map(mapDocument);
 
   const deleteDocument = (documentId) => {
     updateAlertState(true);
@@ -70,16 +85,10 @@ const InvoicesPage = ({
         label: 'Invoice'
       },
       {
-        id: 'customerFirstName',
+        id: 'customerFullName',
         numeric: false,
         disablePadding: true,
         label: 'Firstname'
-      },
-      {
-        id: 'customerLastName',
-        numeric: false,
-        disablePadding: true,
-        label: 'Lastname'
       },
       {
         id: 'invoiceItem',
@@ -88,7 +97,7 @@ const InvoicesPage = ({
         label: 'Item'
       },
       {
-        id: 'unitCost',
+        id: 'formattedUnitCost',
         numeric: false,
         disablePadding: false,
         label: 'Charge'
@@ -100,7 +109,7 @@ const InvoicesPage = ({
         label: 'Duration'
       },
       {
-        id: 'totalCost',
+        id: 'formattedTotalCost',
         numeric: false,
         disablePadding: false,
         label: 'Total'
@@ -125,7 +134,7 @@ const InvoicesPage = ({
   };
 
   return (
-    <Page title="Invoice App | Invoices">
+    <Page title="Billing App | Invoices">
       <AlertDialog
         NoDataIcon={NoDataIcon}
         showDialog={showDialog}
@@ -139,7 +148,7 @@ const InvoicesPage = ({
       {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={data.filter(filterDocument)}
+          data={formattedData.filter(filterDocument)}
           classes={classes}
           listConfig={listConfig}
         />
