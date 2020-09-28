@@ -24,7 +24,11 @@ yarn-error.log*
 
 
 # Environment Specifics
+src/services/firebase.js
 /src/services/firebase.js
+/.firebaserc
+/.firebase/*.*
+/.firebase
 .firebaserc
 .firebase/*.*
 .firebase
