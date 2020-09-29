@@ -33,16 +33,11 @@ const CustomersPage = ({
     const nameSearchText = `${doc.customerFirstName} ${doc.customerLastName}`.toLowerCase();
     const emailSearchText = doc.customerEmail.toLowerCase();
     const telephoneSearchText = doc.customerTelephone.toLowerCase();
-    const operatorSearchText = doc.operatorName.toLowerCase();
-    const operatorTelephoneSearchText = doc.operatorTelephone.toLowerCase();
     return searchQuery.length === 0
       ? true
       : emailSearchText.includes(searchQuery.toLowerCase()) ||
           telephoneSearchText.includes(searchQuery.toLowerCase()) ||
-          operatorSearchText.includes(searchQuery.toLowerCase()) ||
-          nameSearchText.includes(searchQuery.toLowerCase()) ||
-          operatorSearchText.includes(searchQuery.toLowerCase()) ||
-          operatorTelephoneSearchText.includes(searchQuery.toLowerCase());
+          nameSearchText.includes(searchQuery.toLowerCase());
   };
 
   const deleteDocument = (documentId) => {
