@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react';
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator
+} from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -15,7 +19,8 @@ import {
   Grid,
   Card,
   CardHeader,
-  CardContent
+  CardContent,
+  MenuItem
 } from '../../materials';
 import { history } from '../../router';
 import { db } from '../../services/firebase';
@@ -241,52 +246,52 @@ const CustomerForm = (props) => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <TextValidator
+                <SelectValidator
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
                   value={state.customerCity}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['City is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
                   id="customerCity"
                   label="City"
                   name="customerCity"
-                />
+                >
+                  <MenuItem value="Abraham Adesanya">Abraham Adesanya</MenuItem>
+                </SelectValidator>
               </Grid>
               <Grid item md={6} xs={12}>
-                <TextValidator
+                <SelectValidator
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
                   value={state.customerState}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['State is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
                   id="customerState"
                   label="State"
                   name="customerState"
-                />
+                >
+                  <MenuItem value="Lagos">Lagos</MenuItem>
+                </SelectValidator>
               </Grid>
               <Grid item md={6} xs={12}>
-                <TextValidator
+                <SelectValidator
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
                   value={state.customerCountry}
                   onChange={onInputChange}
                   validators={['required']}
                   errorMessages={['Country is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
                   id="customerCountry"
                   label="Country"
                   name="customerCountry"
-                />
+                >
+                  <MenuItem value="Nigeria">Nigeria</MenuItem>
+                </SelectValidator>
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
