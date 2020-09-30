@@ -13,6 +13,7 @@ import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
 import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
+import { listSort } from '../../shared/utils/sortUtils';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
@@ -28,6 +29,8 @@ const CustomersPage = ({
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const { enqueueSnackbar } = useSnackbar();
+
+  const formattedData = data.sort(listSort('customerFullName'));
 
   const filterDocument = (doc) => {
     const nameSearchText = `${doc.customerFirstName} ${doc.customerLastName}`.toLowerCase();
@@ -125,7 +128,7 @@ const CustomersPage = ({
       {data.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
-          data={data.filter(filterDocument)}
+          data={formattedData.filter(filterDocument)}
           classes={classes}
           listConfig={listConfig}
         />
