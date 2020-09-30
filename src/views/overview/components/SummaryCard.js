@@ -4,13 +4,12 @@ import {
   Typography,
   Card,
   CardContent,
-  Avatar,
-  MoneyIcon
+  Avatar
 } from '../../../materials';
 import { k_formatter } from '../../../shared/utils';
 
 const SummaryCard = (props) => {
-  const { classes, title, value } = props;
+  const { classes, title, value, Icon } = props;
   return (
     <React.Fragment>
       <Card>
@@ -26,7 +25,7 @@ const SummaryCard = (props) => {
             </Grid>
             <Grid item>
               <Avatar className={classes.avatar}>
-                <MoneyIcon />
+                <Icon />
               </Avatar>
             </Grid>
           </Grid>

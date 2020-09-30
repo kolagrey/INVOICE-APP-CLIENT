@@ -33,3 +33,13 @@ export const listSort = (orderBy) => (a, b) => {
   }
   return 0;
 };
+
+export const getTotalMonthValue = ({ month, year, entity, dataSet }) => {
+  return dataSet
+    .filter(
+      (doc) => doc.month === month && doc.entity === entity && doc.year === year
+    )
+    .reduce((prev, curr) => {
+      return prev + curr.value;
+    }, 0);
+};
