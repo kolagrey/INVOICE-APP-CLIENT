@@ -31,6 +31,7 @@ import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { ACTIVE, EDIT, SETTINGS_ID } from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
+import { listSort } from '../../shared/utils/sortUtils';
 
 const BillingProfileForm = (props) => {
   const { classes, user } = props;
@@ -160,7 +161,7 @@ const BillingProfileForm = (props) => {
           _customers.push(doc.data());
         });
         if (_customers.length) {
-          setCustomers(_customers);
+          setCustomers(_customers.sort(listSort('customerCompanyName')));
         } else {
           enqueueSnackbar(
             'No customer found! Please create a customer first.',
@@ -247,11 +248,14 @@ const BillingProfileForm = (props) => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <SelectValidator
-                  fullWidth
+                <TextValidator
                   disabled={action === EDIT}
-                  validators={['required']}
-                  errorMessages={['Shop units is required']}
+                  validators={['required', 'minNumber:1', 'maxNumber:1000']}
+                  errorMessages={[
+                    'Shop units is required',
+                    'Shop units must be greater than 1',
+                    'Shop units must be less than 10000'
+                  ]}
                   margin="normal"
                   variant="outlined"
                   label="Shop Units"
@@ -259,19 +263,14 @@ const BillingProfileForm = (props) => {
                   onChange={onInputChange}
                   id="shopUnits"
                   name="shopUnits"
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(
-                    (value) => (
-                      <MenuItem key={value} value={value}>
-                        {value} Unit
-                      </MenuItem>
-                    )
-                  )}
-                </SelectValidator>
+                  type="number"
+                  required
+                  fullWidth
+                />
               </Grid>
 
               <Grid item md={6} xs={12}>
-                {customers.length && (
+                {customers.length ? (
                   <SelectValidator
                     fullWidth
                     disabled={action === EDIT}
@@ -294,6 +293,8 @@ const BillingProfileForm = (props) => {
                       );
                     })}
                   </SelectValidator>
+                ) : (
+                  <CircularProgress />
                 )}
               </Grid>
 

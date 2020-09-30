@@ -23,3 +23,13 @@ export const stableSort = (array, comparator) => {
   });
   return stabilizedThis.map((el) => el[0]);
 };
+
+export const listSort = (orderBy) => (a, b) => {
+  if (a[orderBy] > b[orderBy]) {
+    return 1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return -1;
+  }
+  return 0;
+};

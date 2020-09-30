@@ -14,6 +14,7 @@ import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
 import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
+import { listSort } from '../../shared/utils/sortUtils';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
 
@@ -44,7 +45,7 @@ const BillingProfilesPage = ({
     return doc;
   };
 
-  const formattedData = data.map(mapDocument);
+  const formattedData = data.map(mapDocument).sort(listSort('shopNumber'));
 
   const deleteDocument = (documentId) => {
     updateAlertState(true);
