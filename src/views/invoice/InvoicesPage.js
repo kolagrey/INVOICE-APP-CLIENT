@@ -88,19 +88,13 @@ const InvoicesPage = ({
         id: 'customerFullName',
         numeric: false,
         disablePadding: true,
-        label: 'Firstname'
+        label: 'Customer'
       },
       {
-        id: 'invoiceItem',
+        id: 'shopNumber',
         numeric: false,
         disablePadding: false,
-        label: 'Item'
-      },
-      {
-        id: 'formattedUnitCost',
-        numeric: false,
-        disablePadding: false,
-        label: 'Charge'
+        label: 'Shop(s)'
       },
       {
         id: 'duration',

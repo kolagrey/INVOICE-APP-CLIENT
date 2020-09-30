@@ -45,10 +45,10 @@ const InvoiceForm = (props) => {
 
   const [options, setOptions] = useState({
     customer: {},
+    shopNumber: '',
     billingProfiles: [],
     nextInvoiceId: 0,
-    unitCost: 0,
-    totalCost: 0,
+    subTotalCost: 0,
     settings: {}
   });
 
@@ -80,15 +80,12 @@ const InvoiceForm = (props) => {
     billingProfileId: '',
     shopNumber: '',
 
-    invoiceItem: '',
-    invoiceDescription: '',
+    invoiceItemsList: [],
 
-    unitCost: 0,
-    totalCost: 0,
+    subTotalCost: 0,
     vat: 0,
     vatValue: 0,
     grandTotal: 0,
-    duration: 1,
 
     paymentAccount: '',
     note: ''
@@ -184,17 +181,24 @@ const InvoiceForm = (props) => {
       (billingProfile) => billingProfile.id === state.billingProfileId
     );
     if (_billingProfile.length) {
-      const { serviceCharge, shopNumber, customerId } = _billingProfile[0];
-      const totalCost = +serviceCharge * state.duration;
+      const {
+        serviceCharge,
+        customerId,
+        invoiceItemsList,
+        billingCycle,
+        shopNumber
+      } = _billingProfile[0];
+      const totalCost = +serviceCharge;
       const vat = +options.settings.vat;
       const vatValue = (vat / 100) * totalCost;
       setOptions((prevState) => ({
         ...prevState,
+        billingCycle: billingCycle,
         shopNumber: shopNumber,
-        unitCost: +serviceCharge,
+        invoiceItemsList: invoiceItemsList,
         vat: vat,
         vatValue: vatValue,
-        totalCost: totalCost,
+        subTotalCost: totalCost,
         grandTotal: totalCost + vatValue
       }));
       setState((prevState) => ({
@@ -204,7 +208,6 @@ const InvoiceForm = (props) => {
       getCustomerInformation(customerId);
     }
   }, [
-    state.duration,
     state.billingProfileId,
     options.billingProfiles,
     options.settings.vat,
@@ -244,10 +247,12 @@ const InvoiceForm = (props) => {
       invoiceDueDate: new Date(state.invoiceDueDate),
       invoiceNumber: `${INVOICE_PREFIX}${options.nextInvoiceId}`,
       shopNumber: options.shopNumber,
-      unitCost: options.unitCost,
+
+      invoiceItemsList: options.invoiceItemsList,
+
       vat: options.settings.vat,
       vatValue: options.vatValue,
-      totalCost: options.totalCost,
+      totalCost: options.subTotalCost,
       grandTotal: options.grandTotal,
       created: fb.FieldValue.serverTimestamp()
     };
@@ -270,10 +275,15 @@ const InvoiceForm = (props) => {
     try {
       const finalPayload = {
         ...payload,
-        unitCost: options.unitCost,
+        duration:
+          options.billingCycle > 1
+            ? `${options.billingCycle} months`
+            : `${options.billingCycle} month`,
+        billingCycle: options.billingCycle,
+        invoiceItemsList: options.invoiceItemsList,
         vat: options.settings.vat,
         vatValue: options.vatValue,
-        totalCost: options.totalCost,
+        totalCost: options.subTotalCost,
         grandTotal: options.grandTotal,
         updated: fb.FieldValue.serverTimestamp()
       };
@@ -325,10 +335,10 @@ const InvoiceForm = (props) => {
                       fullWidth
                       required
                       validators={['required']}
-                      errorMessages={['Shop Number is required']}
+                      errorMessages={['Billing profile is required']}
                       margin="normal"
                       variant="outlined"
-                      label="Shop Number"
+                      label="Billing Profile"
                       value={state.billingProfileId}
                       onChange={onInputChange}
                       id="billingProfileId"
@@ -348,25 +358,6 @@ const InvoiceForm = (props) => {
                   </Grid>
                 </React.Fragment>
               )}
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  fullWidth
-                  type="number"
-                  label="Duration (Months)"
-                  name="duration"
-                  margin="normal"
-                  value={state.duration}
-                  validators={['required', 'minNumber:1', 'maxNumber:12']}
-                  errorMessages={[
-                    'Duration is required',
-                    'Minimum duration is 1month',
-                    'Maximum duration is 12months'
-                  ]}
-                  onChange={onInputChange}
-                  variant="outlined"
-                  id="duration"
-                />
-              </Grid>
 
               {action !== EDIT && (
                 <Grid item md={6} xs={12}>
@@ -391,38 +382,6 @@ const InvoiceForm = (props) => {
               )}
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  value={state.invoiceItem}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Invoice item title is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="invoiceItem"
-                  label="Invoice Item"
-                  name="invoiceItem"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  required
-                  value={state.invoiceDescription}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Invoice item description is required']}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  id="invoiceDescription"
-                  label="Invoice Description"
-                  name="invoiceDescription"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
                   value={state.note}
                   onChange={onInputChange}
                   type="text"
@@ -440,7 +399,7 @@ const InvoiceForm = (props) => {
 
           <Box display="flex" justifyContent="flex-end" p={2}>
             <Typography variant="h5" component="h5">
-              NGN{currencyFormatter(options.totalCost)}
+              NGN{currencyFormatter(options.subTotalCost)}
             </Typography>
           </Box>
           <Divider />

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react';
 import {
   ValidatorForm,
-  TextValidator,
   SelectValidator
 } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
@@ -10,9 +9,17 @@ import { useParams } from 'react-router-dom';
 import {
   CUSTOMERS_COLLECTION,
   SETTINGS_COLLECTION,
-  BILLING_PROFILES_COLLECTION
+  BILLING_PROFILES_COLLECTION,
+  SHOPS_COLLECTION
 } from '../../firebase-helpers/constants/collectionsTypes';
 import { useSnackbar } from 'notistack';
+
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
+import { FormControl, InputLabel } from '@material-ui/core';
 
 import {
   Button,
@@ -29,7 +36,7 @@ import {
 import { history } from '../../router';
 import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
-import { ACTIVE, EDIT, SETTINGS_ID } from '../../shared/constants';
+import { ACTIVE, EDIT, SETTINGS_ID, MAIN, EXTRA } from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
 import { listSort } from '../../shared/utils/sortUtils';
 
@@ -40,7 +47,7 @@ const BillingProfileForm = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [customers, setCustomers] = useState([]);
-  const [settings, setSettings] = useState({});
+  const [shops, setShops] = useState([]);
 
   const [state, setState] = useState({
     createdBy: user.id,
@@ -48,34 +55,131 @@ const BillingProfileForm = (props) => {
     customerId: '',
     shopNumber: '',
     shopUnits: 1,
+    shopList: [],
+    invoiceItemsList: [],
+    billingCycle: 1,
+    nextBillingDate: '',
     shopStatus: 'Active',
     baseServiceCharge: 0,
-    serviceCharge: 0
+    baseServiceFee: 0,
+    serviceCharge: 0,
+    activeDiscount: 0,
+    inActiveDiscount: 0
   });
 
-  const calculateServiceCharge = (
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250
+      }
+    }
+  };
+
+  const handleChange = (event) => {
+    setState((prevState) => ({
+      ...prevState,
+      shopList: event.target.value,
+      shopUnits: event.target.value.length
+    }));
+  };
+
+  const getInvoiceItems = useCallback(
+    ({
+      baseServiceFee,
+      shopUnits,
+      billingCycle,
+      shopStatus,
+      shopList,
+      activeDiscount,
+      inActiveDiscount
+    }) => {
+      const invoiceItems = [];
+      if (!shopList || !shopList.length) return invoiceItems;
+      const mainServiceCharge = calculateServiceCharge({
+        shopPosition: MAIN,
+        baseServiceFee,
+        billingCycle,
+        shopUnits,
+        shopStatus,
+        activeDiscount,
+        inActiveDiscount
+      });
+      if (shopList.length === 1) {
+        const subTotalCost = mainServiceCharge * 1;
+        const totalAmount = subTotalCost * billingCycle;
+        invoiceItems.push({
+          shopNumber: shopList[0],
+          invoiceItem: `Main shop`,
+          invoiceDescription: 1,
+          duration: 1,
+          unitCost: mainServiceCharge,
+          subTotalCost,
+          totalAmount
+        });
+      } else {
+        const extraServiceCharge = calculateServiceCharge({
+          shopPosition: EXTRA,
+          baseServiceFee,
+          billingCycle,
+          shopUnits,
+          shopStatus,
+          activeDiscount,
+          inActiveDiscount
+        });
+        const firstSubTotalCost = mainServiceCharge * 1;
+        const firstTotalAmount = firstSubTotalCost * billingCycle;
+        const secondSubTotalCost = extraServiceCharge * (shopUnits - 1);
+        const secondTotalAmount = secondSubTotalCost * billingCycle;
+        invoiceItems.push(
+          {
+            shopNumber: shopList[0],
+            invoiceItem: `Main shop`,
+            invoiceDescription: 1,
+            duration: billingCycle,
+            unitCost: mainServiceCharge,
+            subTotalCost: firstSubTotalCost,
+            totalAmount: firstTotalAmount
+          },
+          {
+            shopNumber: shopList.slice(1).toString(),
+            invoiceItem: `Extra shop(s)`,
+            invoiceDescription: shopUnits - 1,
+            duration: billingCycle,
+            unitCost: extraServiceCharge,
+            subTotalCost: secondSubTotalCost,
+            totalAmount: secondTotalAmount
+          }
+        );
+      }
+      return invoiceItems;
+    },
+    []
+  );
+
+  const calculateServiceCharge = ({
+    shopPosition,
     baseServiceFee,
-    units,
     shopStatus,
-    activeDiscountValue,
-    inActiveDiscountValue
-  ) => {
+    activeDiscount,
+    inActiveDiscount
+  }) => {
     const baseFee = +baseServiceFee;
-    const activeDiscount = +activeDiscountValue;
-    const inActiveDiscount = +inActiveDiscountValue;
+    const activeDiscountValue = +activeDiscount;
+    const inActiveDiscountValue = +inActiveDiscount;
 
     if (shopStatus === ACTIVE) {
-      const activeDiscountPercentage = (100 - activeDiscount) / 100;
-      if (+units <= 1) return baseFee;
-      const activeDiscountedBaseFee = baseFee * activeDiscountPercentage;
-      const otherUnitsCharge = (units - 1) * activeDiscountedBaseFee;
-      return baseFee + otherUnitsCharge;
+      const activeDiscountPercentage = (100 - activeDiscountValue) / 100;
+      if (shopPosition === MAIN) {
+        return baseFee;
+      } else {
+        return baseFee * activeDiscountPercentage;
+      }
     } else {
-      const inActiveDiscountPercentage = (100 - inActiveDiscount) / 100;
-      const inActiveDiscountedBaseFee = baseFee * inActiveDiscountPercentage;
-      if (units <= 1) return inActiveDiscountedBaseFee;
-      const otherUnitsCharge = (units - 1) * inActiveDiscountedBaseFee;
-      return inActiveDiscountedBaseFee + otherUnitsCharge;
+      const inActiveDiscountPercentage = (100 - inActiveDiscountValue) / 100;
+      return baseFee * inActiveDiscountPercentage;
     }
   };
 
@@ -87,11 +191,52 @@ const BillingProfileForm = (props) => {
   }, []);
 
   useEffect(() => {
+    const invoiceItemsList = getInvoiceItems({
+      baseServiceFee: state.baseServiceFee,
+      shopUnits: state.shopUnits,
+      billingCycle: state.billingCycle,
+      shopStatus: state.shopStatus,
+      shopList: state.shopList,
+      activeDiscount: state.activeDiscount,
+      inActiveDiscount: state.inActiveDiscount
+    });
+    const serviceCharge = invoiceItemsList.reduce(
+      (prev, curr) => prev + curr.totalAmount,
+      0
+    );
+
+    setState((prevState) => {
+      return {
+        ...prevState,
+        shopNumber: state.shopList.toString(),
+        serviceCharge,
+        invoiceItemsList
+      };
+    });
+  }, [
+    state.baseServiceFee,
+    state.shopUnits,
+    state.billingCycle,
+    state.shopStatus,
+    state.shopList,
+    state.activeDiscount,
+    state.inActiveDiscount,
+    getInvoiceItems
+  ]);
+
+  useEffect(() => {
     db.collection(SETTINGS_COLLECTION)
       .doc(SETTINGS_ID)
       .get()
       .then((doc) => {
-        setSettings(doc.data());
+        const settings = doc.data();
+        setState((prevState) => ({
+          ...prevState,
+          baseServiceCharge: settings.baseServiceCharge,
+          baseServiceFee: settings.baseServiceCharge,
+          activeDiscount: settings.serviceChargeActiveDiscount,
+          inActiveDiscount: settings.serviceChargeInActiveDiscount
+        }));
       });
   }, []);
 
@@ -109,26 +254,6 @@ const BillingProfileForm = (props) => {
     }
   }, [action, documentId, getShopDocument]);
 
-  useEffect(() => {
-    const serviceCharge = calculateServiceCharge(
-      settings.baseServiceCharge,
-      state.shopUnits,
-      state.shopStatus,
-      settings.serviceChargeActiveDiscount,
-      settings.serviceChargeInActiveDiscount
-    );
-    setState((prevState) => ({
-      ...prevState,
-      serviceCharge: serviceCharge ? serviceCharge : 0
-    }));
-  }, [
-    settings.baseServiceCharge,
-    state.shopUnits,
-    state.shopStatus,
-    settings.serviceChargeActiveDiscount,
-    settings.serviceChargeInActiveDiscount
-  ]);
-
   const onInputChange = (event) => {
     const { name, value } = event.target;
     setState((prevState) => ({
@@ -139,12 +264,16 @@ const BillingProfileForm = (props) => {
 
   const createDocument = async (payload) => {
     try {
-      const newDocumentRef = db.collection(BILLING_PROFILES_COLLECTION).doc();
-      const newDocumentData = payload;
-      newDocumentData.id = newDocumentRef.id;
-      await newDocumentRef.set(newDocumentData);
-      enqueueSnackbar('Shop created successfully!', { variant: 'success' });
-      history.goBack();
+      if (payload.shopList.length) {
+        const newDocumentRef = db.collection(BILLING_PROFILES_COLLECTION).doc();
+        const newDocumentData = payload;
+        newDocumentData.id = newDocumentRef.id;
+        await newDocumentRef.set(newDocumentData);
+        enqueueSnackbar('Shop created successfully!', { variant: 'success' });
+        history.goBack();
+      } else {
+        enqueueSnackbar('Please add shop list!', { variant: 'error' });
+      }
     } catch (error) {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
@@ -167,6 +296,25 @@ const BillingProfileForm = (props) => {
             'No customer found! Please create a customer first.',
             { variant: 'error' }
           );
+          history.goBack();
+        }
+      });
+  }, [enqueueSnackbar]);
+
+  useEffect(() => {
+    const _shops = [];
+    db.collection(SHOPS_COLLECTION)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          _shops.push(doc.data());
+        });
+        if (_shops.length) {
+          setShops(_shops.sort(listSort('shopNumber')));
+        } else {
+          enqueueSnackbar('No shop found! Please create a shop first.', {
+            variant: 'error'
+          });
           history.goBack();
         }
       });
@@ -229,44 +377,57 @@ const BillingProfileForm = (props) => {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  value={state.shopNumber}
-                  onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Shop numnber is required']}
-                  disabled={action === EDIT}
-                  type="text"
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="shopNumber"
-                  label="Shop Number"
-                  name="shopNumber"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextValidator
-                  disabled={action === EDIT}
-                  validators={['required', 'minNumber:1', 'maxNumber:1000']}
-                  errorMessages={[
-                    'Shop units is required',
-                    'Shop units must be greater than 1',
-                    'Shop units must be less than 10000'
-                  ]}
-                  margin="normal"
-                  variant="outlined"
-                  label="Shop Units"
-                  value={state.shopUnits}
-                  onChange={onInputChange}
-                  id="shopUnits"
-                  name="shopUnits"
-                  type="number"
-                  required
-                  fullWidth
-                />
+              <Grid item xs={12}>
+                {shops.length ? (
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel htmlFor="shopList">Shop List</InputLabel>
+                    <Select
+                      required
+                      fullWidth
+                      multiple
+                      disabled={action === EDIT}
+                      variant="outlined"
+                      label="Shop(s)"
+                      labelId="shopList"
+                      id="shopList"
+                      value={state.shopList}
+                      onChange={handleChange}
+                      input={<Input />}
+                      renderValue={(selected) => (
+                        <div className={classes.chips}>
+                          {selected.map((value) => (
+                            <Chip
+                              key={value}
+                              label={value}
+                              className={classes.chip}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      MenuProps={MenuProps}
+                      inputProps={{
+                        name: 'shopList',
+                        id: 'shopList'
+                      }}
+                    >
+                      {shops.map((shop) => (
+                        <MenuItem key={shop.id} value={shop.shopNumber}>
+                          <Checkbox
+                            checked={
+                              state.shopList.indexOf(shop.shopNumber) > -1
+                            }
+                          />
+                          <ListItemText primary={shop.shopNumber} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <CircularProgress />
+                )}
               </Grid>
 
               <Grid item md={6} xs={12}>
@@ -316,7 +477,26 @@ const BillingProfileForm = (props) => {
                 </SelectValidator>
               </Grid>
 
-              <Grid item md={12} xs={12}>
+              <Grid item md={6} xs={12}>
+                <SelectValidator
+                  fullWidth
+                  validators={['required']}
+                  errorMessages={['Billing cycle is required']}
+                  margin="normal"
+                  variant="outlined"
+                  label="Billing Cycle"
+                  value={state.billingCycle}
+                  onChange={onInputChange}
+                  id="billingCycle"
+                  name="billingCycle"
+                >
+                  <MenuItem value={1}>Monthly (1 Month)</MenuItem>
+                  <MenuItem value={3}>Quarterly (3 Months)</MenuItem>
+                  <MenuItem value={6}>Bi-Annually (6 Months)</MenuItem>
+                  <MenuItem value={12}>Annually (12 Months)</MenuItem>
+                </SelectValidator>
+              </Grid>
+              <Grid item md={6} xs={12}>
                 <Box display="flex" justifyContent="flex-end">
                   <Typography variant="caption">Service Charge</Typography>
                 </Box>

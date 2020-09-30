@@ -26,6 +26,7 @@ import { currencyFormatter, moment } from '../../shared/utils';
 const InvoicePage = ({ classes }) => {
   const { id: documentId } = useParams();
   const [invoiceDocument, setInvoiceDocument] = useState({});
+  const [invoiceItems, setInvoiceItems] = useState([]);
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -48,6 +49,20 @@ const InvoicePage = ({ classes }) => {
           'MMMM Do YYYY'
         )
       });
+
+      setInvoiceItems(
+        documentData.invoiceItemsList.map((item, index) => {
+          return {
+            id: index + 1,
+            item: item.invoiceItem,
+            Description: item.invoiceDescription,
+            'Unit Cost (NGN)': currencyFormatter(item.unitCost),
+            'Sub Total (NGN)': currencyFormatter(item.subTotalCost),
+            'Duration (Months)': item.duration,
+            'Amount (NGN)': currencyFormatter(item.totalAmount)
+          };
+        })
+      );
       setLoading(false);
     });
   }, [documentId]);
@@ -60,19 +75,6 @@ const InvoicePage = ({ classes }) => {
     });
   }, []);
 
-  const invoice = [
-    {
-      id: 1,
-      item: invoiceDocument.invoiceItem,
-      description: invoiceDocument.invoiceDescription,
-      cost: `NGN ${currencyFormatter(invoiceDocument.unitCost)}`,
-      duration:
-        invoiceDocument.duration > 1
-          ? `${invoiceDocument.duration} Months`
-          : `${invoiceDocument.duration} Month`,
-      total: `NGN ${currencyFormatter(invoiceDocument.totalCost)}`
-    }
-  ];
   return (
     <React.Fragment>
       {loading ? (
@@ -194,7 +196,10 @@ const InvoicePage = ({ classes }) => {
 
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={12} lg={12}>
-                    <TableCard classes={classes} data={invoice}></TableCard>
+                    <TableCard
+                      classes={classes}
+                      data={invoiceItems}
+                    ></TableCard>
                   </Grid>
                 </Grid>
                 <Grid container spacing={3}>
