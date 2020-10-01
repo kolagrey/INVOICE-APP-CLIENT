@@ -73,12 +73,12 @@ const ReceiptsPage = ({
   };
 
   useEffect(() => {
-    updateTitle('Invoices');
+    updateTitle('Receipts');
   }, [updateTitle]);
 
   const listConfig = {
-    title: 'Invoices',
-    searchPlaceholder: 'Search Receipt',
+    title: 'Receipts',
+    searchPlaceholder: 'Search Receipts',
     headCells: [
       {
         id: 'receiptNumber',
