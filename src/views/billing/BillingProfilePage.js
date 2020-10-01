@@ -65,6 +65,12 @@ function BillingProfilePage({ updateTitle }) {
                   secondary={state.shopStatus}
                 />
               </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Billing Cycle (Months)"
+                  secondary={state.billingCycle}
+                />
+              </ListItem>
             </List>
           </Card>
         </Grid>

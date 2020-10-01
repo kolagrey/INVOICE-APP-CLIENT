@@ -41,7 +41,7 @@ export default function TableCard(props) {
           <TableRow>
             {fields.map((field) => (
               <TableCell key={field} align="left">
-                <h3>{field.toUpperCase()}</h3>
+                <h5>{field.toUpperCase()}</h5>
               </TableCell>
             ))}
           </TableRow>

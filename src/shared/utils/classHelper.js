@@ -272,6 +272,17 @@ const useStyles = (makeStyles) =>
     },
     depositContext: {
       flex: 1
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: '100%'
+    },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    chip: {
+      margin: 2
     }
   }));
 

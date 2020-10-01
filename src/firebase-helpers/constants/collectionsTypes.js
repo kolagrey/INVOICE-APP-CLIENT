@@ -7,3 +7,5 @@ export const RECEIPTS_COLLECTION = 'receipts';
 export const SETTINGS_COLLECTION = 'settings';
 export const ACTIVITY_TRACKER_COLLECTIONS = 'activityTracker';
 export const IDS_TRACKER_COLLECTION = 'idsTracker';
+export const DASHBOARD_SUMMARY_COLLECTION = 'dashboardSummary';
+export const DASHBOARD_CHART_COLLECTION = 'dashboardChart';

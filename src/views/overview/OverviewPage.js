@@ -1,40 +1,111 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import sharedAction from '../../redux/actions/shared';
-/* import TableCard from '../../shared/components/TableCard'; */
 import Page from '../../shared/components/Page';
 import {
   Grid,
   useTheme,
-  colors
-  /*  AccountBalanceIcon,
-  Typography */
+  colors,
+  CircularProgress,
+  AccountBalanceWalletIcon,
+  MoneyIcon,
+  StoreIcon,
+  PeopleIcon
 } from '../../materials';
 
 import SummaryCard from './components/SummaryCard';
 import InvoiceReceiptChart from './components/InvoiceReceiptChart';
+import {
+  DASHBOARD_CHART_COLLECTION,
+  DASHBOARD_SUMMARY_COLLECTION
+} from '../../firebase-helpers/constants/collectionsTypes';
+import { DASHBOARD_SUMMARY_ID } from '../../shared/constants';
+import { db } from '../../services/firebase';
+import useData from '../../shared/hooks/useData';
+import { getTotalMonthValue } from '../../shared/utils/sortUtils';
 
 const { updatePageTitle } = sharedAction;
 
 const OverviewPage = (props) => {
-  const { classes, summary, updateTitle } = props;
+  const { classes, updateTitle } = props;
   const theme = useTheme();
-  const data = {
-    datasets: [
-      {
-        backgroundColor: colors.indigo[500],
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'Invoices'
-      },
-      {
-        backgroundColor: colors.grey[200],
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Receipts'
-      }
-    ],
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+  const [data, loading] = useData(DASHBOARD_CHART_COLLECTION, useState);
+
+  const [summary, setSummary] = useState({
+    customers: 0,
+    shops: 0,
+    invoices: 0,
+    receipts: 0
+  });
+
+  const [chart, setChart] = useState({
+    datasets: [],
+    labels: []
+  });
+
+  const deriveChartData = (dashboardChartData) => {
+    const invoiceData = [];
+    const receiptData = [];
+    const year = new Date().getFullYear();
+    const dataSet = [...dashboardChartData];
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((month) => {
+      const entity = 'invoice';
+      invoiceData.push(getTotalMonthValue({ month, year, entity, dataSet }));
+    });
+
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach((month) => {
+      const entity = 'receipt';
+      receiptData.push(getTotalMonthValue({ month, year, entity, dataSet }));
+    });
+    return [invoiceData, receiptData];
   };
+
+  useEffect(() => {
+    const documentDocRef = db
+      .collection(DASHBOARD_SUMMARY_COLLECTION)
+      .doc(DASHBOARD_SUMMARY_ID);
+    documentDocRef.get().then((documentDoc) => {
+      const documentData = documentDoc.data();
+      setSummary((prevState) => ({
+        ...prevState,
+        ...documentData
+      }));
+    });
+  }, []);
+
+  useEffect(() => {
+    const [invoiceData, receiptData] = deriveChartData(data);
+    setChart({
+      data: deriveChartData(data),
+      datasets: [
+        {
+          backgroundColor: colors.indigo[500],
+          data: invoiceData,
+          label: 'Invoices'
+        },
+        {
+          backgroundColor: colors.grey[200],
+          data: receiptData,
+          label: 'Receipts'
+        }
+      ],
+      labels: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ]
+    });
+  }, [data]);
 
   const options = {
     animation: false,
@@ -99,64 +170,55 @@ const OverviewPage = (props) => {
   return (
     <React.Fragment>
       <Page className={classes.root} title="Billing App | Overview">
-        <Grid container spacing={3}>
-          {/* Summary */}
-          <Grid item xs={12} md={3} lg={3}>
-            <SummaryCard
-              classes={classes}
-              title={'Customers'}
-              value={summary.users}
-            />
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Grid container spacing={3}>
+            {/* Summary */}
+            <Grid item xs={12} md={3} lg={3}>
+              <SummaryCard
+                Icon={PeopleIcon}
+                classes={classes}
+                title={'Customers'}
+                value={summary.customers}
+              />
+            </Grid>
+            <Grid item xs={12} md={3} lg={3}>
+              <SummaryCard
+                Icon={StoreIcon}
+                classes={classes}
+                title={'Shops'}
+                value={summary.shops}
+              />
+            </Grid>
+            <Grid item xs={12} md={3} lg={3}>
+              <SummaryCard
+                Icon={MoneyIcon}
+                classes={classes}
+                title={'Invoices'}
+                value={summary.invoices}
+              />
+            </Grid>
+            <Grid item xs={12} md={3} lg={3}>
+              <SummaryCard
+                Icon={AccountBalanceWalletIcon}
+                classes={classes}
+                title={'Receipts'}
+                value={summary.receipts}
+              />
+            </Grid>
+            <Grid item lg={12} md={12} xl={12} xs={12}>
+              <InvoiceReceiptChart
+                chartData={chart}
+                chartOption={options}
+                classes={classes}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={3} lg={3}>
-            <SummaryCard
-              classes={classes}
-              title={'Shops'}
-              value={summary.bounties}
-            />
-          </Grid>
-          <Grid item xs={12} md={3} lg={3}>
-            <SummaryCard
-              classes={classes}
-              title={'Invoices'}
-              value={summary.vault}
-            />
-          </Grid>
-          <Grid item xs={12} md={3} lg={3}>
-            <SummaryCard
-              classes={classes}
-              title={'Receipts'}
-              value={summary.vault}
-            />
-          </Grid>
-          <Grid item lg={12} md={12} xl={12} xs={12}>
-            <InvoiceReceiptChart
-              chartData={data}
-              chartOption={options}
-              classes={classes}
-            />
-          </Grid>
-          {/*    <Grid item lg={12} md={12} xl={12} xs={12}>
-            <Typography color="textPrimary" variant="h4">
-              {'Most Recent Receipts'}
-            </Typography>
-            <TableCard
-              data={tableData}
-              classes={classes}
-              defaultIcon={AccountBalanceIcon}
-            />
-          </Grid> */}
-        </Grid>
+        )}
       </Page>
     </React.Fragment>
   );
-};
-
-const mapStateToProps = (state) => {
-  return {
-    loading: state.dashboard.loading,
-    summary: state.dashboard.summary
-  };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -164,4 +226,4 @@ const mapDispatchToProps = (dispatch) => {
     updateTitle: (payload) => dispatch(updatePageTitle(payload))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OverviewPage);
+export default connect(null, mapDispatchToProps)(OverviewPage);
