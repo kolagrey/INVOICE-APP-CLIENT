@@ -35,6 +35,8 @@ const InvoicePage = lazy(() => import('../views/invoice/InvoicePage'));
 const InvoiceForm = lazy(() => import('../views/invoice/InvoiceForm'));
 
 const ReceiptsPage = lazy(() => import('../views/receipt/ReceiptsPage'));
+const ReceiptPage = lazy(() => import('../views/receipt/ReceiptPage'));
+
 const SettingsPage = lazy(() => import('../views/settings/SettingsPage'));
 const ProfilePage = lazy(() => import('../views/profile/ProfilePage'));
 const ReportPage = lazy(() => import('../views/report/ReportPage'));
@@ -234,6 +236,7 @@ const AppRouter = (props) => {
               </RouteGaurd>
               {/* INVOICE ROUTES ENDS*/}
 
+              {/* RECEIPT ROUTE STARTS */}
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
@@ -243,6 +246,17 @@ const AppRouter = (props) => {
               >
                 <ReceiptsPage classes={classes} />
               </RouteGaurd>
+              <RouteGaurd
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/receipt/:id"
+              >
+                <ReceiptPage classes={classes} />
+              </RouteGaurd>
+              {/* RECEIPT ROUTE ENDS */}
+
               <RouteGaurd
                 Route={Route}
                 Redirect={Redirect}
