@@ -49,9 +49,9 @@ const InvoicePage = ({ classes }) => {
           'MMMM Do YYYY'
         )
       });
-
+      const invoiceList = documentData.invoiceItemsList || []
       setInvoiceItems(
-        documentData.invoiceItemsList.map((item, index) => {
+        invoiceList.map((item, index) => {
           return {
             id: index + 1,
             item: item.invoiceItem,
