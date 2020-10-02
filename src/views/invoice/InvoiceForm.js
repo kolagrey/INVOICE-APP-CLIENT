@@ -33,7 +33,12 @@ import { InvoiceCustomer } from '../../models/User';
 import { history } from '../../router';
 import { db, fb } from '../../services/firebase';
 import Page from '../../shared/components/Page';
-import { EDIT, INVOICE_PREFIX, SETTINGS_ID } from '../../shared/constants';
+import {
+  EDIT,
+  INVOICE_PREFIX,
+  SETTINGS_ID,
+  STATUS_PENDING
+} from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
 
 const InvoiceForm = (props) => {
@@ -247,13 +252,17 @@ const InvoiceForm = (props) => {
       invoiceDueDate: new Date(state.invoiceDueDate),
       invoiceNumber: `${INVOICE_PREFIX}${options.nextInvoiceId}`,
       shopNumber: options.shopNumber,
-
+      duration:
+        options.billingCycle > 1
+          ? `${options.billingCycle} months`
+          : `${options.billingCycle} month`,
       invoiceItemsList: options.invoiceItemsList,
 
       vat: options.settings.vat,
       vatValue: options.vatValue,
       totalCost: options.subTotalCost,
       grandTotal: options.grandTotal,
+      status: STATUS_PENDING,
       created: fb.FieldValue.serverTimestamp()
     };
 
@@ -285,6 +294,7 @@ const InvoiceForm = (props) => {
         vatValue: options.vatValue,
         totalCost: options.subTotalCost,
         grandTotal: options.grandTotal,
+        status: STATUS_PENDING,
         updated: fb.FieldValue.serverTimestamp()
       };
       const customoreRef = db.collection(INVOICES_COLLECTION).doc(documentId);

@@ -8,11 +8,20 @@ import AlertDialog from '../../shared/components/AlertDialog';
 import BlankView from '../../shared/components/BlankView';
 import { CircularProgress } from '../../materials';
 import useData from '../../shared/hooks/useData';
-import { INVOICES_COLLECTION } from '../../firebase-helpers/constants/collectionsTypes';
+import {
+  IDS_TRACKER_COLLECTION,
+  INVOICES_COLLECTION,
+  RECEIPTS_COLLECTION
+} from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
 import { useSnackbar } from 'notistack';
-import { ADMIN_ROLE, MANAGER_ROLE } from '../../shared/constants';
+import {
+  ADMIN_ROLE,
+  MANAGER_ROLE,
+  STATUS_PAID,
+  STATUS_PENDING
+} from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
 
 const { updatePageTitle, updateAlertDialogState } = sharedAction;
@@ -28,23 +37,20 @@ const InvoicesPage = ({
   const [data, loading] = useData(INVOICES_COLLECTION, useState);
   const [documentId, setDocumentId] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [approvalLoading, setApprovalLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const filterDocument = (doc) => {
     const nameSearchText = doc.customerFullName
       ? doc.customerFullName.toLowerCase()
       : doc.customerCompanyName.toLowerCase();
-    const invoiceNumberSearchText = doc.invoiceNumber.toLowerCase();
+    const invoiceNumberSearchText = doc.invoiceNumber + '';
     const shopNumberSearchText = doc.shopNumber.toLowerCase();
-    const accountPaymentSearchText = doc.bankName
-      ? doc.bankName.toLowerCase()
-      : '';
     return searchQuery.length === 0
       ? true
       : invoiceNumberSearchText.includes(searchQuery.toLowerCase()) ||
           nameSearchText.includes(searchQuery.toLowerCase()) ||
-          shopNumberSearchText.includes(searchQuery.toLowerCase()) ||
-          accountPaymentSearchText.includes(searchQuery.toLowerCase());
+          shopNumberSearchText.includes(searchQuery.toLowerCase());
   };
 
   const mapDocument = (doc) => {
@@ -55,7 +61,9 @@ const InvoicesPage = ({
     return doc;
   };
 
-  const formattedData = data.map(mapDocument);
+  const formattedData = data
+    .filter((doc) => !doc.status || doc.status === STATUS_PENDING)
+    .map(mapDocument);
 
   const deleteDocument = (documentId) => {
     updateAlertState(true);
@@ -68,6 +76,66 @@ const InvoicesPage = ({
       updateAlertState(false);
       enqueueSnackbar('Invoice deleted successfully!', { variant: 'success' });
     });
+  };
+
+  const getLastId = () => {
+    return new Promise((resolve, reject) => {
+      db.collection(IDS_TRACKER_COLLECTION)
+        .doc('receipt')
+        .get()
+        .then((doc) => {
+          resolve(doc.data().nextId);
+        });
+    });
+  };
+
+  // Invoice Approval Action
+  const approveInvoice = async (invoiceIds) => {
+    try {
+      if (invoiceIds && invoiceIds.length) {
+        setApprovalLoading(true);
+        let idLength = invoiceIds.length;
+        let nextId = await getLastId();
+        invoiceIds.forEach((invoiceId) => {
+          const documentDocRef = db
+            .collection(INVOICES_COLLECTION)
+            .doc(invoiceId);
+          documentDocRef.get().then((document) => {
+            const receiptDocument = {
+              ...document.data(),
+              status: STATUS_PAID,
+              receiptDate: new Date(),
+              receiptNumber: nextId++,
+              approvedBy: {
+                id: user.id,
+                fullName: `${user.firstName} ${user.lastName}`,
+                email: user.email
+              }
+            };
+            documentDocRef.update({ status: STATUS_PAID }).then(() => {
+              const newDocumentRef = db.collection(RECEIPTS_COLLECTION).doc();
+              receiptDocument.id = newDocumentRef.id;
+              newDocumentRef.set(receiptDocument).then(() => {
+                idLength--;
+                if (idLength === 0) {
+                  setApprovalLoading(false);
+                  enqueueSnackbar(
+                    `${invoiceIds.length} Invoice approved successfully!`,
+                    {
+                      variant: 'success'
+                    }
+                  );
+                }
+              });
+            });
+          });
+        });
+      } else {
+        enqueueSnackbar('Unable to execute action!', { variant: 'error' });
+      }
+    } catch (error) {
+      enqueueSnackbar('Unable to execute action!', { variant: 'error' });
+    }
   };
 
   useEffect(() => {
@@ -109,6 +177,7 @@ const InvoicesPage = ({
         label: 'Total'
       }
     ],
+    showApproval: true,
     showSearchToolbar: true,
     showCheckbox: true,
     showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
@@ -118,6 +187,8 @@ const InvoicesPage = ({
     canCreate: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     showFilter: false,
     showAddButton: true,
+    approvalLoading: approvalLoading,
+    approvalAction: approveInvoice,
     filterAction: () => {},
     deleteAction: deleteDocument,
     searchAction: setSearchQuery,
@@ -139,7 +210,7 @@ const InvoicesPage = ({
         cancelText={'Discard'}
         updateAlertState={updateAlertState}
       />
-      {data.length ? (
+      {formattedData.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
           data={formattedData.filter(filterDocument)}

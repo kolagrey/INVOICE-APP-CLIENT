@@ -1,3 +1,4 @@
+import { deepPurple } from '@material-ui/core/colors';
 import { colors } from '../../materials';
 
 const drawerWidth = 240;
@@ -283,6 +284,10 @@ const useStyles = (makeStyles) =>
     },
     chip: {
       margin: 2
+    },
+    purple: {
+      color: theme.palette.getContrastText(deepPurple[500]),
+      backgroundColor: deepPurple[500]
     }
   }));
 
