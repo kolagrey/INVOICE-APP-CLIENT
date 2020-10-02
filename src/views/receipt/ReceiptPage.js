@@ -285,10 +285,7 @@ const ReceiptPage = ({ classes }) => {
                     lg={12}
                     style={{ marginTop: 40, marginBottom: 30 }}
                   >
-                    <div style={invoiceHeadersStyle}>PAYMENT INSTRUCTION</div>
-                    <div>{receiptDocument.bankAccountName}</div>
-                    <div>{receiptDocument.bankAccountNumber}</div>
-                    <div>{receiptDocument.bankName}</div>
+                    <h3>PAYMENT RECEIVED</h3>
                   </Grid>
                   <Grid
                     item

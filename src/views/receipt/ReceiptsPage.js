@@ -34,19 +34,15 @@ const ReceiptsPage = ({
     const nameSearchText = doc.customerFullName
       ? doc.customerFullName.toLowerCase()
       : doc.customerCompanyName.toLowerCase();
-    const invoiceNumberSearchText = doc.invoiceNumber.toLowerCase();
-    const receiptNumberSearchText = doc.receiptNumber.toLowerCase();
+    const invoiceNumberSearchText = doc.invoiceNumber + '';
+    const receiptNumberSearchText = doc.receiptNumber + '';
     const shopNumberSearchText = doc.shopNumber.toLowerCase();
-    const accountPaymentSearchText = doc.bankName
-      ? doc.bankName.toLowerCase()
-      : '';
     return searchQuery.length === 0
       ? true
       : invoiceNumberSearchText.includes(searchQuery.toLowerCase()) ||
           receiptNumberSearchText.includes(searchQuery.toLowerCase()) ||
           nameSearchText.includes(searchQuery.toLowerCase()) ||
-          shopNumberSearchText.includes(searchQuery.toLowerCase()) ||
-          accountPaymentSearchText.includes(searchQuery.toLowerCase());
+          shopNumberSearchText.includes(searchQuery.toLowerCase());
   };
 
   const mapDocument = (doc) => {
@@ -84,13 +80,13 @@ const ReceiptsPage = ({
         id: 'receiptNumber',
         numeric: false,
         disablePadding: true,
-        label: 'Receipt'
+        label: 'Receipt No.'
       },
       {
         id: 'invoiceNumber',
         numeric: false,
         disablePadding: true,
-        label: 'Invoice'
+        label: 'Invoice No.'
       },
       {
         id: 'customerFullName',
@@ -118,7 +114,7 @@ const ReceiptsPage = ({
       }
     ],
     showSearchToolbar: true,
-    showCheckbox: true,
+    showCheckbox: false,
     showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     canView: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     canEdit: false,
@@ -147,7 +143,7 @@ const ReceiptsPage = ({
         cancelText={'Discard'}
         updateAlertState={updateAlertState}
       />
-      {data.length ? (
+      {formattedData.length ? (
         <ListView
           updateAlertDialogState={updateAlertState}
           data={formattedData.filter(filterDocument)}

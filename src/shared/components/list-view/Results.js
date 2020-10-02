@@ -39,19 +39,19 @@ const Results = ({ classes, data, listConfig }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = data.map((n) => n.name);
+      const newSelecteds = data.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -83,6 +83,10 @@ const Results = ({ classes, data, listConfig }) => {
   return (
     <Paper>
       <EnhancedTableToolbar
+        showApproval={listConfig.showApproval}
+        approvalAction={listConfig.approvalAction}
+        approvalLoading={listConfig.approvalLoading}
+        selectedIds={selected}
         numSelected={selected.length}
         classes={classes}
         tableTitle={listConfig.title}
@@ -110,7 +114,7 @@ const Results = ({ classes, data, listConfig }) => {
             {stableSort(data, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
-                const isItemSelected = isSelected(row.name);
+                const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -125,7 +129,7 @@ const Results = ({ classes, data, listConfig }) => {
                     {listConfig.showCheckbox && (
                       <TableCell
                         padding="checkbox"
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row.id)}
                       >
                         <Checkbox
                           checked={isItemSelected}

@@ -10,3 +10,5 @@ export const EXTRA = 'Extra';
 export const INACTIVE = 'In Active';
 export const SETTINGS_ID = 'WFwkJiAaJWrAQ4kbYrTv';
 export const DASHBOARD_SUMMARY_ID = 'summary';
+export const STATUS_PENDING = 'Pending';
+export const STATUS_PAID = 'Paid';
