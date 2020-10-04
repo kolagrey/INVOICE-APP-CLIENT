@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Box, Avatar, TableCell } from '../../../materials';
 import { getInitials } from '../../../shared/utils';
+import { Chip } from '@material-ui/core';
 
 const EnhancedTableCell = ({
   fieldName,
@@ -21,6 +22,20 @@ const EnhancedTableCell = ({
   ) : fieldName === 'Created' ? (
     <TableCell align="left">
       {moment(fieldValue).format('DD/MM/YYYY')}
+    </TableCell>
+  ) : fieldName === 'Status' ? (
+    <TableCell align="left">
+      <Chip
+        label={fieldValue}
+        color={fieldValue === 'Paid' ? 'primary' : 'secondary'}
+      />
+    </TableCell>
+  ) : fieldName === 'Shop Status' ? (
+    <TableCell align="left">
+      <Chip
+        label={fieldValue}
+        color={fieldValue === 'Active' ? 'primary' : 'secondary'}
+      />
     </TableCell>
   ) : (
     <TableCell align="left">{fieldValue}</TableCell>
