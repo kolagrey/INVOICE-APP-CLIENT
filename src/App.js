@@ -5,7 +5,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { deepPurple, grey } from '@material-ui/core/colors';
 import { SnackbarProvider } from 'notistack';
 
-import { Router, history } from './router';
+import { Router } from './router';
 import { auth } from './services/firebase';
 import authActions from './redux/actions/auth';
 import profileActions from './redux/actions/profile';
@@ -42,7 +42,6 @@ class App extends React.Component {
       } else {
         this.props.getCompanySettings();
         await this.props.getUserProfile(user.uid);
-        history.push('/dashboard');
       }
     });
   }
