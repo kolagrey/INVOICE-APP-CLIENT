@@ -60,13 +60,13 @@ const CustomersPage = ({
       {
         id: 'shopNumber',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Shop Number'
       },
       {
         id: 'shopStatus',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Shop Status'
       }
     ],

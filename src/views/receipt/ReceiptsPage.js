@@ -79,19 +79,19 @@ const ReceiptsPage = ({
       {
         id: 'receiptNumber',
         numeric: false,
-        disablePadding: true,
-        label: 'Receipt No.'
+        disablePadding: false,
+        label: 'Receipt#'
       },
       {
         id: 'invoiceNumber',
         numeric: false,
-        disablePadding: true,
-        label: 'Invoice No.'
+        disablePadding: false,
+        label: 'Invoice#'
       },
       {
         id: 'customerFullName',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Customer'
       },
       {
@@ -115,10 +115,10 @@ const ReceiptsPage = ({
     ],
     showSearchToolbar: true,
     showCheckbox: false,
-    showAction: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    showAction: true,
     canView: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
     canEdit: false,
-    canDelete: user.role === ADMIN_ROLE || user.role === MANAGER_ROLE,
+    canDelete: user.role === ADMIN_ROLE,
     canCreate: false,
     showFilter: false,
     showAddButton: false,

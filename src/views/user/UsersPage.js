@@ -69,19 +69,19 @@ const UsersPage = ({
       {
         id: 'avatar',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Avatar'
       },
       {
         id: 'firstName',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Firstname'
       },
       {
         id: 'lastName',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Lastname'
       },
       {

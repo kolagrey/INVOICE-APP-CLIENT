@@ -7,7 +7,12 @@ import {
 import { dispatcher } from '../action.helper';
 import { history } from '../../../router';
 
-import { signUp, signIn, signOut, sendVerificationEmail } from '../../../firebase-helpers/functions/authFunctions';
+import {
+  signUp,
+  signIn,
+  signOut,
+  sendVerificationEmail
+} from '../../../firebase-helpers/functions/authFunctions';
 import { updateAdminProfile } from '../../../firebase-helpers/functions/userProfileFunctions';
 import { UserAuth, UserProfile } from '../../../models/User';
 

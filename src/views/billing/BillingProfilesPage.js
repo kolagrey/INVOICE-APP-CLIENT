@@ -73,13 +73,13 @@ const BillingProfilesPage = ({
       {
         id: 'shopNumber',
         numeric: false,
-        disablePadding: true,
-        label: 'Shop Number'
+        disablePadding: false,
+        label: 'Shop(s)'
       },
       {
         id: 'formattedServiceCharge',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Service Charge'
       },
       {

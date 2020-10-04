@@ -15,6 +15,7 @@ import {
 
 import Copyright from '../../../shared/components/Copyright';
 import { Logo192 } from '../../../assets';
+import { history } from '../../../router';
 
 const LoginForm = (props) => {
   const { classes, authenticateUser, loading } = props;
@@ -36,6 +37,7 @@ const LoginForm = (props) => {
     e.preventDefault();
     try {
       await authenticateUser(state);
+      history.push('/dashboard');
     } catch (error) {
       // TODO: Use error logging strategy
       Sentry.captureException(error);

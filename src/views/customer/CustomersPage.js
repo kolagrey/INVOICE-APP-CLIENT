@@ -67,14 +67,14 @@ const CustomersPage = ({
       {
         id: 'avatar',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Avatar'
       },
       {
         id: 'customerFullName',
         numeric: false,
-        disablePadding: true,
-        label: 'Customer Fullname'
+        disablePadding: false,
+        label: 'Customer'
       },
       {
         id: 'customerEmail',

@@ -149,13 +149,13 @@ const InvoicesPage = ({
       {
         id: 'invoiceNumber',
         numeric: false,
-        disablePadding: true,
-        label: 'Invoice'
+        disablePadding: false,
+        label: 'Invoice#'
       },
       {
         id: 'customerFullName',
         numeric: false,
-        disablePadding: true,
+        disablePadding: false,
         label: 'Customer'
       },
       {
