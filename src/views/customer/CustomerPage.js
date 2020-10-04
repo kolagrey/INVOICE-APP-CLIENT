@@ -84,6 +84,12 @@ function CustomerPage({ classes, updateTitle }) {
         numeric: false,
         disablePadding: false,
         label: 'Grand Total'
+      },
+      {
+        id: 'status',
+        number: false,
+        disablePadding: false,
+        label: 'Status'
       }
     ],
     disablePadding: false,

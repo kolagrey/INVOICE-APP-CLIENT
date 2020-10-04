@@ -155,8 +155,9 @@ const InvoiceForm = (props) => {
       .then((doc) => {
         setOptions((prevState) => ({
           ...prevState,
-          nextInvoiceId: doc.data().nextId
+          nextInvoiceId: doc.data().nextId + 1
         }));
+        doc.ref.update({ nextId: doc.data().nextId + 1 });
       });
   }, []);
 
