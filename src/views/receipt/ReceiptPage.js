@@ -190,7 +190,7 @@ const ReceiptPage = ({ classes }) => {
                     xs={6}
                     md={6}
                     lg={6}
-                    style={{ textAlign: 'left', marginBottom: 50 }}
+                    style={{ textAlign: 'right', marginBottom: 50 }}
                   >
                     <div style={invoiceHeadersStyle}>
                       <div>TO</div>
