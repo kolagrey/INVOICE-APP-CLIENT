@@ -31,7 +31,6 @@ const ReceiptPage = ({ classes }) => {
   const [loading, setLoading] = useState(true);
 
   const invoiceHeadersStyle = {
-    textAlign: 'left',
     fontSize: 10,
     color: 'grey'
   };
