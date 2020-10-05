@@ -33,14 +33,18 @@ const CustomersPage = ({
   const formattedData = data.sort(listSort('customerFullName'));
 
   const filterDocument = (doc) => {
-    const nameSearchText = `${doc.customerFirstName} ${doc.customerLastName}`.toLowerCase();
+    const nameSearchText = doc.customerFullName.toLowerCase();
+    const addressSearchText = doc.customerAddress.toLowerCase();
+    const companyNameSearchText = doc.customerCompanyName.toLowerCase();
     const emailSearchText = doc.customerEmail.toLowerCase();
     const telephoneSearchText = doc.customerTelephone.toLowerCase();
     return searchQuery.length === 0
       ? true
       : emailSearchText.includes(searchQuery.toLowerCase()) ||
           telephoneSearchText.includes(searchQuery.toLowerCase()) ||
-          nameSearchText.includes(searchQuery.toLowerCase());
+          nameSearchText.includes(searchQuery.toLowerCase()) ||
+          addressSearchText.includes(searchQuery.toLowerCase()) ||
+          companyNameSearchText.includes(searchQuery.toLowerCase());
   };
 
   const deleteDocument = (documentId) => {

@@ -5,6 +5,7 @@ import { present, moment } from './time.utils';
 import getInitials from './getInitials';
 import currencyFormatter from './currencyFormatter';
 import { getComparator, stableSort, descendingComparator } from './sortUtils';
+import { titleCase } from './textFormatter';
 
 export {
   useStyles,
@@ -18,5 +19,6 @@ export {
   getComparator,
   stableSort,
   descendingComparator,
-  currencyFormatter
+  currencyFormatter,
+  titleCase
 };

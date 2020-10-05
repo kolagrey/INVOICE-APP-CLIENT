@@ -228,10 +228,16 @@ const ReceiptPage = ({ classes }) => {
                         <Table aria-label="card table">
                           <TableBody>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>SubTotal</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(receiptDocument.totalCost)}
@@ -239,18 +245,30 @@ const ReceiptPage = ({ classes }) => {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>VAT</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>{receiptDocument.vat}%</h3>
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>VAT Value</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(receiptDocument.vatValue)}
@@ -258,10 +276,16 @@ const ReceiptPage = ({ classes }) => {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>Grand Total</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(

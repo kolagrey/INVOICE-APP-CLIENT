@@ -169,8 +169,8 @@ const CustomerForm = (props) => {
                   id="shopStatus"
                   name="shopStatus"
                 >
-                  <MenuItem value="Available">Available</MenuItem>
-                  <MenuItem value="Unavailable">Unavailable</MenuItem>
+                  <MenuItem value="Functional">Functional</MenuItem>
+                  <MenuItem value="Non Functional">Non Functional</MenuItem>
                 </SelectValidator>
               </Grid>
             </Grid>

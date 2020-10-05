@@ -33,9 +33,11 @@ const BillingProfilesPage = ({
 
   const filterDocument = (doc) => {
     const shopSearchText = doc.shopNumber.toLowerCase();
+    const customerSearchText = doc.customer.toLowerCase();
     return searchQuery.length === 0
       ? true
-      : shopSearchText.includes(searchQuery.toLowerCase());
+      : shopSearchText.includes(searchQuery.toLowerCase()) ||
+          customerSearchText.includes(searchQuery.toLowerCase());
   };
 
   const mapDocument = (doc) => {
@@ -70,6 +72,12 @@ const BillingProfilesPage = ({
     title: 'Billing Profiles',
     searchPlaceholder: 'Search Billing Profile',
     headCells: [
+      {
+        id: 'customer',
+        numeric: false,
+        disablePadding: false,
+        label: 'Customer'
+      },
       {
         id: 'shopNumber',
         numeric: false,
