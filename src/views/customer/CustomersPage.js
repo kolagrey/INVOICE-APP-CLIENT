@@ -33,7 +33,9 @@ const CustomersPage = ({
   const formattedData = data.sort(listSort('customerFullName'));
 
   const filterDocument = (doc) => {
-    const nameSearchText = doc.customerFullName.toLowerCase();
+    const nameSearchText = doc.customerFullName
+      ? doc.customerFullName.toLowerCase()
+      : '';
     const addressSearchText = doc.customerAddress.toLowerCase();
     const companyNameSearchText = doc.customerCompanyName.toLowerCase();
     const emailSearchText = doc.customerEmail.toLowerCase();
