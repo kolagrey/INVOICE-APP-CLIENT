@@ -37,7 +37,7 @@ export default function TableCard(props) {
   return (
     <TableContainer>
       <Table className={classes.table} aria-label="card table">
-        <TableHead>
+        <TableHead style={{ backgroundColor: '#D8D8D8' }}>
           <TableRow>
             {fields.map((field) => (
               <TableCell key={field} align="left">
@@ -52,6 +52,7 @@ export default function TableCard(props) {
               <TableRow key={row.id}>
                 {fields.map((field) => (
                   <TableCell
+                    style={{ borderBottom: '1px solid #000' }}
                     key={`field-${(
                       Math.random() * new Date().getTime()
                     ).toFixed(0)}-${index}`}

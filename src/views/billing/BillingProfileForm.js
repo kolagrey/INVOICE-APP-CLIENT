@@ -37,7 +37,7 @@ import { history } from '../../router';
 import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { ACTIVE, EDIT, SETTINGS_ID, MAIN, EXTRA } from '../../shared/constants';
-import { currencyFormatter } from '../../shared/utils';
+import { currencyFormatter, titleCase } from '../../shared/utils';
 import { listSort } from '../../shared/utils/sortUtils';
 
 const BillingProfileForm = (props) => {
@@ -113,7 +113,7 @@ const BillingProfileForm = (props) => {
         invoiceItems.push({
           shopNumber: shopList[0],
           invoiceItem: `Main shop`,
-          invoiceDescription: 1,
+          invoiceDescription: `1 (${shopStatus})`,
           duration: 1,
           unitCost: mainServiceCharge,
           subTotalCost,
@@ -137,7 +137,7 @@ const BillingProfileForm = (props) => {
           {
             shopNumber: shopList[0],
             invoiceItem: `Main shop`,
-            invoiceDescription: 1,
+            invoiceDescription: `1 x ${shopStatus}`,
             duration: billingCycle,
             unitCost: mainServiceCharge,
             subTotalCost: firstSubTotalCost,
@@ -146,7 +146,7 @@ const BillingProfileForm = (props) => {
           {
             shopNumber: shopList.slice(1).toString(),
             invoiceItem: `Extra shop(s)`,
-            invoiceDescription: shopUnits - 1,
+            invoiceDescription: `${shopUnits - 1} x ${shopStatus}`,
             duration: billingCycle,
             unitCost: extraServiceCharge,
             subTotalCost: secondSubTotalCost,
@@ -269,7 +269,9 @@ const BillingProfileForm = (props) => {
         const newDocumentData = payload;
         newDocumentData.id = newDocumentRef.id;
         await newDocumentRef.set(newDocumentData);
-        enqueueSnackbar('Shop created successfully!', { variant: 'success' });
+        enqueueSnackbar('Billing profile created successfully!', {
+          variant: 'success'
+        });
         history.goBack();
       } else {
         enqueueSnackbar('Please add shop list!', { variant: 'error' });
@@ -324,9 +326,7 @@ const BillingProfileForm = (props) => {
     const customer = customers.filter((doc) => doc.id === state.customerId)[0];
     setState((prevState) => ({
       ...prevState,
-      customer: customer
-        ? `${customer.customerFirstName} ${customer.customerLastName}`
-        : ''
+      customer: customer ? titleCase(customer.customerFullName) : ''
     }));
   }, [state.customerId, customers]);
 
@@ -472,8 +472,8 @@ const BillingProfileForm = (props) => {
                   id="shopStatus"
                   name="shopStatus"
                 >
-                  <MenuItem value="Active">Functional</MenuItem>
-                  <MenuItem value="In Active">Non Functional</MenuItem>
+                  <MenuItem value="Functional">Functional</MenuItem>
+                  <MenuItem value="Non Functional">Non Functional</MenuItem>
                 </SelectValidator>
               </Grid>
 

@@ -40,6 +40,7 @@ import {
   STATUS_PENDING
 } from '../../shared/constants';
 import { currencyFormatter } from '../../shared/utils';
+import { listSort } from '../../shared/utils/sortUtils';
 
 const InvoiceForm = (props) => {
   const { classes, user } = props;
@@ -355,16 +356,18 @@ const InvoiceForm = (props) => {
                       id="billingProfileId"
                       name="billingProfileId"
                     >
-                      {options.billingProfiles.map((billingProfile) => {
-                        return (
-                          <MenuItem
-                            key={billingProfile.id}
-                            value={billingProfile.id}
-                          >
-                            {billingProfile.shopNumber}
-                          </MenuItem>
-                        );
-                      })}
+                      {options.billingProfiles
+                        .sort(listSort('shopNumber'))
+                        .map((billingProfile) => {
+                          return (
+                            <MenuItem
+                              key={billingProfile.id}
+                              value={billingProfile.id}
+                            >
+                              {billingProfile.shopNumber}
+                            </MenuItem>
+                          );
+                        })}
                     </SelectValidator>
                   </Grid>
                 </React.Fragment>

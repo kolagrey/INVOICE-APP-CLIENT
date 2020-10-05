@@ -11,7 +11,8 @@ import useData from '../../shared/hooks/useData';
 import {
   IDS_TRACKER_COLLECTION,
   INVOICES_COLLECTION,
-  RECEIPTS_COLLECTION
+  RECEIPTS_COLLECTION,
+  SETTINGS_COLLECTION
 } from '../../firebase-helpers/constants/collectionsTypes';
 import { NoDataIcon } from '../../assets';
 import { db } from '../../services/firebase';
@@ -19,6 +20,7 @@ import { useSnackbar } from 'notistack';
 import {
   ADMIN_ROLE,
   MANAGER_ROLE,
+  SETTINGS_ID,
   STATUS_PAID,
   STATUS_PENDING
 } from '../../shared/constants';
@@ -89,6 +91,20 @@ const InvoicesPage = ({
     });
   };
 
+  const getSettings = () => {
+    return new Promise((resolve, reject) => {
+      db.collection(SETTINGS_COLLECTION)
+        .doc(SETTINGS_ID)
+        .get()
+        .then((doc) => {
+          resolve(doc.data());
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
+
   // Invoice Approval Action
   const approveInvoice = async (invoiceIds) => {
     try {
@@ -96,6 +112,7 @@ const InvoicesPage = ({
         setApprovalLoading(true);
         let idLength = invoiceIds.length;
         let nextId = await getLastId();
+        const settings = await getSettings();
         invoiceIds.forEach((invoiceId) => {
           const documentDocRef = db
             .collection(INVOICES_COLLECTION)
@@ -103,6 +120,7 @@ const InvoicesPage = ({
           documentDocRef.get().then((document) => {
             const receiptDocument = {
               ...document.data(),
+              note: settings.receiptNote,
               status: STATUS_PAID,
               receiptDate: new Date(),
               receiptNumber: nextId++,

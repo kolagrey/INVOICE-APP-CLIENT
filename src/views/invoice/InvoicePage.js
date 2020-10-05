@@ -49,7 +49,7 @@ const InvoicePage = ({ classes }) => {
           'MMMM Do YYYY'
         )
       });
-      const invoiceList = documentData.invoiceItemsList || []
+      const invoiceList = documentData.invoiceItemsList || [];
       setInvoiceItems(
         invoiceList.map((item, index) => {
           return {
@@ -172,7 +172,7 @@ const InvoicePage = ({ classes }) => {
                     xs={6}
                     md={6}
                     lg={6}
-                    style={{ textAlign: 'left', marginBottom: 50 }}
+                    style={{ textAlign: 'right', marginBottom: 50 }}
                   >
                     <div style={invoiceHeadersStyle}>
                       <div>TO</div>
@@ -210,10 +210,16 @@ const InvoicePage = ({ classes }) => {
                         <Table aria-label="card table">
                           <TableBody>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>SubTotal</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(invoiceDocument.totalCost)}
@@ -221,18 +227,30 @@ const InvoicePage = ({ classes }) => {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>VAT</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>{invoiceDocument.vat}%</h3>
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>VAT Value</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(invoiceDocument.vatValue)}
@@ -240,10 +258,16 @@ const InvoicePage = ({ classes }) => {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell align="right">
+                              <TableCell
+                                align="right"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h4>Grand Total</h4>
                               </TableCell>
-                              <TableCell align="left">
+                              <TableCell
+                                align="left"
+                                style={{ borderBottom: '1px solid #000' }}
+                              >
                                 <h3>
                                   NGN
                                   {currencyFormatter(
@@ -268,9 +292,15 @@ const InvoicePage = ({ classes }) => {
                     style={{ marginTop: 40, marginBottom: 30 }}
                   >
                     <div style={invoiceHeadersStyle}>PAYMENT INSTRUCTION</div>
-                    <div>{invoiceDocument.bankAccountName}</div>
-                    <div>{invoiceDocument.bankAccountNumber}</div>
-                    <div>{invoiceDocument.bankName}</div>
+                    <div style={{ fontSize: 16 }}>
+                      {invoiceDocument.bankAccountName}
+                    </div>
+                    <div style={{ fontSize: 16 }}>
+                      {invoiceDocument.bankAccountNumber}
+                    </div>
+                    <div style={{ fontSize: 16 }}>
+                      {invoiceDocument.bankName}
+                    </div>
                   </Grid>
                   <Grid
                     item

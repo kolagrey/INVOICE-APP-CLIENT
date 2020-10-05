@@ -26,6 +26,7 @@ import { history } from '../../router';
 import { db } from '../../services/firebase';
 import Page from '../../shared/components/Page';
 import { EDIT } from '../../shared/constants';
+import { titleCase } from '../../shared/utils';
 
 const CustomerForm = (props) => {
   const { classes, user } = props;
@@ -76,6 +77,10 @@ const CustomerForm = (props) => {
       const newDocumentRef = db.collection(CUSTOMERS_COLLECTION).doc();
       const newDocumentData = payload;
       newDocumentData.id = newDocumentRef.id;
+      newDocumentData.customerFullName = titleCase(payload.customerFullName);
+      newDocumentData.customerCompanyName = titleCase(
+        payload.customerCompanyName
+      );
       await newDocumentRef.set(newDocumentData);
       enqueueSnackbar('Customer saved successfully!', { variant: 'success' });
       history.goBack();
@@ -90,6 +95,8 @@ const CustomerForm = (props) => {
     try {
       const customorRef = db.collection(CUSTOMERS_COLLECTION).doc(documentId);
       const customerData = { ...payload };
+      customerData.customerFullName = titleCase(payload.customerFullName);
+      customerData.customerCompanyName = titleCase(payload.customerCompanyName);
       await customorRef.set(customerData);
       enqueueSnackbar('Customer saved successfully!', { variant: 'success' });
       history.goBack();

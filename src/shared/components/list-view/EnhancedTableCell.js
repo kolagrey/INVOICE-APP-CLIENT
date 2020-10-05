@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Box, Avatar, TableCell } from '../../../materials';
 import { getInitials } from '../../../shared/utils';
 import { Chip } from '@material-ui/core';
+import { ACTIVE, STATUS_PAID } from '../../constants';
 
 const EnhancedTableCell = ({
   fieldName,
@@ -27,14 +28,14 @@ const EnhancedTableCell = ({
     <TableCell align="left">
       <Chip
         label={fieldValue}
-        color={fieldValue === 'Paid' ? 'primary' : 'secondary'}
+        color={fieldValue === STATUS_PAID ? 'primary' : 'secondary'}
       />
     </TableCell>
   ) : fieldName === 'Shop Status' ? (
     <TableCell align="left">
       <Chip
         label={fieldValue}
-        color={fieldValue === 'Active' ? 'primary' : 'secondary'}
+        color={fieldValue === ACTIVE ? 'primary' : 'secondary'}
       />
     </TableCell>
   ) : (
