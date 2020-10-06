@@ -37,10 +37,17 @@ export default function TableCard(props) {
   return (
     <TableContainer>
       <Table className={classes.table} aria-label="card table">
-        <TableHead style={{ backgroundColor: '#D8D8D8' }}>
-          <TableRow>
+        <TableHead>
+          <TableRow className="tableCardHeaderRow">
             {fields.map((field) => (
-              <TableCell key={field} align="left">
+              <TableCell
+                key={field}
+                align="left"
+                style={{
+                  backgroundColor: '#D8D8D8',
+                  border: '1px solid #000'
+                }}
+              >
                 <h5>{field.toUpperCase()}</h5>
               </TableCell>
             ))}
@@ -49,10 +56,10 @@ export default function TableCard(props) {
         <TableBody>
           {data.map((row, index) => {
             return (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} style={{ border: '1px solid #000' }}>
                 {fields.map((field) => (
                   <TableCell
-                    style={{ borderBottom: '1px solid #000' }}
+                    style={{ border: '1px solid #000' }}
                     key={`field-${(
                       Math.random() * new Date().getTime()
                     ).toFixed(0)}-${index}`}
