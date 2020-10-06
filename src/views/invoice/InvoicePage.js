@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import PrintIcon from '@material-ui/icons/PrintRounded';
 import {
   Button,
@@ -22,8 +23,10 @@ import {
 import { db } from '../../services/firebase';
 import { SETTINGS_ID } from '../../shared/constants';
 import { currencyFormatter, moment } from '../../shared/utils';
+import { updatePageTitle } from '../../redux/actions/shared/sharedActions';
+import Page from '../../shared/components/Page';
 
-const InvoicePage = ({ classes }) => {
+const InvoicePage = ({ classes, updateTitle }) => {
   const { id: documentId } = useParams();
   const [invoiceDocument, setInvoiceDocument] = useState({});
   const [invoiceItems, setInvoiceItems] = useState([]);
@@ -74,8 +77,20 @@ const InvoicePage = ({ classes }) => {
     });
   }, []);
 
+  useEffect(() => {
+    updateTitle(
+      `Invoice ${
+        invoiceDocument.invoiceNumber ? invoiceDocument.invoiceNumber : ''
+      }`
+    );
+  }, [updateTitle, invoiceDocument.invoiceNumber]);
+
   return (
-    <React.Fragment>
+    <Page
+      title={`Billing App | Invoice ${
+        invoiceDocument.invoiceNumber ? invoiceDocument.invoiceNumber : ''
+      }`}
+    >
       {loading ? (
         <CircularProgress />
       ) : (
@@ -204,8 +219,8 @@ const InvoicePage = ({ classes }) => {
                 <Grid container spacing={3}>
                   <Grid item xs={7} md={7} lg={7}></Grid>
                   <Grid item xs={5} md={5} lg={5}>
-                    <Grid container spacing={2}>
-                      <TableContainer>
+                    <Grid container spacing={1}>
+                      <TableContainer style={{ marginRight: 15 }}>
                         <Table aria-label="card table">
                           <TableBody>
                             <TableRow>
@@ -285,20 +300,48 @@ const InvoicePage = ({ classes }) => {
                 <Grid container spacing={2}>
                   <Grid
                     item
-                    xs={12}
-                    md={12}
-                    lg={12}
-                    style={{ marginTop: 40, marginBottom: 30 }}
+                    xs={6}
+                    md={6}
+                    lg={6}
+                    style={{
+                      marginTop: 40,
+                      marginBottom: 30,
+                      textAlign: 'left'
+                    }}
                   >
                     <div style={invoiceHeadersStyle}>PAYMENT INSTRUCTION</div>
-                    <div style={{ fontSize: 16 }}>
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
                       {invoiceDocument.bankAccountName}
                     </div>
-                    <div style={{ fontSize: 16 }}>
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
                       {invoiceDocument.bankAccountNumber}
                     </div>
-                    <div style={{ fontSize: 16 }}>
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
                       {invoiceDocument.bankName}
+                    </div>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    lg={6}
+                    style={{
+                      marginTop: 40,
+                      marginBottom: 30,
+                      textAlign: 'right'
+                    }}
+                  >
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
+                      &nbsp;
+                    </div>
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
+                      &nbsp;
+                    </div>
+                    <div style={{ fontSize: 18, fontWeight: 'bold' }}>
+                      &nbsp;
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 'bold' }}>
+                      Authorized Signature
                     </div>
                   </Grid>
                   <Grid
@@ -306,7 +349,12 @@ const InvoicePage = ({ classes }) => {
                     xs={12}
                     md={12}
                     lg={12}
-                    style={{ textAlign: 'center', marginBottom: 30 }}
+                    style={{
+                      textAlign: 'center',
+                      marginBottom: 30,
+                      border: '1px solid #000',
+                      padding: 10
+                    }}
                   >
                     <i>{invoiceDocument.note}</i>
                   </Grid>
@@ -316,7 +364,7 @@ const InvoicePage = ({ classes }) => {
           </Grid>
         </Grid>
       )}
-    </React.Fragment>
+    </Page>
   );
 };
 
@@ -324,4 +372,12 @@ InvoicePage.propTypes = {
   classes: PropTypes.object
 };
 
-export default InvoicePage;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateTitle: (payload) => {
+      return dispatch(updatePageTitle(payload));
+    }
+  };
+};
+
+export default connect(null, mapDispatchToProps)(InvoicePage);

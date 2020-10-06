@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import PrintIcon from '@material-ui/icons/PrintRounded';
 import {
   Button,
@@ -22,8 +23,10 @@ import {
 import { db } from '../../services/firebase';
 import { SETTINGS_ID } from '../../shared/constants';
 import { currencyFormatter, moment } from '../../shared/utils';
+import { updatePageTitle } from '../../redux/actions/shared/sharedActions';
+import Page from '../../shared/components/Page';
 
-const ReceiptPage = ({ classes }) => {
+const ReceiptPage = ({ classes, updateTitle }) => {
   const { id: documentId } = useParams();
   const [receiptDocument, setReceiptsDocument] = useState({});
   const [invoiceItems, setInvoiceItems] = useState([]);
@@ -77,8 +80,20 @@ const ReceiptPage = ({ classes }) => {
     });
   }, []);
 
+  useEffect(() => {
+    updateTitle(
+      `Receipt ${
+        receiptDocument.receiptNumber ? receiptDocument.receiptNumber : ''
+      }`
+    );
+  }, [updateTitle, receiptDocument.receiptNumber]);
+
   return (
-    <React.Fragment>
+    <Page
+      title={`Billing App | Receipt ${
+        receiptDocument.receiptNumber ? receiptDocument.receiptNumber : ''
+      }`}
+    >
       {loading ? (
         <CircularProgress />
       ) : (
@@ -222,8 +237,8 @@ const ReceiptPage = ({ classes }) => {
                 <Grid container spacing={3}>
                   <Grid item xs={7} md={7} lg={7}></Grid>
                   <Grid item xs={5} md={5} lg={5}>
-                    <Grid container spacing={2}>
-                      <TableContainer>
+                    <Grid container spacing={3}>
+                      <TableContainer style={{ marginRight: 15 }}>
                         <Table aria-label="card table">
                           <TableBody>
                             <TableRow>
@@ -308,14 +323,19 @@ const ReceiptPage = ({ classes }) => {
                     lg={12}
                     style={{ marginTop: 40, marginBottom: 30 }}
                   >
-                    <h3>PAYMENT RECEIVED</h3>
+                    <h1>PAYMENT RECEIVED</h1>
                   </Grid>
                   <Grid
                     item
                     xs={12}
                     md={12}
                     lg={12}
-                    style={{ textAlign: 'center', marginBottom: 30 }}
+                    style={{
+                      textAlign: 'center',
+                      marginBottom: 30,
+                      border: '1px solid #000',
+                      padding: 10
+                    }}
                   >
                     <i>{receiptDocument.note}</i>
                   </Grid>
@@ -325,7 +345,7 @@ const ReceiptPage = ({ classes }) => {
           </Grid>
         </Grid>
       )}
-    </React.Fragment>
+    </Page>
   );
 };
 
@@ -333,4 +353,12 @@ ReceiptPage.propTypes = {
   classes: PropTypes.object
 };
 
-export default ReceiptPage;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateTitle: (payload) => {
+      return dispatch(updatePageTitle(payload));
+    }
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ReceiptPage);
