@@ -95,7 +95,7 @@ const InvoicePage = ({ classes, updateTitle }) => {
         <CircularProgress />
       ) : (
         <Grid container direction="row" justify="center" alignItems="center">
-          <Grid item xs={12} md={11} lg={11}>
+          <Grid item xs={12} md={10} lg={10}>
             <Grid container spacing={5}>
               <Grid item sm={12} md={12} lg={12}>
                 <Button
@@ -132,10 +132,14 @@ const InvoicePage = ({ classes, updateTitle }) => {
                         {invoiceDocument.invoiceDate}
                       </Grid>
                       <Grid item xs={4} style={invoiceHeadersStyle}>
-                        DUE DATE
+                        <span style={{ fontWeight: 'bolder', color: 'black' }}>
+                          DUE DATE
+                        </span>
                       </Grid>
                       <Grid item xs={8} style={invoiceHeadersStyle}>
-                        {invoiceDocument.invoiceDueDate}
+                        <span style={{ fontWeight: 'bolder', color: 'black' }}>
+                          {invoiceDocument.invoiceDueDate}
+                        </span>
                       </Grid>
                       <Grid item xs={4} style={invoiceHeadersStyle}>
                         SHOP NUMBER(S)
@@ -165,7 +169,7 @@ const InvoicePage = ({ classes, updateTitle }) => {
                 </Grid>
 
                 <Grid container spacing={3} style={{ marginBottom: 10 }}>
-                  <Grid item xs={6} md={6} lg={6} style={{ textAlign: 'left' }}>
+                  <Grid item xs={3} style={{ textAlign: 'left' }}>
                     <div style={invoiceHeadersStyle}>
                       <div>FROM</div>
                     </div>
@@ -180,31 +184,32 @@ const InvoicePage = ({ classes, updateTitle }) => {
                     <div>{invoiceDocument.companyTelephone}</div>
                     <div>{invoiceDocument.companyEmail}</div>
                   </Grid>
-
+                  <Grid item xs={3}></Grid>
+                  <Grid item xs={3}></Grid>
                   <Grid
                     item
-                    xs={6}
-                    md={6}
-                    lg={6}
-                    style={{ textAlign: 'right', marginBottom: 50 }}
+                    xs={3}
+                    style={{ marginBottom: 50, alignContent: 'flex-end' }}
                   >
-                    <div style={invoiceHeadersStyle}>
-                      <div>TO</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={invoiceHeadersStyle}>
+                        <div>TO</div>
+                      </div>
+                      <div>
+                        <h4>
+                          {invoiceDocument.customerCompanyName
+                            ? invoiceDocument.customerCompanyName
+                            : invoiceDocument.customerFullName}
+                        </h4>
+                      </div>
+                      <div>{invoiceDocument.customerAddress}</div>
+                      <div>
+                        {invoiceDocument.customerCity},{' '}
+                        {invoiceDocument.customerState}
+                      </div>
+                      <div>{invoiceDocument.customerTelephone}</div>
+                      <div>{invoiceDocument.customerEmail}</div>
                     </div>
-                    <div>
-                      <h4>
-                        {invoiceDocument.customerCompanyName
-                          ? invoiceDocument.customerCompanyName
-                          : invoiceDocument.customerFullName}
-                      </h4>
-                    </div>
-                    <div>{invoiceDocument.customerAddress}</div>
-                    <div>
-                      {invoiceDocument.customerCity},{' '}
-                      {invoiceDocument.customerState}
-                    </div>
-                    <div>{invoiceDocument.customerTelephone}</div>
-                    <div>{invoiceDocument.customerEmail}</div>
                   </Grid>
                 </Grid>
 
@@ -221,7 +226,7 @@ const InvoicePage = ({ classes, updateTitle }) => {
                   <Grid item xs={5} md={5} lg={5}>
                     <Grid container spacing={1}>
                       <TableContainer style={{ marginRight: 15 }}>
-                        <Table aria-label="card table">
+                        <Table aria-label="card table" size="small">
                           <TableBody>
                             <TableRow>
                               <TableCell

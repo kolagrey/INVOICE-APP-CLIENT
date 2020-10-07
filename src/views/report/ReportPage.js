@@ -53,10 +53,10 @@ const ReportPage = ({ updateTitle }) => {
     event.preventDefault();
     console.log({ report });
     if (report.status === 'Paid') {
-      setHelperText('You got it!');
+      setHelperText('Report feature is still pending...');
       setError(false);
     } else if (report.status === 'Pending') {
-      setHelperText('Sorry, wrong answer!');
+      setHelperText('Report feature is still pending...');
       setError(true);
     } else {
       setHelperText('Please select an option.');

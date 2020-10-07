@@ -183,7 +183,7 @@ const ReceiptPage = ({ classes, updateTitle }) => {
                 </Grid>
 
                 <Grid container spacing={3} style={{ marginBottom: 10 }}>
-                  <Grid item xs={6} md={6} lg={6} style={{ textAlign: 'left' }}>
+                  <Grid item xs={3} style={{ textAlign: 'left' }}>
                     <div style={invoiceHeadersStyle}>
                       <div>FROM</div>
                     </div>
@@ -198,31 +198,32 @@ const ReceiptPage = ({ classes, updateTitle }) => {
                     <div>{receiptDocument.companyTelephone}</div>
                     <div>{receiptDocument.companyEmail}</div>
                   </Grid>
-
+                  <Grid item xs={3}></Grid>
+                  <Grid item xs={3}></Grid>
                   <Grid
                     item
-                    xs={6}
-                    md={6}
-                    lg={6}
-                    style={{ textAlign: 'right', marginBottom: 50 }}
+                    xs={3}
+                    style={{ marginBottom: 50, alignContent: 'flex-end' }}
                   >
-                    <div style={invoiceHeadersStyle}>
-                      <div>TO</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={invoiceHeadersStyle}>
+                        <div>TO</div>
+                      </div>
+                      <div>
+                        <h4>
+                          {receiptDocument.customerCompanyName
+                            ? receiptDocument.customerCompanyName
+                            : receiptDocument.customerFullName}
+                        </h4>
+                      </div>
+                      <div>{receiptDocument.customerAddress}</div>
+                      <div>
+                        {receiptDocument.customerCity},{' '}
+                        {receiptDocument.customerState}
+                      </div>
+                      <div>{receiptDocument.customerTelephone}</div>
+                      <div>{receiptDocument.customerEmail}</div>
                     </div>
-                    <div>
-                      <h4>
-                        {receiptDocument.customerCompanyName
-                          ? receiptDocument.customerCompanyName
-                          : receiptDocument.customerFullName}
-                      </h4>
-                    </div>
-                    <div>{receiptDocument.customerAddress}</div>
-                    <div>
-                      {receiptDocument.customerCity},{' '}
-                      {receiptDocument.customerState}
-                    </div>
-                    <div>{receiptDocument.customerTelephone}</div>
-                    <div>{receiptDocument.customerEmail}</div>
                   </Grid>
                 </Grid>
 
@@ -239,7 +240,7 @@ const ReceiptPage = ({ classes, updateTitle }) => {
                   <Grid item xs={5} md={5} lg={5}>
                     <Grid container spacing={3}>
                       <TableContainer style={{ marginRight: 15 }}>
-                        <Table aria-label="card table">
+                        <Table aria-label="card table" size="small">
                           <TableBody>
                             <TableRow>
                               <TableCell
