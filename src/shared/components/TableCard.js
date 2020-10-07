@@ -8,7 +8,8 @@ import {
   TableHead,
   TableRow,
   Avatar,
-  Button
+  Button,
+  Grid
 } from '../../materials';
 
 export default function TableCard(props) {
@@ -36,30 +37,34 @@ export default function TableCard(props) {
 
   return (
     <TableContainer>
-      <Table className={classes.table} aria-label="card table">
+      <Table aria-label="card table" size="small">
         <TableHead>
-          <TableRow className="tableCardHeaderRow">
+          <TableRow className="tableCardHeaderRowPrint">
             {fields.map((field) => (
               <TableCell
                 key={field}
                 align="left"
                 style={{
-                  backgroundColor: '#D8D8D8',
-                  border: '1px solid #000'
+                  backgroundColor: '#D8D8D8'
                 }}
               >
-                <h5>{field.toUpperCase()}</h5>
+                <h5>{field === 'id' ? 'S/N' : field.toUpperCase()}</h5>
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <Grid xs={12} style={{ marginBottom: 10 }}></Grid>
+        <TableBody style={{ border: '1px solid #000' }}>
           {data.map((row, index) => {
             return (
-              <TableRow key={row.id} style={{ border: '1px solid #000' }}>
+              <TableRow key={row.id}>
                 {fields.map((field) => (
                   <TableCell
-                    style={{ border: '1px solid #000' }}
+                    style={{
+                      border: 2,
+                      borderColor: 'black',
+                      borderStyle: 'solid'
+                    }}
                     key={`field-${(
                       Math.random() * new Date().getTime()
                     ).toFixed(0)}-${index}`}
