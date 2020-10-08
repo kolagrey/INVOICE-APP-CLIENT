@@ -326,7 +326,7 @@ const BillingProfileForm = (props) => {
     const customer = customers.filter((doc) => doc.id === state.customerId)[0];
     setState((prevState) => ({
       ...prevState,
-      customer: customer ? titleCase(customer.customerFullName) : ''
+      customer: customer && customer.customerFullName ? titleCase(customer.customerFullName) : ''
     }));
   }, [state.customerId, customers]);
 

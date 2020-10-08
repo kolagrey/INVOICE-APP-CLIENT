@@ -37,7 +37,7 @@ export default function TableCard(props) {
 
   return (
     <TableContainer>
-      <Table aria-label="card table" size="small">
+      <Table aria-label="card table" size="small" style={{ minWidth: '100%' }}>
         <TableHead>
           <TableRow className="tableCardHeaderRowPrint">
             {fields.map((field) => (

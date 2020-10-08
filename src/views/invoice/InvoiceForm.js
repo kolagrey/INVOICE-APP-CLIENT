@@ -202,7 +202,7 @@ const InvoiceForm = (props) => {
         ...prevState,
         billingCycle: billingCycle,
         shopNumber: shopNumber,
-        invoiceItemsList: invoiceItemsList,
+        invoiceItemsList: invoiceItemsList && invoiceItemsList.length ? invoiceItemsList : [],
         vat: vat,
         vatValue: vatValue,
         subTotalCost: totalCost,
@@ -230,6 +230,13 @@ const InvoiceForm = (props) => {
   };
 
   const createDocument = async (payload) => {
+    if(!options.invoiceItemsList && !options.invoiceItemsList.length) {
+      enqueueSnackbar(
+            'The billing profile for this invoice is deprecated! Please re-create billing profile.',
+            { variant: 'error' }
+          );
+    } else {
+
     const finalPayload = {
       ...payload,
 
@@ -279,6 +286,7 @@ const InvoiceForm = (props) => {
       // TODO: Handle error properly
       enqueueSnackbar(error.message, { variant: 'error' });
       Sentry.captureException(error);
+    }
     }
   };
 
