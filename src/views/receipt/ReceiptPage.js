@@ -115,6 +115,9 @@ const ReceiptPage = ({ classes, updateTitle }) => {
 
             <Card className={classes.card} variant="outlined">
               <CardContent className="printArea">
+              <div id="watermarkBackground">
+  <p id="bg-text">PAID</p>
+	</div>
                 <Grid container spacing={3} style={{ marginBottom: 10 }}>
                   <Grid item xs={6} md={6} lg={6}>
                     <Grid container spacing={1} style={{ marginBottom: 10 }}>
