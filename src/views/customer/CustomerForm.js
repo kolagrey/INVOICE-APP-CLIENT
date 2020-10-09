@@ -189,12 +189,9 @@ const CustomerForm = (props) => {
                 <TextValidator
                   value={state.ownerTelephone}
                   onChange={onInputChange}
-                  validators={['required']}
-                  errorMessages={['Owner telephone is required']}
                   type="tel"
                   variant="outlined"
                   margin="normal"
-                  required
                   fullWidth
                   id="ownerTelephone"
                   label="Owner Telephone"
