@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import LogRocket from 'logrocket';
 import {
   SET_USER_PROFILE,
   PROFILE_LOADING,
@@ -30,6 +31,14 @@ export const getUserProfile = (id) => async (dispatch) => {
       email: userProfile.email,
       firstName: userProfile.firstName,
       lastName: userProfile.lastName
+    });
+
+    LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
+      name: `${userProfile.firstName} ${userProfile.lastName}`,
+      email: userProfile.email,
+
+      // Add your own custom user variables here, ie:
+      id: id
     });
 
     dispatcher(dispatch, SET_USER_PROFILE, {
