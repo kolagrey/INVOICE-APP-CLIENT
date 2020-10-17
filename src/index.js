@@ -9,9 +9,12 @@ import { CircularProgress } from './materials';
 import { store, persistor } from './redux/storeConfig/store';
 import * as serviceWorker from './serviceWorker';
 
+import LogRocket from 'logrocket';
+import { LOG_ROCKET_URL, SENTRY_URL } from './services/firebase';
+LogRocket.init(LOG_ROCKET_URL);
+
 Sentry.init({
-  dsn:
-    'https://9dfdf7203ca64e398ef1bd81233e55d2@o453636.ingest.sentry.io/5442585',
+  dsn: SENTRY_URL,
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1.0
 });
