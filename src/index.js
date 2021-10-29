@@ -10,13 +10,17 @@ import { store, persistor } from './redux/storeConfig/store';
 import * as serviceWorker from './serviceWorker';
 
 import LogRocket from 'logrocket';
-import { LOG_ROCKET_URL, SENTRY_URL } from './services/firebase';
+import {
+  LOG_ROCKET_URL,
+  SENTRY_URL,
+  TRACE_SAMPLE_RATE
+} from './services/firebase';
 LogRocket.init(LOG_ROCKET_URL);
 
 Sentry.init({
   dsn: SENTRY_URL,
   integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate: 1.0
+  tracesSampleRate: TRACE_SAMPLE_RATE
 });
 
 const LazyApp = lazy(() => import('./App'));
