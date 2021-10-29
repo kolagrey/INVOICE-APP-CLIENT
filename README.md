@@ -1,4 +1,4 @@
-# CUTOM BILLING & INVOICING by A.R.T
+# CUTOM BILLING & INVOICING by A.R.T (2020)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses Firebase, Sentry, Log Rocket, and React Material for UI.
 
