@@ -11,6 +11,7 @@ const OverviewPage = lazy(() => import('../views/overview/OverviewPage'));
 const CustomersPage = lazy(() => import('../views/customer/CustomersPage'));
 const CustomerPage = lazy(() => import('../views/customer/CustomerPage'));
 const CustomerForm = lazy(() => import('../views/customer/CustomerForm'));
+const CustomersDownload = lazy(() => import('../views/customer/CustomersDownload'));
 
 const BillingProfilesPage = lazy(() =>
   import('../views/billing/BillingProfilesPage')
@@ -84,6 +85,15 @@ const AppRouter = (props) => {
                 path="/dashboard/customers"
               >
                 <CustomersPage classes={classes} />
+              </RouteGaurd>
+              <RouteGaurd
+                Route={Route}
+                Redirect={Redirect}
+                isAuthenticated={isAuthenticated}
+                classes={classes}
+                path="/dashboard/data/download"
+              >
+                <CustomersDownload classes={classes} />
               </RouteGaurd>
               <RouteGaurd
                 exact

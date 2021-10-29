@@ -5,15 +5,25 @@ import { Search as SearchIcon } from 'react-feather';
 import LinkButton from '../LinkButton';
 
 const SearchToolbar = ({
+  download,
   classes,
   searchAction,
   searchPlaceholder,
   addButtonText,
-  addButtonUrl
+  addButtonUrl,
+  downloadButtonUrl,
+  downloadButtonText,
 }) => {
   return (
     <React.Fragment>
       <Box display="flex" justifyContent="flex-end">
+        {download && (
+          <LinkButton
+            buttonUrl={downloadButtonUrl}
+            buttonText={downloadButtonText}
+            buttonClass={classes.download}
+          />
+        )}
         <LinkButton
           buttonUrl={addButtonUrl}
           buttonText={addButtonText}

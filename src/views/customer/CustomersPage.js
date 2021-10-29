@@ -116,7 +116,9 @@ const CustomersPage = ({
     editUrl: '/dashboard/customer/edit',
     viewUrl: '/dashboard/customer',
     addButtonText: 'Add Customer',
-    addButtonUrl: '/dashboard/customer/new/document'
+    addButtonUrl: '/dashboard/customer/new/document',
+    downloadButtonText: 'Download Customers',
+    downloadButtonUrl: '/dashboard/data/download'
   };
 
   return (
@@ -133,6 +135,7 @@ const CustomersPage = ({
       />
       {data.length ? (
         <ListView
+          download
           updateAlertDialogState={updateAlertState}
           data={formattedData.filter(filterDocument)}
           classes={classes}

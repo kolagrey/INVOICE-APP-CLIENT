@@ -5,14 +5,17 @@ import Results from './Results';
 import SearchToolbar from './SearchToolbar';
 
 const ListView = React.memo(
-  ({ data, listConfig, classes, updateAlertDialogState }) => {
+  ({ data, listConfig, classes, updateAlertDialogState, download }) => {
     return (
       <React.Fragment>
         {listConfig.showSearchToolbar && (
           <SearchToolbar
+            download={download}
             classes={classes}
             searchPlaceholder={listConfig.searchPlaceholder}
             addButtonUrl={listConfig.addButtonUrl}
+            downloadButtonUrl={listConfig.downloadButtonUrl}
+            downloadButtonText={listConfig.downloadButtonText}
             addButtonText={listConfig.addButtonText}
             searchAction={listConfig.searchAction}
           />
